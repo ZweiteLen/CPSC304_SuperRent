@@ -1,4 +1,4 @@
-package com.cpsc304.superrent;
+package ca.ubc.cpsc304.controller;
 
 public class SuperRent {
 
