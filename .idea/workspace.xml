@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/CustomerModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReservationModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReturnModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/VehicleTypeModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/VehicleModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/VehicleModel.java" afterDir="false" />
-    </list>
+    <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1572332596159</updated>
       <workItem from="1572389948378" duration="297000" />
-      <workItem from="1572985159941" duration="5949000" />
+      <workItem from="1572985159941" duration="6068000" />
     </task>
     <servers />
   </component>
