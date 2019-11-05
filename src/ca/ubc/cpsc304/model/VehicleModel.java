@@ -28,6 +28,42 @@ public class VehicleModel {
         this.city = city;
     }
 
+    public int getVid() {
+        return vid;
+    }
+
+    public String getVlicense() {
+        return vlicense;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getColour() {
+        return colour;
+    }
+
+    public int getOdometer() {
+        return odometer;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getVtname() {
+        return vtname;
+    }
+
     public String getLocation() {
         return location;
     }
