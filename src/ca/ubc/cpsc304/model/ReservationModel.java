@@ -3,13 +3,13 @@ package ca.ubc.cpsc304.model;
 public class ReservationModel {
     private final int confNo;
     private final String vtname;
-    private final String cellphone;
+    private final int cellphone;
     private final String fromDate;
     private final int fromTime;
     private final String toDate;
     private final int toTime;
 
-    public ReservationModel (int confNo, String vtname, String cellphone, String fromDate, int fromTime,
+    public ReservationModel (int confNo, String vtname, int cellphone, String fromDate, int fromTime,
                              String toDate, int toTime) {
         this.confNo = confNo;
         this.vtname = vtname;
@@ -28,7 +28,7 @@ public class ReservationModel {
         return vtname;
     }
 
-    public String getCellphone() {
+    public int getCellphone() {
         return cellphone;
     }
 
