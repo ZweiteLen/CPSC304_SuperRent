@@ -36,8 +36,8 @@ public class TransactionsWindow extends JFrame implements ActionListener {
 
         JLabel vtnameLabel = new JLabel("Enter vehicle type: ");
         JLabel locationLabel = new JLabel("Enter branch: ");
-        JLabel fromLabel = new JLabel("From (yy/mm/dd-hh/mm): ");
-        JLabel toLabel = new JLabel("Until (yy/mm/dd-hh/mm): ");
+        JLabel fromLabel = new JLabel("From (date/time): ");
+        JLabel toLabel = new JLabel("Until (date/time): ");
 
         vtnameField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
@@ -56,11 +56,22 @@ public class TransactionsWindow extends JFrame implements ActionListener {
         //Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
         JMenu reports = new JMenu("Reports");
+        JMenu vehicles = new JMenu("Vehicles");
+        mb.add(vehicles);
         mb.add(reports);
         JMenuItem rentals = new JMenuItem("Rentals");
         JMenuItem returns = new JMenuItem("Returns");
+        JMenuItem search = new JMenuItem("Search");
+        JMenuItem makeRental = new JMenuItem("Rent");
+        JMenuItem makeReturn = new JMenuItem("Return");
         reports.add(rentals);
         reports.add(returns);
+        vehicles.add(search);
+        vehicles.add(makeRental);
+        vehicles.add(makeReturn);
+
+        // TODO: Figure out how to switch between the search and the reports
+        // TODO: Or just make pop-ups...
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 9;
@@ -148,6 +159,8 @@ public class TransactionsWindow extends JFrame implements ActionListener {
         gb.setConstraints(searchButton, c);
         contentPane.add(searchButton);
 
+        // Placeholder information to test out how this looks
+        // TODO: get the table attributes and data from database
         String[] vAttributes = {"First Name",
                 "Last Name",
                 "Sport",
