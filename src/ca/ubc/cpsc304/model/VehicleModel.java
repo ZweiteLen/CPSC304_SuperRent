@@ -1,7 +1,7 @@
 package ca.ubc.cpsc304.model;
 
 public class VehicleModel {
-    private final int vid;
+    private final String vid;
     private final String vlicense;
     private final String make;
     private final String model;
@@ -13,7 +13,7 @@ public class VehicleModel {
     private final String location;
     private final String city;
 
-    public VehicleModel(int vid, String vlicense, String make, String model, int year, String color, int odometer,
+    public VehicleModel(String vid, String vlicense, String make, String model, int year, String color, int odometer,
                         String status, String vtname, String location, String city) {
         this.vid = vid;
         this.vlicense = vlicense;
@@ -28,7 +28,7 @@ public class VehicleModel {
         this.city = city;
     }
 
-    public int getVid() {
+    public String getVid() {
         return vid;
     }
 

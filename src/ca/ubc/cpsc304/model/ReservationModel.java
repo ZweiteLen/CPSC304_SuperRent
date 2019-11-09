@@ -1,16 +1,17 @@
 package ca.ubc.cpsc304.model;
 
 public class ReservationModel {
-    private final int confNo;
+    private final String confNo;
     private final String vtname;
     private final int cellphone;
+    // TODO: figure out how we want to represent date/time
     private final String fromDate;
-    private final int fromTime;
+    private final String fromTime;
     private final String toDate;
-    private final int toTime;
+    private final String toTime;
 
-    public ReservationModel (int confNo, String vtname, int cellphone, String fromDate, int fromTime,
-                             String toDate, int toTime) {
+    public ReservationModel (String confNo, String vtname, int cellphone, String fromDate, String fromTime,
+                             String toDate, String toTime) {
         this.confNo = confNo;
         this.vtname = vtname;
         this.cellphone = cellphone;
@@ -20,7 +21,7 @@ public class ReservationModel {
         this.toTime = toTime;
     }
 
-    public int getConfNo() {
+    public String getConfNo() {
         return confNo;
     }
 
@@ -32,11 +33,11 @@ public class ReservationModel {
         return cellphone;
     }
 
-    public int getFromTime() {
+    public String getFromTime() {
         return fromTime;
     }
 
-    public int getToTime() {
+    public String getToTime() {
         return toTime;
     }
 
