@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TerminalTransactionsDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TerminalTransactionsDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +30,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -108,7 +110,7 @@
       <workItem from="1572985159941" duration="6068000" />
       <workItem from="1573169599460" duration="3311000" />
       <workItem from="1573174243647" duration="3539000" />
-      <workItem from="1573238583724" duration="16919000" />
+      <workItem from="1573238583724" duration="18367000" />
     </task>
     <servers />
   </component>

@@ -13,30 +13,15 @@ import ca.ubc.cpsc304.model.VehicleModel;
  * controller class (in this case Bank).
  *
  * TerminalTransactions calls the methods that we have listed below but
- * Bank is the actual class that will implement the methods.
+ * SuperRent is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-
-	// Customer transactions
-	// TODO
-
-	// Rent transactions
-	// TODO
 
 	// Reservation transactions
 	public void deleteReservation(int confNo);
 	public void insertReservation(ReservationModel model);
 	public void showReservation();
 	public void updateReservation(int confNo, String name);
-
-	// Return transactions
-	// TODO
-
-	// Vehicle transactions
-	// TODO
-
-	// Report transactions
-	// TODO
 	
 	public void terminalTransactionsFinished();
 }

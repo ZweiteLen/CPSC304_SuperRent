@@ -25,6 +25,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     /**
      * loginWindow is temporarily commented out to make testing the
      * transactionsWindow gui easier on myself
+     * TODO: uncomment and remove transactionsWindow when everything is complete
      */
     private void start() {
         // loginWindow = new LoginWindow();
@@ -69,21 +70,16 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     /**
      * TerminalTransactionsDelegate Implementation
      *
-     * Insert a branch with the given info
+     * Insert a reservation with the given info
      */
     public void insertReservation(ReservationModel model) {
         dbHandler.insertReservation(model);
     }
 
-    @Override
-    public void deleteReservation(String confNo) {
-
-    }
-
     /**
      * TerminalTransactionsDelegate Implementation
      *
-     * Delete branch with given branch ID.
+     * Delete reservation with given confNo.
      */
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
@@ -92,7 +88,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     /**
      * TerminalTransactionsDelegate Implementation
      *
-     * Update the branch name for a specific ID
+     * Update reservation not actually needed, but I'll remove later
      */
 
     public void updateReservation(int confNo, String vtname) {
@@ -102,7 +98,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     /**
      * TerminalTransactionsDelegate Implementation
      *
-     * Displays information about varies bank branches.
+     * Displays information about reservations.
      */
     public void showReservation() {
         ReservationModel[] models = dbHandler.getReservationInfo();
@@ -123,41 +119,6 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         }
     }
 
-    @Override
-    public void addCustomer(CustomerModel model) {
-
-    }
-
-    @Override
-    public void showVehicles(String vtname, String location, String fromDate, String fromTime, String toDate, String toTime) {
-
-    }
-
-    @Override
-    public void rentVehicle(RentModel model) {
-
-    }
-
-    @Override
-    public void returnVehicle(ReturnModel model) {
-
-    }
-
-    @Override
-    public void showRentals(String location) {
-
-    }
-
-    @Override
-    public void showReturns(String location) {
-
-    }
-
-    @Override
-    public void transactionsWindowFinished() {
-
-    }
-
     /**
      * TerminalTransactionsDelegate Implementation
      *
@@ -169,6 +130,52 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         dbHandler = null;
 
         System.exit(0);
+    }
+
+    /**
+     * TransactionsWindowDelegate Implementation Start
+     *
+     */
+
+
+    public void makeReservation(ReservationModel model) {
+
+    }
+
+    public void removeReservation(String confNo) {
+
+    }
+
+    public void showReservations() {
+
+    }
+
+    public void addCustomer(CustomerModel model) {
+
+    }
+
+    public void showVehicles(String vtname, String location, String fromDate, String fromTime, String toDate, String toTime) {
+
+    }
+
+    public void rentVehicle(RentModel model) {
+
+    }
+
+    public void returnVehicle(ReturnModel model) {
+
+    }
+
+    public void showRentals(String location) {
+
+    }
+
+    public void showReturns(String location) {
+
+    }
+
+    public void transactionsWindowFinished() {
+
     }
 
 }

@@ -29,6 +29,31 @@ public class DatabaseConnectionHandler {
 		}
 	}
 	
+	public boolean login(String username, String password) {
+		try {
+			if (connection != null) {
+				connection.close();
+			}
+
+			connection = DriverManager.getConnection(ORACLE_URL, username, password);
+			connection.setAutoCommit(false);
+	
+			System.out.println("\nConnected to Oracle!");
+			return true;
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			return false;
+		}
+	}
+
+	private void rollbackConnection() {
+		try  {
+			connection.rollback();	
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+	}
+
 	public void close() {
 		try {
 			if (connection != null) {
@@ -39,25 +64,30 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	/**
+	 * Transactions Implementation Start
+	 * these are from the terminalTransactions
+	 * we can use them as examples
+	 */
 	public void deleteReservation(int confNo) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
 			ps.setInt(1, confNo);
-			
+
 			int rowCount = ps.executeUpdate();
 			if (rowCount == 0) {
 				System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
 			}
-			
+
 			connection.commit();
-	
+
 			ps.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
 	}
-	
+
 	public void insertReservation(ReservationModel model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
@@ -83,14 +113,14 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
-	
+
 	public ReservationModel[] getReservationInfo() {
 		ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
-		
+
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
-		
+
 //    		// get info on ResultSet
 //    		ResultSetMetaData rsmd = rs.getMetaData();
 //
@@ -101,15 +131,15 @@ public class DatabaseConnectionHandler {
 //    			// get column name and print it
 //    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
 //    		}
-			
+
 			while(rs.next()) {
 				ReservationModel model = new ReservationModel(rs.getString("confNo"),
-													rs.getString("vtname"),
-													rs.getInt("cellphone"),
-													rs.getString("fromdate"),
-													rs.getString("fromtime"),
-													rs.getString("todate"),
-													rs.getString("totime"));
+						rs.getString("vtname"),
+						rs.getInt("cellphone"),
+						rs.getString("fromdate"),
+						rs.getString("fromtime"),
+						rs.getString("todate"),
+						rs.getString("totime"));
 				result.add(model);
 			}
 
@@ -117,53 +147,28 @@ public class DatabaseConnectionHandler {
 			stmt.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-		}	
-		
+		}
+
 		return result.toArray(new ReservationModel[result.size()]);
 	}
 
 	public void updateReservation(int confNo, String vtname) {
 		try {
-		  PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
-		  ps.setString(1, vtname);
-		  ps.setInt(2, confNo);
+			PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
+			ps.setString(1, vtname);
+			ps.setInt(2, confNo);
 
-		  int rowCount = ps.executeUpdate();
-		  if (rowCount == 0) {
-		      System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
-		  }
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0) {
+				System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
+			}
 
-		  connection.commit();
+			connection.commit();
 
-		  ps.close();
+			ps.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
-		}
-	}
-	
-	public boolean login(String username, String password) {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-
-			connection = DriverManager.getConnection(ORACLE_URL, username, password);
-			connection.setAutoCommit(false);
-	
-			System.out.println("\nConnected to Oracle!");
-			return true;
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			return false;
-		}
-	}
-
-	private void rollbackConnection() {
-		try  {
-			connection.rollback();	
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
 }
