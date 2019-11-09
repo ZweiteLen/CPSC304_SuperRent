@@ -85,10 +85,10 @@ public class TerminalTransactions {
 	}
 	
 	private void handleInsertOption() {
-		int confNo = INVALID_INPUT;
-		while (confNo == INVALID_INPUT) {
+		String confNo = null;
+		while (confNo == null || confNo.length() <= 0) {
 			System.out.print("Please enter the confirmation number you wish to insert: ");
-			confNo = readInteger(false);
+			confNo = readLine().trim();
 		}
 		
 		String vtname = null;
@@ -109,40 +109,26 @@ public class TerminalTransactions {
 			fromDate = readLine().trim();
 		}
 		
-		int fromTime = INVALID_INPUT;
-		while (fromTime == INVALID_INPUT) {
+		String fromTime = null;
+		while (fromTime == null || fromTime.length() <= 0) {
 			System.out.print("Please enter the time you wish to reserve from: ");
-			fromTime = readInteger(false);
+			fromTime = readLine().trim();
 		}
 
 		String toDate = null;
 		while (toDate == null || toDate.length() <= 0) {
 			System.out.print("Please enter the date you wish to reserve until: ");
-			fromDate = readLine().trim();
+			toDate = readLine().trim();
 		}
 
-		int toTime = INVALID_INPUT;
-		while (toTime == INVALID_INPUT) {
+		String toTime = null;
+		while (toTime == null || toTime.length() <= 0) {
 			System.out.print("Please enter the time you wish to reserve until: ");
-			toTime = readInteger(false);
+			toTime = readLine().trim();
 		}
 		
 		ReservationModel model = new ReservationModel(confNo, vtname, cellphone, fromDate, fromTime, toDate, toTime);
 		delegate.insertReservation(model);
-	}
-	
-	private void handleQuitOption() {
-		System.out.println("Good Bye!");
-		
-		if (bufferedReader != null) {
-			try {
-				bufferedReader.close();
-			} catch (IOException e) {
-				System.out.println("IOException!");
-			}
-		}
-		
-		delegate.terminalTransactionsFinished();
 	}
 	
 	private void handleUpdateOption() {
@@ -160,6 +146,20 @@ public class TerminalTransactions {
 
 		delegate.updateReservation(confNo, vtname);
 	}
+
+    private void handleQuitOption() {
+        System.out.println("Good Bye!");
+
+        if (bufferedReader != null) {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                System.out.println("IOException!");
+            }
+        }
+
+        delegate.terminalTransactionsFinished();
+    }
 	
 	private int readInteger(boolean allowEmpty) {
 		String line = null;

@@ -61,7 +61,7 @@ public class DatabaseConnectionHandler {
 	public void insertReservation(ReservationModel model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
-			ps.setInt(1, model.getConfNo());
+			ps.setString(1, model.getConfNo());
 			ps.setString(2, model.getVtname());
 			if (model.getCellphone() == 0) {
 				ps.setNull(3, java.sql.Types.INTEGER);
@@ -69,9 +69,9 @@ public class DatabaseConnectionHandler {
 				ps.setInt(3, model.getCellphone());
 			}
 			ps.setString(4, model.getFromDate());
-			ps.setInt(5, model.getFromTime());
+			ps.setString(5, model.getFromTime());
 			ps.setString(6, model.getToDate());
-			ps.setInt(7, model.getToTime());
+			ps.setString(7, model.getToTime());
 
 
 			ps.executeUpdate();
@@ -103,13 +103,13 @@ public class DatabaseConnectionHandler {
 //    		}
 			
 			while(rs.next()) {
-				ReservationModel model = new ReservationModel(rs.getInt("confNo"),
+				ReservationModel model = new ReservationModel(rs.getString("confNo"),
 													rs.getString("vtname"),
 													rs.getInt("cellphone"),
 													rs.getString("fromdate"),
-													rs.getInt("fromtime"),
+													rs.getString("fromtime"),
 													rs.getString("todate"),
-													rs.getInt("totime"));
+													rs.getString("totime"));
 				result.add(model);
 			}
 

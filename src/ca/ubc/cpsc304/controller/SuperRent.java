@@ -1,25 +1,36 @@
 package ca.ubc.cpsc304.controller;
 
-
 import ca.ubc.cpsc304.database.DatabaseConnectionHandler;
 import ca.ubc.cpsc304.delegates.LoginWindowDelegate;
 import ca.ubc.cpsc304.delegates.TerminalTransactionsDelegate;
+import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
+import ca.ubc.cpsc304.model.CustomerModel;
+import ca.ubc.cpsc304.model.RentModel;
 import ca.ubc.cpsc304.model.ReservationModel;
+import ca.ubc.cpsc304.model.ReturnModel;
 import ca.ubc.cpsc304.ui.LoginWindow;
+import ca.ubc.cpsc304.ui.TransactionsWindow;
 import ca.ubc.cpsc304.ui.TerminalTransactions;
 
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate{
+public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate{
     private DatabaseConnectionHandler dbHandler = null;
     private LoginWindow loginWindow = null;
+    private TransactionsWindow transactionsWindow = null;
 
     public static void main(String[] args) {
         SuperRent superRent = new SuperRent();
         superRent.start();
     }
 
+    /**
+     * loginWindow is temporarily commented out to make testing the
+     * transactionsWindow gui easier on myself
+     */
     private void start() {
-        loginWindow = new LoginWindow();
-        loginWindow.showFrame(this);
+        // loginWindow = new LoginWindow();
+        // loginWindow.showFrame(this);
+        transactionsWindow = new TransactionsWindow();
+        transactionsWindow.showFrame(this);
     }
 
 
@@ -37,6 +48,13 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
             TerminalTransactions transaction = new TerminalTransactions();
             transaction.showMainMenu(this);
+
+            /**
+             * TODO: Uncomment when everything is done
+             */
+            // transactionsWindow = new TransactionsWindow();
+            // transactionsWindow.showFrame(this);
+
         } else {
             loginWindow.handleLoginFailed();
 
@@ -49,7 +67,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     /**
-     * TermainalTransactionsDelegate Implementation
+     * TerminalTransactionsDelegate Implementation
      *
      * Insert a branch with the given info
      */
@@ -57,8 +75,13 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         dbHandler.insertReservation(model);
     }
 
+    @Override
+    public void deleteReservation(String confNo) {
+
+    }
+
     /**
-     * TermainalTransactionsDelegate Implementation
+     * TerminalTransactionsDelegate Implementation
      *
      * Delete branch with given branch ID.
      */
@@ -67,7 +90,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     /**
-     * TermainalTransactionsDelegate Implementation
+     * TerminalTransactionsDelegate Implementation
      *
      * Update the branch name for a specific ID
      */
@@ -77,7 +100,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     /**
-     * TermainalTransactionsDelegate Implementation
+     * TerminalTransactionsDelegate Implementation
      *
      * Displays information about varies bank branches.
      */
@@ -98,6 +121,41 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
             System.out.println();
         }
+    }
+
+    @Override
+    public void addCustomer(CustomerModel model) {
+
+    }
+
+    @Override
+    public void showVehicles(String vtname, String location, String fromDate, String fromTime, String toDate, String toTime) {
+
+    }
+
+    @Override
+    public void rentVehicle(RentModel model) {
+
+    }
+
+    @Override
+    public void returnVehicle(ReturnModel model) {
+
+    }
+
+    @Override
+    public void showRentals(String location) {
+
+    }
+
+    @Override
+    public void showReturns(String location) {
+
+    }
+
+    @Override
+    public void transactionsWindowFinished() {
+
     }
 
     /**
