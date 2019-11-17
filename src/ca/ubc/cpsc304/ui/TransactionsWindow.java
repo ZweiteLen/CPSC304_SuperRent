@@ -44,8 +44,8 @@ public class TransactionsWindow extends JFrame {
 
         JLabel vtnameLabel = new JLabel("Enter vehicle type: ");
         JLabel locationLabel = new JLabel("Enter branch: ");
-        JLabel fromLabel = new JLabel("From (date/time): ");
-        JLabel toLabel = new JLabel("Until (date/time): ");
+        JLabel fromLabel = new JLabel("From (yyyymmddhh): ");
+        JLabel toLabel = new JLabel("Until (yyyymmddhh): ");
 
         vtnameField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
@@ -180,7 +180,7 @@ public class TransactionsWindow extends JFrame {
         gb.setConstraints(sp, c);
         contentPane.add(sp);
 
-        foundButtonlabel = new JLabel("Search for available vehicles");
+        foundButtonlabel = new JLabel(" ");
         c.fill = GridBagConstraints.RELATIVE;
         c.gridwidth = 1;
         c.gridx = 0;
@@ -191,6 +191,8 @@ public class TransactionsWindow extends JFrame {
         c.gridy = 2;
         gb.setConstraints(seeVButton, c);
         contentPane.add(seeVButton);
+
+        contentPane.revalidate();
 
         // register buttons with action event handler
         searchButton.addActionListener(new ActionListener() {

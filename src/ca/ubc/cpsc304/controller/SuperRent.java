@@ -177,6 +177,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public DefaultTableModel showDailyRentalsReport(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        // res = dbHandler.getDailyRental(location);
         return res;
     }
 
@@ -193,6 +194,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     public DefaultTableModel showDailyReturnsReportByBranch(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
+        // res = dbHandler.getDailyReturn(location);
         return res;
     }
 }

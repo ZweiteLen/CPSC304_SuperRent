@@ -180,18 +180,22 @@ public class DatabaseConnectionHandler {
 	}
 
 	public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
-		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-				"Colour", "Features"}, 0);
+		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type","Location","Model", "Make", "Year",
+				"Colour", "Features", "Current Status"}, 0);
+		String from = "";
+		String to = "";
+		if (!fromDateTime.isBlank()) {from = "'" + fromDateTime + ":00:00'";}
+		if (!toDateTime.isBlank()) {to = "'" + toDateTime + ":00:00'";}
 
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
 			// TODO test this query
 			if (vtname.isBlank() ^ location.isBlank() ^ fromDateTime.isBlank() ^ toDateTime.isBlank()) {
-				rs = stmt.executeQuery("SELECT status, location, model, make, year, colour, features FROM vehicles");
+				rs = stmt.executeQuery("SELECT vtname, location, model, make, year, colour, features, status FROM vehicles ORDER  BY location");
 			} else {
 				boolean prev = false;
-				String sqlquery = "SELECT status, location, model, make, year, colour, features " +
+				String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
 								  "FROM vehicles v, vtype vt, reservation r WHERE ";
 				if (!vtname.isBlank()) {
 					sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'" + " AND v.vtname=vt.vtname AND v.vtname=r.vtname";
@@ -200,25 +204,26 @@ public class DatabaseConnectionHandler {
 					sqlquery = sqlquery + "location = " + "'" + location + "'";
 					prev = true;
 				}
-				if (!fromDateTime.isBlank() ^ !toDateTime.isBlank()) {
+				if (!from.isBlank() ^ !to.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					sqlquery = sqlquery + "'" + fromDateTime + "'" + "<= r.toDateTime AND r.fromDateTime >= "
-							+ "'" + toDateTime+ "'";
+					sqlquery = sqlquery + "TO_TIMESTAMP(" + from + ")<= r.toDateTime AND r.fromDateTime >= "
+							+ "TO_TIMESTAMP(" + to +')';
 				} else if (!fromDateTime.isBlank() ^ toDateTime.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					sqlquery = sqlquery + "'" + fromDateTime + "'" + "< r.fromDateTime OR " +
-							"'" + fromDateTime + "' > r.toDateTime";
+					sqlquery = sqlquery + "TO_TIMESTAMP(" + from + ")< r.fromDateTime OR " +
+							"TO_TIMESTAMP(" + from + ") > r.toDateTime";
 				} else if (fromDateTime.isBlank() ^ !toDateTime.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					String todt = "'" + toDateTime + "'";
-					sqlquery = sqlquery +  todt + "< r.fromDateTime OR " +
-							todt + "> r.toDateTime";
+					sqlquery = sqlquery + "TO_TIMESTAMP(" + to + ")< r.fromDateTime OR " +
+							"TO_TIMESTAMP(" + to + ")> r.toDateTime";
 				}
+				sqlquery = sqlquery + " ORDER BY vtname, location";
 				rs = stmt.executeQuery(sqlquery);
 			}
 
 			while(rs.next())
 			{
+			    String v = rs.getString("vtname");
 				String s = rs.getString("status");
 				String l = rs.getString("location");
 				String mo = rs.getString("model");
@@ -226,7 +231,88 @@ public class DatabaseConnectionHandler {
 				int y = rs.getInt("year");
 				String c = rs.getString("colour");
 				String f = rs.getString("features");
-				vmodel.addRow(new Object[]{s,l,mo,ma,y,c,f});
+				vmodel.addRow(new Object[]{v,l,mo,ma,y,c,f,s});
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return vmodel;
+	}
+
+	public DefaultTableModel getDailyRental(String location) {
+		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "vlicense", "confNo", "dlicense",
+				"fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			// TODO test this query
+			if (location.isBlank()) {
+				rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
+						"CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate  FROM rentals " +
+						"WHERE CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
+			} else {
+				rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
+						"CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate " +
+						"FROM rentals r, vehicles v WHERE r.vlicense=v.vlicense AND " +
+						"CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE) AND v.location = " + "'" + location + "'");
+			}
+
+			while(rs.next())
+			{
+				String r = rs.getString("rid");
+				String v = rs.getString("vlicense");
+				String c = rs.getString("confNo");
+				String d = rs.getString("dlicense");
+				Date from = rs.getDate("fromDateTime");
+				Date to = rs.getDate("toDateTime");
+				int o = rs.getInt("odometer");
+				String cnm = rs.getString("cardName");
+				String cno = rs.getString("cardNo");
+				String e = rs.getString("expDate");
+				vmodel.addRow(new Object[]{r, v, c, d, from, to, o, cnm, cno, e});
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return vmodel;
+	}
+
+
+	public DefaultTableModel getDailyReturn(String location) {
+		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank?", "value"}, 0);
+
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			// TODO test this query
+			if (location.isBlank()) {
+				rs = stmt.executeQuery("SELECT *  FROM returns  WHERE " +
+						"CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
+			} else {
+				rs = stmt.executeQuery("SELECT * FROM returns r, vehicles v WHERE r.vlicense=v.vlicense AND " +
+						"CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE) AND v.location = " + "'" + location + "'");
+			}
+
+			while(rs.next())
+			{
+				String r = rs.getString("rid");
+				Date d = rs.getDate("datetime");
+				int o = rs.getInt("odometer");
+				String t = "No";
+				if (rs.getBoolean("fulltank")) {
+					t = "Yes";
+				}
+				int v = rs.getInt("value");
+				vmodel.addRow(new Object[]{r, d, o, t, v});
 			}
 
 			rs.close();
