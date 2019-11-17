@@ -75,3 +75,4 @@ insert into reservation values(4, 'Truck', '04d872', TO_TIMESTAMP('2019-01-09 15
 insert into reservation values(5, 'Car', '04d872', TO_TIMESTAMP('2019-05-23 15:00:00'), TO_TIMESTAMP('2019-06-01 09:00:00'));
 insert into reservation values(6, 'Car', '04d872', TO_TIMESTAMP('2019-03-11 15:00:00'), TO_TIMESTAMP('2019-04-01 09:00:00'));
 insert into reservation values(7, 'SUV', '04d872', TO_TIMESTAMP('2019-08-30 15:00:00'), TO_TIMESTAMP('2019-09-01 09:00:00'));
+insert into reservation values(8, 'Truck', '04d872', TO_TIMESTAMP('2019-07-20 15:00:00'), TO_TIMESTAMP('2019-08-01 13:00:00'));
