@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Glenn.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Glenn.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/RentModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/RentModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReservationModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReservationModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReturnModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReturnModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -147,7 +139,7 @@
       <workItem from="1573174243647" duration="3539000" />
       <workItem from="1573238583724" duration="18389000" />
       <workItem from="1573592127737" duration="2355000" />
-      <workItem from="1573860321922" duration="25449000" />
+      <workItem from="1573860321922" duration="27511000" />
     </task>
     <servers />
   </component>

@@ -157,7 +157,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
         // DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 
-        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Model", "Make"}, 0);
+        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
+                "Colour", "Features"}, 0);
         for (int i = 0; i<5; i++)
         {
             resmodel.addRow(new Object[]{i, "model", "make"});
@@ -173,16 +174,14 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     }
 
-    public void showRentals(String location) {
-
+    public DefaultTableModel showRentals(String location) {
+        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
+                "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        return res;
     }
 
-    public void showReturns(String location) {
-
+    public DefaultTableModel showReturns(String location) {
+        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
+        return res;
     }
-
-    public void transactionsWindowFinished() {
-
-    }
-
 }

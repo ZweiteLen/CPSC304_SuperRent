@@ -69,19 +69,14 @@ public class TransactionsWindow extends JFrame {
         mb.add(reports);
         JMenuItem rentals = new JMenuItem("Rentals");
         JMenuItem returns = new JMenuItem("Returns");
-        JMenuItem search = new JMenuItem("Search");
         JMenuItem makeReservation = new JMenuItem("Reserve");
         JMenuItem makeRental = new JMenuItem("Rent");
         JMenuItem makeReturn = new JMenuItem("Return");
         reports.add(rentals);
         reports.add(returns);
-        vehicles.add(search);
         vehicles.add(makeReservation);
         vehicles.add(makeRental);
         vehicles.add(makeReturn);
-
-        // TODO: Figure out how to switch between the search and the reports
-        // TODO: Or just make pop-ups...
 
         // place menu bar
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -218,6 +213,34 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
+            }
+        });
+        makeRental.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        });
+        makeReturn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        });
+        rentals.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branch = JOptionPane.showInputDialog("Which branch? (optional)");
+                searchmodel = delegate.showRentals(branch);
+                vehicleTable.setModel(searchmodel);
+            }
+        });
+        returns.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branch = JOptionPane.showInputDialog("Which branch? (optional)");
+                searchmodel = delegate.showReturns(branch);
+                vehicleTable.setModel(searchmodel);
             }
         });
 

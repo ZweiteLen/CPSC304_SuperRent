@@ -32,8 +32,6 @@ public interface TransactionsWindowDelegate {
      * Daily report transactions
      * @param location: if not empty, then show a report only for that specified branch
      */
-    public void showRentals(String location);
-    public void showReturns(String location);
-
-    public void transactionsWindowFinished();
+    public DefaultTableModel showRentals(String location);
+    public DefaultTableModel showReturns(String location);
 }
