@@ -1,11 +1,8 @@
 package ca.ubc.cpsc304.database;
 
-import ca.ubc.cpsc304.model.ReturnModel;
-import ca.ubc.cpsc304.model.CustomerModel;
-import ca.ubc.cpsc304.model.ReservationModel;
-import ca.ubc.cpsc304.model.VehicleTypeModel;
-import ca.ubc.cpsc304.model.VehicleModel;
+import ca.ubc.cpsc304.model.*;
 
+import javax.management.DescriptorAccess;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -248,4 +245,28 @@ public class DatabaseConnectionHandler {
 	 * 3) Generate reports: daily rentals, daily rentals for specific branch, daily return,s
 	 * daily returns for specific branch
 	 */
+
+	public void rentVehicle(RentModel rentModel) {
+
+	}
+
+	public void returnVehicle(ReturnModel returnModel) {
+
+	}
+
+	public DefaultTableModel showDailyRentalsReport(String location) {
+		return null;
+	}
+
+	public DefaultTableModel showDailyRentalsReportByBranch(String location) {
+		return null;
+	}
+
+	public DefaultTableModel showDailyReturnsReport(String location) {
+		return null;
+	}
+
+	public DefaultTableModel showDailyReturnReportByBranch(String location) {
+		return null;
+	}
 }
