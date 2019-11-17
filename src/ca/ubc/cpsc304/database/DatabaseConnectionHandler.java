@@ -67,9 +67,17 @@ public class DatabaseConnectionHandler {
 	}
 
 	/**
+	 * START OF CUSTOMER TRANSACTIONS:
+	 * 1) View vehicles
+	 * 2) Make reservation
+	 * 3) Delete reservation
+	 * 4) Update reservation
+	 */
+
+	/**
 	 * Transactions Implementation Start
-	 * these are from the terminalTransactions
-	 * we can use them as examples
+	 * These are from the terminalTransactions
+	 * We can use them as examples
 	 */
 	public void deleteReservation(int confNo) {
 		try {
@@ -232,4 +240,12 @@ public class DatabaseConnectionHandler {
 
 		return vmodel;
 	}
+
+	/**
+	 * START OF CLERK TRANSACTIONS:
+	 * 1) Rent vehicle
+	 * 2) Return vehicle
+	 * 3) Generate reports: daily rentals, daily rentals for specific branch, daily return,s
+	 * daily returns for specific branch
+	 */
 }
