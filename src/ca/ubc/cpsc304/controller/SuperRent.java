@@ -4,13 +4,13 @@ import ca.ubc.cpsc304.database.DatabaseConnectionHandler;
 import ca.ubc.cpsc304.delegates.LoginWindowDelegate;
 import ca.ubc.cpsc304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
-import ca.ubc.cpsc304.model.CustomerModel;
-import ca.ubc.cpsc304.model.RentModel;
-import ca.ubc.cpsc304.model.ReservationModel;
-import ca.ubc.cpsc304.model.ReturnModel;
+import ca.ubc.cpsc304.model.*;
 import ca.ubc.cpsc304.ui.LoginWindow;
 import ca.ubc.cpsc304.ui.TransactionsWindow;
 import ca.ubc.cpsc304.ui.TerminalTransactions;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate{
     private DatabaseConnectionHandler dbHandler = null;
@@ -110,10 +110,10 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.printf("%-10.10s", model.getConfNo());
             System.out.printf("%-20.20s", model.getVtname());
             System.out.printf("%-20.20s", model.getCellphone());
-            System.out.printf("%-20.20s", model.getFromDate());
-            System.out.printf("%-20.20s", model.getFromTime());
-            System.out.printf("%-20.20s", model.getToDate());
-            System.out.printf("%-20.20s", model.getToTime());
+            //System.out.printf("%-20.20s", model.getFromDate());
+            //System.out.printf("%-20.20s", model.getFromTime());
+            //System.out.printf("%-20.20s", model.getToDate());
+            //System.out.printf("%-20.20s", model.getToTime());
 
             System.out.println();
         }
@@ -139,7 +139,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
 
     public void makeReservation(ReservationModel model) {
-
+        dbHandler.insertReservation(model);
     }
 
     public void removeReservation(String confNo) {
@@ -154,8 +154,15 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     }
 
-    public void showVehicles(String vtname, String location, String fromDate, String fromTime, String toDate, String toTime) {
+    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+        // DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 
+        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Model", "Make"}, 0);
+        for (int i = 0; i<5; i++)
+        {
+            resmodel.addRow(new Object[]{i, "model", "make"});
+        }
+        return resmodel;
     }
 
     public void rentVehicle(RentModel model) {

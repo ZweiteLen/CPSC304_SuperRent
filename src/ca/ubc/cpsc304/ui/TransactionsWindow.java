@@ -3,6 +3,7 @@ package ca.ubc.cpsc304.ui;
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,7 @@ import java.awt.event.WindowEvent;
 /**
  * The class is responsible for displaying and handling the transactions GUI.
  */
-public class TransactionsWindow extends JFrame implements ActionListener {
+public class TransactionsWindow extends JFrame {
     private static final int TEXT_FIELD_WIDTH = 10;
 
     // components of the login window
@@ -23,6 +24,13 @@ public class TransactionsWindow extends JFrame implements ActionListener {
 
     // delegate
     private TransactionsWindowDelegate delegate;
+
+
+    DefaultTableModel vmodel = new DefaultTableModel();
+    DefaultTableModel searchmodel = new DefaultTableModel();
+
+    JButton seeVButton = new JButton("See vehicles");
+    JLabel foundButtonlabel;
 
     public TransactionsWindow() {
         super("SuperRent");
@@ -62,17 +70,20 @@ public class TransactionsWindow extends JFrame implements ActionListener {
         JMenuItem rentals = new JMenuItem("Rentals");
         JMenuItem returns = new JMenuItem("Returns");
         JMenuItem search = new JMenuItem("Search");
+        JMenuItem makeReservation = new JMenuItem("Reserve");
         JMenuItem makeRental = new JMenuItem("Rent");
         JMenuItem makeReturn = new JMenuItem("Return");
         reports.add(rentals);
         reports.add(returns);
         vehicles.add(search);
+        vehicles.add(makeReservation);
         vehicles.add(makeRental);
         vehicles.add(makeReturn);
 
         // TODO: Figure out how to switch between the search and the reports
         // TODO: Or just make pop-ups...
 
+        // place menu bar
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 9;
         c.gridx = 0;
@@ -159,40 +170,56 @@ public class TransactionsWindow extends JFrame implements ActionListener {
         gb.setConstraints(searchButton, c);
         contentPane.add(searchButton);
 
-        // Placeholder information to test out how this looks
-        // TODO: get the table attributes and data from database
-        String[] vAttributes = {"First Name",
-                "Last Name",
-                "Sport",
-                "# of Years",
-                "Vegetarian"};
-        Object[][] vData = {
-                {"Kathy", "Smith",
-                        "Snowboarding", 5, Boolean.FALSE},
-                {"John", "Doe",
-                        "Rowing", 3, Boolean.TRUE},
-                {"Sue", "Black",
-                        "Knitting", 2, Boolean.FALSE},
-                {"Jane", "White",
-                        "Speed reading", 20, Boolean.TRUE},
-                {"Joe", "Brown",
-                        "Pool", 10, Boolean.FALSE}
-        };
-
-        JTable vehicleTable = new JTable(vData, vAttributes);
+        // Set up vehicle table
+        JTable vehicleTable = new JTable(vmodel);
         JScrollPane sp = new JScrollPane(vehicleTable);
         vehicleTable.setFillsViewportHeight(true);
+        vehicleTable.setModel(vmodel);
 
+        // add table to the ui
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 9;
-        c.gridheight = 2;
+        c.gridheight = 1;
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         gb.setConstraints(sp, c);
         contentPane.add(sp);
 
-        // register search button with action event handler
-        searchButton.addActionListener(this);
+        foundButtonlabel = new JLabel("Search for available vehicles");
+        c.fill = GridBagConstraints.RELATIVE;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 2;
+        gb.setConstraints(foundButtonlabel, c);
+        contentPane.add(foundButtonlabel);
+        c.gridx = 1;
+        c.gridy = 2;
+        gb.setConstraints(seeVButton, c);
+        contentPane.add(seeVButton);
+
+        // register buttons with action event handler
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchmodel = delegate.showVehicles(vtnameField.getText(),locationField.getText(),fromField.getText(),
+                        toField.getText());
+                int num = searchmodel.getRowCount();
+                foundButtonlabel.setText(num + " Vehicles found");
+                vehicleTable.setModel(vmodel);
+            }
+        });
+        seeVButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vehicleTable.setModel(searchmodel);
+            }
+        });
+        makeReservation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        });
 
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
@@ -214,14 +241,5 @@ public class TransactionsWindow extends JFrame implements ActionListener {
 
         // place the cursor in the text field for the username
         vtnameField.requestFocus();
-    }
-
-    /**
-     * ActionListener Methods
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        delegate.showVehicles(vtnameField.getText(),locationField.getText(),fromField.getText(),
-                                fromField.getText(),toField.getText(),toField.getText());
     }
 }

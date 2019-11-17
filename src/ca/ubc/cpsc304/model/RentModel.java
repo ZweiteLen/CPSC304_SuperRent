@@ -4,11 +4,8 @@ public class RentModel {
     private final String rid;
     private final String vid;
     private final int cellphone;
-    // TODO: figure out how we want to represent date/time
-    private final String fromDate;
-    private final String fromTime;
-    private final String toDate;
-    private final String toTime;
+    private final String fromDateTime;
+    private final String toDateTime;
     private final int odometer;
     private final String cardName;
     private final String cardNo;
@@ -20,10 +17,8 @@ public class RentModel {
         this.rid = rid;
         this.vid= vid;
         this.cellphone = cellphone;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
+        this.fromDateTime = fromDate + " " + fromTime;
+        this.toDateTime = toDate + " " + toTime;
         this.odometer = odometer;
         this.cardName = cardName;
         this.cardNo = cardNo;
@@ -43,20 +38,12 @@ public class RentModel {
         return cellphone;
     }
 
-    public String getFromDate() {
-        return fromDate;
+    public String getFromDateTime() {
+        return fromDateTime;
     }
 
-    public String getFromTime() {
-        return fromTime;
-    }
-
-    public String getToDate() {
-        return toDate;
-    }
-
-    public String getToTime() {
-        return toTime;
+    public String getToDateTime() {
+        return toDateTime;
     }
 
     public int getOdometer() {

@@ -2,17 +2,14 @@ package ca.ubc.cpsc304.model;
 
 public class ReturnModel {
     private final String rid;
-    // TODO: figure out how we want to represent date/time
-    private final String date;
-    private final String time;
+    private final String datetime;
     private final int odometer;
     private final boolean fulltank;
     private final int value;
 
     public ReturnModel(String rid, String date, String time, int odometer, boolean fulltank, int value) {
         this.rid = rid;
-        this.date = date;
-        this.time = time;
+        this.datetime = date + " " + time;
         this.odometer = odometer;
         this.fulltank = fulltank;
         this.value = value;
@@ -23,11 +20,7 @@ public class ReturnModel {
     }
 
     public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
+        return datetime;
     }
 
     public int getOdometer() {

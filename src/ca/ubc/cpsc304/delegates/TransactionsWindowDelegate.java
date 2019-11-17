@@ -2,6 +2,9 @@ package ca.ubc.cpsc304.delegates;
 
 import ca.ubc.cpsc304.model.*;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 /**
  * This interface uses the delegation design pattern where instead of having the
  * TransactionsWindow class try to do everything, it will only focus on handling the UI.
@@ -21,8 +24,7 @@ public interface TransactionsWindowDelegate {
 
     public void addCustomer(CustomerModel model);
 
-    public void showVehicles(String vtname, String location, String fromDate,
-                             String fromTime, String toDate, String toTime);
+    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime);
     public void rentVehicle(RentModel model);
     public void returnVehicle(ReturnModel model);
 

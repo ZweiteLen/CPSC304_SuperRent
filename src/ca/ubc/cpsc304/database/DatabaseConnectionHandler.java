@@ -6,6 +6,8 @@ import ca.ubc.cpsc304.model.ReservationModel;
 import ca.ubc.cpsc304.model.VehicleTypeModel;
 import ca.ubc.cpsc304.model.VehicleModel;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -98,10 +100,10 @@ public class DatabaseConnectionHandler {
 			} else {
 				ps.setInt(3, model.getCellphone());
 			}
-			ps.setString(4, model.getFromDate());
-			ps.setString(5, model.getFromTime());
-			ps.setString(6, model.getToDate());
-			ps.setString(7, model.getToTime());
+			// ps.setString(4, model.getFromDate());
+			// ps.setString(5, model.getFromTime());
+			// ps.setString(6, model.getToDate());
+			// ps.setString(7, model.getToTime());
 
 
 			ps.executeUpdate();
@@ -170,5 +172,64 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
+	}
+
+	public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
+		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
+				"Colour", "Features"}, 0);
+
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			// TODO test this query
+			if (vtname.isBlank() ^ location.isBlank() ^ fromDateTime.isBlank() ^ toDateTime.isBlank()) {
+				rs = stmt.executeQuery("SELECT status, location, model, make, year, colour, features FROM vehicles");
+			} else {
+				boolean prev = false;
+				String sqlquery = "SELECT status, location, model, make, year, colour, features " +
+								  "FROM vehicles v, vtype vt, reservation r WHERE ";
+				if (!vtname.isBlank()) {
+					sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'" + " AND v.vtname=vt.vtname AND v.vtname=r.vtname";
+				}
+				if (!location.isBlank()) {
+					sqlquery = sqlquery + "location = " + "'" + location + "'";
+					prev = true;
+				}
+				if (!fromDateTime.isBlank() ^ !toDateTime.isBlank()) {
+					if (prev) {sqlquery = sqlquery + " AND ";}
+					sqlquery = sqlquery + "'" + fromDateTime + "'" + "<= r.toDateTime AND r.fromDateTime >= "
+							+ "'" + toDateTime+ "'";
+				} else if (!fromDateTime.isBlank() ^ toDateTime.isBlank()) {
+					if (prev) {sqlquery = sqlquery + " AND ";}
+					sqlquery = sqlquery + "'" + fromDateTime + "'" + "< r.fromDateTime OR " +
+							"'" + fromDateTime + "' > r.toDateTime";
+				} else if (fromDateTime.isBlank() ^ !toDateTime.isBlank()) {
+					if (prev) {sqlquery = sqlquery + " AND ";}
+					String todt = "'" + toDateTime + "'";
+					sqlquery = sqlquery +  todt + "< r.fromDateTime OR " +
+							todt + "> r.toDateTime";
+				}
+				rs = stmt.executeQuery(sqlquery);
+			}
+
+			while(rs.next())
+			{
+				String s = rs.getString("status");
+				String l = rs.getString("location");
+				String mo = rs.getString("model");
+				String ma = rs.getString("make");
+				int y = rs.getInt("year");
+				String c = rs.getString("colour");
+				String f = rs.getString("features");
+				vmodel.addRow(new Object[]{s,l,mo,ma,y,c,f});
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return vmodel;
 	}
 }
