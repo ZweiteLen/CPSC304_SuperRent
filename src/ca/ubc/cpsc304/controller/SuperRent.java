@@ -177,11 +177,13 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public DefaultTableModel showRentals(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        // res = dbHandler.getDailyRental(location);
         return res;
     }
 
     public DefaultTableModel showReturns(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
+        // res = dbHandler.getDailyReturn(location);
         return res;
     }
 }
