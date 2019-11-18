@@ -37,6 +37,10 @@ public class RentModel {
     }
 
     public String getCellphone() {
+        return cellphone;
+    }
+
+    public String getDlicense() {
         return dlicense;
     }
 
