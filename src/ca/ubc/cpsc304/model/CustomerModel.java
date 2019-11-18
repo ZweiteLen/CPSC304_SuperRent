@@ -1,20 +1,20 @@
 package ca.ubc.cpsc304.model;
 
 public class CustomerModel {
-    private final int cellphone;
+    private final String dLicense;
     private final String name;
     private final String address;
     private final String dlicense;
 
-    public CustomerModel(int cellphone, String name, String address, String dlicense) {
-        this.cellphone = cellphone;
+    public CustomerModel(String dLicense, String name, String address, String dlicense) {
+        this.dLicense = dLicense;
         this.name = name;
         this.address = address;
         this.dlicense = dlicense;
     }
 
-    public int getCellphone() {
-        return cellphone;
+    public String getDLicense() {
+        return dLicense;
     }
 
     public String getAddress() {
