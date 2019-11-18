@@ -77,6 +77,32 @@ public class DatabaseConnectionHandler {
 	 * These are from the terminalTransactions
 	 * We can use them as examples
 	 */
+	public void insertReservation(ReservationModel model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
+			ps.setString(1, model.getConfNo());
+			ps.setString(2, model.getVtname());
+			if (model.getDLicense().equals("") || model.getDLicense() == null) {
+				ps.setNull(3, java.sql.Types.INTEGER);
+			} else {
+				ps.setString(3, model.getDLicense());
+			}
+			// ps.setString(4, model.getFromDate());
+			// ps.setString(5, model.getFromTime());
+			// ps.setString(6, model.getToDate());
+			// ps.setString(7, model.getToTime());
+
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
 	public void deleteReservation(int confNo) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
@@ -96,23 +122,17 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void insertReservation(ReservationModel model) {
+	public void updateReservation(int confNo, String vtname) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
-			ps.setString(1, model.getConfNo());
-			ps.setString(2, model.getVtname());
-			if (model.getCellphone() == 0) {
-				ps.setNull(3, java.sql.Types.INTEGER);
-			} else {
-				ps.setInt(3, model.getCellphone());
+			PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
+			ps.setString(1, vtname);
+			ps.setInt(2, confNo);
+
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0) {
+				System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
 			}
-			// ps.setString(4, model.getFromDate());
-			// ps.setString(5, model.getFromTime());
-			// ps.setString(6, model.getToDate());
-			// ps.setString(7, model.getToTime());
 
-
-			ps.executeUpdate();
 			connection.commit();
 
 			ps.close();
@@ -143,11 +163,9 @@ public class DatabaseConnectionHandler {
 			while(rs.next()) {
 				ReservationModel model = new ReservationModel(rs.getString("confNo"),
 						rs.getString("vtname"),
-						rs.getInt("cellphone"),
-						rs.getString("fromdate"),
-						rs.getString("fromtime"),
-						rs.getString("todate"),
-						rs.getString("totime"));
+						rs.getString("dLicense"),
+						rs.getTimestamp("fromDateTime"),
+						rs.getTimestamp("toDateTime"));
 				result.add(model);
 			}
 
@@ -158,26 +176,6 @@ public class DatabaseConnectionHandler {
 		}
 
 		return result.toArray(new ReservationModel[result.size()]);
-	}
-
-	public void updateReservation(int confNo, String vtname) {
-		try {
-			PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
-			ps.setString(1, vtname);
-			ps.setInt(2, confNo);
-
-			int rowCount = ps.executeUpdate();
-			if (rowCount == 0) {
-				System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
-			}
-
-			connection.commit();
-
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
 	}
 
 	public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
@@ -312,7 +310,7 @@ public class DatabaseConnectionHandler {
 			ps.setString(8, rentModel.getCardNo());
 			ps.setString(9, rentModel.getExpDate());
 
-			if (checkConfNoIsNull(reservationModel. ps)) {
+			if (checkConfNoIsNull(reservationModel, ps)) {
 				System.out.println("This vehicle has not even been reserved before renting!");
 			}
 

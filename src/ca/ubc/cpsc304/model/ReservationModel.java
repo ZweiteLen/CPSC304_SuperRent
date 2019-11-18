@@ -1,19 +1,21 @@
 package ca.ubc.cpsc304.model;
 
+import java.sql.Timestamp;
+
 public class ReservationModel {
     private final String confNo;
     private final String vtname;
-    private final int cellphone;
-    private final String fromDateTime;
-    private final String toDateTime;
+    private final String dLicense;
+    private final Timestamp fromDateTime;
+    private final Timestamp toDateTime;
 
-    public ReservationModel (String confNo, String vtname, int cellphone, String fromDate, String fromTime,
-                             String toDate, String toTime) {
+    public ReservationModel (String confNo, String vtname, String dLicense, Timestamp fromDateTime,
+                             Timestamp toDateTime) {
         this.confNo = confNo;
         this.vtname = vtname;
-        this.cellphone = cellphone;
-        this.fromDateTime = fromDate + " " + fromTime;
-        this.toDateTime = toDate + " " + toTime;
+        this.dLicense = dLicense;
+        this.fromDateTime = fromDateTime;
+        this.toDateTime = toDateTime;
     }
 
     public String getConfNo() {
@@ -24,15 +26,15 @@ public class ReservationModel {
         return vtname;
     }
 
-    public int getCellphone() {
-        return cellphone;
+    public String getDLicense() {
+        return dLicense;
     }
 
-    public String getFromDateTime() {
+    public Timestamp getFromDateTime() {
         return fromDateTime;
     }
 
-    public String getToDateTime() {
+    public Timestamp getToDateTime() {
         return toDateTime;
     }
 }
