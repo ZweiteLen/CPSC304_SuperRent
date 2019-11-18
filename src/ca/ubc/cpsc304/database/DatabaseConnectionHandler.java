@@ -1,11 +1,8 @@
 package ca.ubc.cpsc304.database;
 
-import ca.ubc.cpsc304.model.ReturnModel;
-import ca.ubc.cpsc304.model.CustomerModel;
-import ca.ubc.cpsc304.model.ReservationModel;
-import ca.ubc.cpsc304.model.VehicleTypeModel;
-import ca.ubc.cpsc304.model.VehicleModel;
+import ca.ubc.cpsc304.model.*;
 
+import javax.management.DescriptorAccess;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -252,6 +249,22 @@ public class DatabaseConnectionHandler {
 		return vmodel;
 	}
 
+	/**
+	 * START OF CLERK TRANSACTIONS:
+	 * 1) Rent vehicle
+	 * 2) Return vehicle
+	 * 3) Generate reports: daily rentals, daily rentals for specific branch, daily return,s
+	 * daily returns for specific branch
+	 */
+
+	public void rentVehicle(RentModel rentModel) {
+
+	}
+
+	public void returnVehicle(ReturnModel returnModel) {
+
+	}
+
 	public DefaultTableModel getDailyRental(String location) {
 		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "vlicense", "confNo", "dlicense",
 				"fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
@@ -298,6 +311,9 @@ public class DatabaseConnectionHandler {
 		return vmodel;
 	}
 
+	public DefaultTableModel getDailyRentalByBranch(String location) {
+		return null;
+	}
 
 	public DefaultTableModel getDailyReturn(String location) {
 		DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank?", "value"}, 0);
@@ -336,11 +352,7 @@ public class DatabaseConnectionHandler {
 		return vmodel;
 	}
 
-	/**
-	 * START OF CLERK TRANSACTIONS:
-	 * 1) Rent vehicle
-	 * 2) Return vehicle
-	 * 3) Generate reports: daily rentals, daily rentals for specific branch, daily return,s
-	 * daily returns for specific branch
-	 */
+	public DefaultTableModel getDailyReturnByBranch (String location) {
+		return null;
+	}
 }

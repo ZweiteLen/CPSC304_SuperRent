@@ -231,7 +231,7 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String branch = JOptionPane.showInputDialog("Which branch? (optional)");
-                searchmodel = delegate.showRentals(branch);
+                searchmodel = delegate.showDailyRentalsReport(branch);
                 vehicleTable.setModel(searchmodel);
             }
         });
@@ -239,7 +239,7 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String branch = JOptionPane.showInputDialog("Which branch? (optional)");
-                searchmodel = delegate.showReturns(branch);
+                searchmodel = delegate.showDailyReturnsReport(branch);
                 vehicleTable.setModel(searchmodel);
             }
         });

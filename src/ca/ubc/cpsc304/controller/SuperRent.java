@@ -12,7 +12,7 @@ import ca.ubc.cpsc304.ui.TerminalTransactions;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate{
+public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate {
     private DatabaseConnectionHandler dbHandler = null;
     private LoginWindow loginWindow = null;
     private TransactionsWindow transactionsWindow = null;
@@ -174,14 +174,25 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     }
 
-    public DefaultTableModel showRentals(String location) {
+    public DefaultTableModel showDailyRentalsReport(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
         // res = dbHandler.getDailyRental(location);
         return res;
     }
 
-    public DefaultTableModel showReturns(String location) {
+    public DefaultTableModel showDailyRentalsReportByBranch(String location) {
+        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
+                "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        return res;
+    }
+
+    public DefaultTableModel showDailyReturnsReport(String location) {
+        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
+        return res;
+    }
+
+    public DefaultTableModel showDailyReturnsReportByBranch(String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
         // res = dbHandler.getDailyReturn(location);
         return res;
