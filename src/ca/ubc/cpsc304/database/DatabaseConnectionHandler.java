@@ -257,6 +257,9 @@ public class DatabaseConnectionHandler {
 	 * daily returns for specific branch
 	 */
 
+	// TODO: Display receipt (confirmation number, date of reservation, type of car, location,
+	//  rental period, vehicle license, driver license).
+	// TODO: Handle case where vehicle was not reserved prior to renting.
 	public void rentVehicle(RentModel rentModel) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals " +
@@ -266,20 +269,50 @@ public class DatabaseConnectionHandler {
 			ps.setString(1, rentModel.getRid());
 			ps.setString(2, rentModel.getVlicense());
 			ps.setString(3, rentModel.getDlicense());
-			ps.setString(4, rentModel.getFromDateTime());
-			ps.setString(5, rentModel.getToDateTime());
+			ps.setTimestamp(4, rentModel.getFromDateTime());
+			ps.setTimestamp(5, rentModel.getToDateTime());
 			ps.setInt(6, rentModel.getOdometer());
 			ps.setString(7, rentModel.getCardName());
 			ps.setString(8, rentModel.getCardNo());
 			ps.setString(9, rentModel.getExpDate());
-			ps.setString(10, rentModel.getConfNo());
+
+			if (rentModel.getConfNo() == null) {
+				ps.setNull(10, Types.INTEGER);
+			} else {
+				ps.setString(10, rentModel.getConfNo());
+			}
+
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
 
-	public void returnVehicle(ReturnModel returnModel) {
+	// TODO: Confirm the vehicle being returned is actually rented (use rent ID, not confirmation number).
+	// TODO: Show receipt with reservation confirmation number, date of return, how total is calculated.
+	public void returnVehicle(ReturnModel returnModel, RentModel rentModel) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO returns " +
+					"(rid, datetime, odometer, fulltank, value) VALUES (?, ?, ?, ?, ?)");
 
+			if (rentModel.getRid() == null) {
+				System.out.println("This vehicle has not even been rented!");
+			} else {
+				ps.setString(1, returnModel.getRid());
+				ps.setTimestamp(2, returnModel.getDateTime());
+				ps.setInt(3, returnModel.getOdometer());
+				ps.setBoolean(4, returnModel.isFulltank());
+				ps.setInt(5, returnModel.getValue());
+
+				ps.executeUpdate();
+				connection.commit();
+				ps.close();
+			}
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + e.getMessage());
+		}
 	}
 
 	public DefaultTableModel getDailyRental(String location) {

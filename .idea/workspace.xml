@@ -5,6 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/RentModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/RentModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReturnModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/ReturnModel.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

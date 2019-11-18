@@ -1,18 +1,20 @@
 package ca.ubc.cpsc304.model;
 
+import java.sql.*;
+
 public class RentModel {
     private final String rid;
     private final String vlicense;
     private final String dlicense;
-    private final String fromDateTime;
-    private final String toDateTime;
+    private final Timestamp fromDateTime;
+    private final Timestamp toDateTime;
     private final int odometer;
     private final String cardName;
     private final String cardNo;
     private final String expDate;
     private final String confNo;
 
-    public RentModel (String rid, String vlicense, String cellphone, String dlicense, String fromDateTime, String toDateTime,
+    public RentModel (String rid, String vlicense, String dlicense, Timestamp fromDateTime, Timestamp toDateTime,
                       int odometer, String cardName, String cardNo, String expDate, String confNo) {
         this.rid = rid;
         this.vlicense = vlicense;
@@ -38,11 +40,11 @@ public class RentModel {
         return dlicense;
     }
 
-    public String getFromDateTime() {
+    public Timestamp getFromDateTime() {
         return fromDateTime;
     }
 
-    public String getToDateTime() {
+    public Timestamp getToDateTime() {
         return toDateTime;
     }
 

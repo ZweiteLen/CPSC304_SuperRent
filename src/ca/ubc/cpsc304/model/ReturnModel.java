@@ -1,15 +1,17 @@
 package ca.ubc.cpsc304.model;
 
+import java.sql.*;
+
 public class ReturnModel {
     private final String rid;
-    private final String datetime;
+    private final Timestamp datetime;
     private final int odometer;
     private final boolean fulltank;
     private final int value;
 
-    public ReturnModel(String rid, String date, String time, int odometer, boolean fulltank, int value) {
+    public ReturnModel(String rid, Timestamp datetime, int odometer, boolean fulltank, int value) {
         this.rid = rid;
-        this.datetime = date + " " + time;
+        this.datetime = datetime;
         this.odometer = odometer;
         this.fulltank = fulltank;
         this.value = value;
@@ -19,7 +21,7 @@ public class ReturnModel {
         return rid;
     }
 
-    public String getDate() {
+    public Timestamp getDateTime() {
         return datetime;
     }
 
