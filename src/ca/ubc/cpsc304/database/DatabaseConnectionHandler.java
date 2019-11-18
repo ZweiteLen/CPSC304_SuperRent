@@ -257,6 +257,23 @@ public class DatabaseConnectionHandler {
 	 * daily returns for specific branch
 	 */
 
+	// Helper function to check if a vehicle is rented before returning by comparing rent ids.
+	private boolean checkRidIsNull(RentModel rentModel, PreparedStatement ps) throws SQLException {
+		ResultSet rs = ps.executeQuery("SELECT rid FROM rentals WHERE rid = " + rentModel.getRid());
+
+		if (rs.next()) {
+			String rid = rs.getString(1);
+			if (rid.equals(rentModel.getRid())) {
+				rs.close();
+				return true;
+			}
+
+		}
+
+		rs.close();
+		return false;
+	}
+
 	// TODO: Display receipt (confirmation number, date of reservation, type of car, location,
 	//  rental period, vehicle license, driver license).
 	// TODO: Handle case where vehicle was not reserved prior to renting.
@@ -290,14 +307,13 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	// TODO: Confirm the vehicle being returned is actually rented (use rent ID, not confirmation number).
 	// TODO: Show receipt with reservation confirmation number, date of return, how total is calculated.
 	public void returnVehicle(ReturnModel returnModel, RentModel rentModel) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO returns " +
 					"(rid, datetime, odometer, fulltank, value) VALUES (?, ?, ?, ?, ?)");
 
-			if (rentModel.getRid() == null) {
+			if (checkRidIsNull(rentModel, ps)) {
 				System.out.println("This vehicle has not even been rented!");
 			} else {
 				ps.setString(1, returnModel.getRid());
