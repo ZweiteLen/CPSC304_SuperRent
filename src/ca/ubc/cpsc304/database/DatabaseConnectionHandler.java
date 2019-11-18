@@ -187,40 +187,46 @@ public class DatabaseConnectionHandler {
 				"Colour", "Features", "Current Status"}, 0);
 		String from = "";
 		String to = "";
-		if (!fromDateTime.isBlank()) {from = "'" + fromDateTime + ":00:00'";}
-		if (!toDateTime.isBlank()) {to = "'" + toDateTime + ":00:00'";}
+		if (!fromDateTime.isBlank()) {from = "TO_TIMESTAMP('" + fromDateTime + ":00:00')";}
+		if (!toDateTime.isBlank()) {to = "TO_TIMESTAMP('" + toDateTime + ":00:00')";}
 
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
 			// TODO test this query
 			if (vtname.isBlank() ^ location.isBlank() ^ fromDateTime.isBlank() ^ toDateTime.isBlank()) {
-				rs = stmt.executeQuery("SELECT vtname, location, model, make, year, colour, features, status FROM vehicles ORDER  BY location");
+				rs = stmt.executeQuery("SELECT v.vtname, location, model, make, year, colour, features, status " +
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname ORDER  BY v.vtname, location");
 			} else {
 				boolean prev = false;
 				String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
-								  "FROM vehicles v, vtype vt, reservation r WHERE ";
+								  "FROM vehicles v, vtype vt WHERE v.vtname=t.vtname AND ";
 				if (!vtname.isBlank()) {
-					sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'" + " AND v.vtname=vt.vtname AND v.vtname=r.vtname";
+					sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'" + "v.vtname=r.vtname";
+					prev = true;
 				}
 				if (!location.isBlank()) {
+					if (prev) {sqlquery = sqlquery + " AND ";}
 					sqlquery = sqlquery + "location = " + "'" + location + "'";
 					prev = true;
 				}
 				if (!from.isBlank() ^ !to.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					sqlquery = sqlquery + "TO_TIMESTAMP(" + from + ")<= r.toDateTime AND r.fromDateTime >= "
-							+ "TO_TIMESTAMP(" + to +')';
-				} else if (!fromDateTime.isBlank() ^ toDateTime.isBlank()) {
+					sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+							"where (r.FROMDATETIME<="+ from +" AND " + from + "<=r.toDateTime) OR " +
+							"(r.fromDateTime<="+ to + " AND " + to + "<=r.TODATETIME) OR " +
+							from +"<=r.FROMDATETIME AND " + "r.FROMDATETIME<=" + to + " OR " +
+							from +"<=r.TODATETIME AND " + "r.TODATETIME<=" + to + ")";
+				} else if (!from.isBlank() ^ to.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					sqlquery = sqlquery + "TO_TIMESTAMP(" + from + ")< r.fromDateTime OR " +
-							"TO_TIMESTAMP(" + from + ") > r.toDateTime";
-				} else if (fromDateTime.isBlank() ^ !toDateTime.isBlank()) {
+					sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+							"where r.FROMDATETIME<="+ from +" AND " + from + "<=r.toDateTime)";
+				} else if (from.isBlank() ^ !to.isBlank()) {
 					if (prev) {sqlquery = sqlquery + " AND ";}
-					sqlquery = sqlquery + "TO_TIMESTAMP(" + to + ")< r.fromDateTime OR " +
-							"TO_TIMESTAMP(" + to + ")> r.toDateTime";
+					sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+							"where r.fromDateTime<="+ to + " AND " + to + "<=r.TODATETIME)";
 				}
-				sqlquery = sqlquery + " ORDER BY vtname, location";
+				sqlquery = sqlquery + " ORDER BY v.vtname, location";
 				rs = stmt.executeQuery(sqlquery);
 			}
 
@@ -253,15 +259,18 @@ public class DatabaseConnectionHandler {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
-			// TODO test this query
+			// TODO:
+			/* FIGURE OUT WHAT THE PROJECT DESCRIPTION MEANS WHEN IT SAYS
+			 * 'contains information on all the vehicles rented out during the day'
+ 			 */
 			if (location.isBlank()) {
 				rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
-						"CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate  FROM rentals " +
+						"CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate  FROM rent r " +
 						"WHERE CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
 			} else {
 				rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
 						"CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate " +
-						"FROM rentals r, vehicles v WHERE r.vlicense=v.vlicense AND " +
+						"FROM rent r, vehicles v WHERE r.vlicense=v.vlicense AND " +
 						"CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE) AND v.location = " + "'" + location + "'");
 			}
 

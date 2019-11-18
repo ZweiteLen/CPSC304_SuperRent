@@ -43,9 +43,28 @@ create table reservation (
 );
 grant select on reservation to public;
 
+create table rent (
+    rid integer not null,
+    confNo integer not null,
+    vlicense char(20) not null,
+    dlicense char(20) not null,
+    fromDateTime timestamp,
+    toDateTime timestamp,
+    odometer integer,
+    cardName char(20),
+    cardNo char(20),
+    expDate char(4),
+    primary key (rid),
+    foreign key (confNo) references RESERVATION,
+    foreign key (vlicense) references VEHICLES on delete cascade
+);
+grant select on rent to public;
+
+
 insert into vtype values('Car', 'car stuff', 1,1,1,1,1,1,1);
 insert into vtype values('Truck', 'truck stuff', 2,2,2,2,2,2,2);
 insert into vtype values('SUV', 'suv stuff', 3,3,3,3,3,3,3);
+
 
 insert into vehicles values('1', 'Toyota', 'Something', 2019, 'black', 0, 'In maintenance', 'SUV', '1234 street', 'Burnaby');
 insert into vehicles values('2', 'Honda', 'Something', 2018, 'black', 0, 'In maintenance', 'Truck', '1234 street', 'Richmond');
@@ -68,6 +87,7 @@ insert into vehicles values('18', 'Toyota', 'Something', 2019, 'black', 0, 'In m
 insert into vehicles values('19', 'Toyota', 'Something', 2019, 'black', 0, 'In maintenance', 'Car', '1234 street', 'Richmond');
 insert into vehicles values('20', 'Honda', 'Something', 2019, 'black', 0, 'In maintenance', 'Truck', '1234 street', 'Burnaby');
 
+
 insert into reservation values(1, 'SUV', '50s8a2', TO_TIMESTAMP('2019-09-04 05:00:00'), TO_TIMESTAMP('2019-10-04 15:00:00'));
 insert into reservation values(2, 'Truck', '6s3j72', TO_TIMESTAMP('2019-09-05 23:00:00'), TO_TIMESTAMP('2019-09-25 20:00:00'));
 insert into reservation values(3, 'SUV', '04d872', TO_TIMESTAMP('2019-10-09 15:00:00'), TO_TIMESTAMP('2019-11-01 09:00:00'));
@@ -76,3 +96,13 @@ insert into reservation values(5, 'Car', '04d872', TO_TIMESTAMP('2019-05-23 15:0
 insert into reservation values(6, 'Car', '04d872', TO_TIMESTAMP('2019-03-11 15:00:00'), TO_TIMESTAMP('2019-04-01 09:00:00'));
 insert into reservation values(7, 'SUV', '04d872', TO_TIMESTAMP('2019-08-30 15:00:00'), TO_TIMESTAMP('2019-09-01 09:00:00'));
 insert into reservation values(8, 'Truck', '04d872', TO_TIMESTAMP('2019-07-20 15:00:00'), TO_TIMESTAMP('2019-08-01 13:00:00'));
+
+
+insert into rent values (1,1,'1','50s8a2', TO_TIMESTAMP('2019-09-04 05:00:00'),
+                         TO_TIMESTAMP('2019-10-04 15:00:00'),1,'Visa','54135123','2004');
+insert into rent values (2,3,'3','04d872', TO_TIMESTAMP('2019-10-09 15:00:00'),
+                         TO_TIMESTAMP('2019-11-01 09:00:00'),0,'Visa','54135123','2004');
+insert into rent values (3,7,'4','04d872', TO_TIMESTAMP('2019-08-30 15:00:00'),
+                         TO_TIMESTAMP('2019-09-01 09:00:00'),1,'Visa','54135123','2004');
+insert into rent values (4,2,'2','6s3j72', TO_TIMESTAMP('2019-09-05 23:00:00'),
+                         TO_TIMESTAMP('2019-09-25 20:00:00'),1,'Visa','54135123','2004');
