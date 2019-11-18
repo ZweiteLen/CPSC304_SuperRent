@@ -2,6 +2,7 @@ package ca.ubc.cpsc304.database;
 
 import ca.ubc.cpsc304.model.*;
 
+import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.management.DescriptorAccess;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -257,27 +258,45 @@ public class DatabaseConnectionHandler {
 	 * daily returns for specific branch
 	 */
 
+	// Helper function to check if a vehicle has been reserved before renting
+	// by comparing confirmation numbers.
+	private boolean checkConfNoIsNull(ReservationModel reservationModel, PreparedStatement ps) throws SQLException {
+		ResultSet rs = ps.executeQuery("SELECT confNo FROM reservations WHERE confNo = "
+				+ reservationModel.getConfNo());
+
+		if (rs.next()) {
+			String confNo = rs.getString(1);
+			if (confNo.equals(reservationModel.getConfNo())) {
+				rs.close();
+				return false;
+			}
+		}
+
+		rs.close();
+		return true;
+	}
+
 	// Helper function to check if a vehicle is rented before returning by comparing rent ids.
 	private boolean checkRidIsNull(RentModel rentModel, PreparedStatement ps) throws SQLException {
-		ResultSet rs = ps.executeQuery("SELECT rid FROM rentals WHERE rid = " + rentModel.getRid());
+		ResultSet rs = ps.executeQuery("SELECT rid FROM rentals WHERE rid = "
+				+ rentModel.getRid());
 
 		if (rs.next()) {
 			String rid = rs.getString(1);
 			if (rid.equals(rentModel.getRid())) {
 				rs.close();
-				return true;
+				return false;
 			}
-
 		}
 
 		rs.close();
-		return false;
+		return true;
 	}
 
 	// TODO: Display receipt (confirmation number, date of reservation, type of car, location,
 	//  rental period, vehicle license, driver license).
 	// TODO: Handle case where vehicle was not reserved prior to renting.
-	public void rentVehicle(RentModel rentModel) {
+	public void rentVehicle(RentModel rentModel, ReservationModel reservationModel) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals " +
 					"(rid, vid, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
@@ -292,6 +311,10 @@ public class DatabaseConnectionHandler {
 			ps.setString(7, rentModel.getCardName());
 			ps.setString(8, rentModel.getCardNo());
 			ps.setString(9, rentModel.getExpDate());
+
+			if (checkConfNoIsNull(reservationModel. ps)) {
+				System.out.println("This vehicle has not even been reserved before renting!");
+			}
 
 			if (rentModel.getConfNo() == null) {
 				ps.setNull(10, Types.INTEGER);
@@ -315,6 +338,7 @@ public class DatabaseConnectionHandler {
 
 			if (checkRidIsNull(rentModel, ps)) {
 				System.out.println("This vehicle has not even been rented!");
+				return;
 			} else {
 				ps.setString(1, returnModel.getRid());
 				ps.setTimestamp(2, returnModel.getDateTime());
