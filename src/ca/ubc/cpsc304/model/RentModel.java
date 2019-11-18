@@ -3,7 +3,6 @@ package ca.ubc.cpsc304.model;
 public class RentModel {
     private final String rid;
     private final String vlicense;
-    private final String cellphone;
     private final String dlicense;
     private final String fromDateTime;
     private final String toDateTime;
@@ -17,7 +16,6 @@ public class RentModel {
                       int odometer, String cardName, String cardNo, String expDate, String confNo) {
         this.rid = rid;
         this.vlicense = vlicense;
-        this.cellphone = cellphone;
         this.dlicense = dlicense;
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
@@ -34,10 +32,6 @@ public class RentModel {
 
     public String getVlicense() {
         return vlicense;
-    }
-
-    public String getCellphone() {
-        return cellphone;
     }
 
     public String getDlicense() {

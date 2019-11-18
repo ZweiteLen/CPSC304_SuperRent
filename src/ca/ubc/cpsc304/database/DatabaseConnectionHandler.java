@@ -260,12 +260,19 @@ public class DatabaseConnectionHandler {
 	public void rentVehicle(RentModel rentModel) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals " +
-					"(rid, vid, fromDate, fromTime, toDate, toTime, odometer, cardName, " +
+					"(rid, vid, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
 					"cardNo, exoDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-			ps.setString(1, rentModel.getCardNo());
+			ps.setString(1, rentModel.getRid());
 			ps.setString(2, rentModel.getVlicense());
-
+			ps.setString(3, rentModel.getDlicense());
+			ps.setString(4, rentModel.getFromDateTime());
+			ps.setString(5, rentModel.getToDateTime());
+			ps.setInt(6, rentModel.getOdometer());
+			ps.setString(7, rentModel.getCardName());
+			ps.setString(8, rentModel.getCardNo());
+			ps.setString(9, rentModel.getExpDate());
+			ps.setString(10, rentModel.getConfNo());
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
