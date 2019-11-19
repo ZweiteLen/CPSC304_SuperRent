@@ -1,6 +1,8 @@
 package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
+import ca.ubc.cpsc304.model.ReservationModel;
+import ca.ubc.cpsc304.number_generator.RandomNumberGenerator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -210,6 +212,10 @@ public class TransactionsWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null,"Error: not connected yet",
                         "Error", JOptionPane.ERROR_MESSAGE);
+                // todo: Add the input form
+                // TODO: Replace parameter of insertReservation with correct data.
+                delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(), "SUV", "ahfj12345",
+                        "August 11. 2019 12:00 pm", "August 15, 2019 12:00 pm"));
             }
         });
         makeRental.addActionListener(new ActionListener() {

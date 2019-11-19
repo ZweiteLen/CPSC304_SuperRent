@@ -19,7 +19,8 @@ public interface TransactionsWindowDelegate {
      * TODO: figure out how we want to generate confNo for each reservation
      */
     public void insertReservation(ReservationModel model);
-    public void deleteReservation(String confNo);
+    public void deleteReservation(int confNo);
+    public void updateReservation(int confNo, ReservationModel model);
     public void showReservations();
 
     public void insertCustomer(CustomerModel model);
