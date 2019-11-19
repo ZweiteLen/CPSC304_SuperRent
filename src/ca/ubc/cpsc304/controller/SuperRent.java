@@ -2,24 +2,20 @@ package ca.ubc.cpsc304.controller;
 
 import ca.ubc.cpsc304.database.DatabaseConnectionHandler;
 import ca.ubc.cpsc304.delegates.LoginWindowDelegate;
+import ca.ubc.cpsc304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
-import ca.ubc.cpsc304.model.*;
+import ca.ubc.cpsc304.model.CustomerModel;
+import ca.ubc.cpsc304.model.RentModel;
+import ca.ubc.cpsc304.model.ReservationModel;
+import ca.ubc.cpsc304.model.ReturnModel;
 import ca.ubc.cpsc304.ui.LoginWindow;
 import ca.ubc.cpsc304.ui.TransactionsWindow;
+import ca.ubc.cpsc304.ui.TerminalTransactions;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
-    private final String LOG_TAG = SuperRent.class.getSimpleName();
-
+public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate{
     private DatabaseConnectionHandler dbHandler = null;
     private LoginWindow loginWindow = null;
     private TransactionsWindow transactionsWindow = null;
-
-    public SuperRent() {
-        dbHandler = new DatabaseConnectionHandler();
-    }
 
     public static void main(String[] args) {
         SuperRent superRent = new SuperRent();
@@ -32,10 +28,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
      * TODO: uncomment and remove transactionsWindow when everything is complete
      */
     private void start() {
-         loginWindow = new LoginWindow();
-         loginWindow.showFrame(this);
-//        transactionsWindow = new TransactionsWindow();
-//        transactionsWindow.showFrame(this);
+        // loginWindow = new LoginWindow();
+        // loginWindow.showFrame(this);
+        transactionsWindow = new TransactionsWindow();
+        transactionsWindow.showFrame(this);
     }
 
 
@@ -51,14 +47,14 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             // Once connected, remove login window and start text transaction flow
             loginWindow.dispose();
 
-            TransactionsWindow transaction = new TransactionsWindow();
-            transaction.showFrame(this);
+            TerminalTransactions transaction = new TerminalTransactions();
+            transaction.showMainMenu(this);
 
             /**
              * TODO: Uncomment when everything is done
              */
-//             transactionsWindow = new TransactionsWindow();
-//             transactionsWindow.showFrame(this);
+            // transactionsWindow = new TransactionsWindow();
+            // transactionsWindow.showFrame(this);
 
         } else {
             loginWindow.handleLoginFailed();
@@ -75,35 +71,35 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
      * TerminalTransactionsDelegate Implementation
      *
      * Insert a reservation with the given info
-     *//*
-    public void insertReservation(ReservationModel resModel) {
-        dbHandler.insertReservation(resModel);
+     */
+    public void insertReservation(ReservationModel model) {
+        dbHandler.insertReservation(model);
     }
 
-    *//**
+    /**
      * TerminalTransactionsDelegate Implementation
      *
      * Delete reservation with given confNo.
-     *//*
+     */
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
 
-    *//**
+    /**
      * TerminalTransactionsDelegate Implementation
      *
      * Update reservation not actually needed, but I'll remove later
-     *//*
+     */
 
     public void updateReservation(int confNo, String vtname) {
         dbHandler.updateReservation(confNo, vtname);
     }
 
-    *//**
+    /**
      * TerminalTransactionsDelegate Implementation
      *
      * Displays information about reservations.
-     *//*
+     */
     public void showReservation() {
         ReservationModel[] models = dbHandler.getReservationInfo();
 
@@ -113,15 +109,15 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             // simplified output formatting; truncation may occur
             System.out.printf("%-10.10s", model.getConfNo());
             System.out.printf("%-20.20s", model.getVtname());
-            System.out.printf("%-20.20s", model.getDLicense());
-            //System.out.printf("%-20.20s", model.getFromDate());
-            //System.out.printf("%-20.20s", model.getFromTime());
-            //System.out.printf("%-20.20s", model.getToDate());
-            //System.out.printf("%-20.20s", model.getToTime());
+            System.out.printf("%-20.20s", model.getCellphone());
+            System.out.printf("%-20.20s", model.getFromDate());
+            System.out.printf("%-20.20s", model.getFromTime());
+            System.out.printf("%-20.20s", model.getToDate());
+            System.out.printf("%-20.20s", model.getToTime());
 
             System.out.println();
         }
-    }*/
+    }
 
     /**
      * TerminalTransactionsDelegate Implementation
@@ -138,42 +134,45 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     /**
      * TransactionsWindowDelegate Implementation Start
+     *
      */
 
-    /**
-     * Customer transactions.
-     */
-    public void insertReservation(ReservationModel resModel) {
-        dbHandler.insertReservation(resModel);
+
+    public void makeReservation(ReservationModel model) {
+        dbHandler.makeReservation(model);
     }
 
-    public void deleteReservation(String confNo) {
-
+    public void removeReservation(String confNo) {
+        dbHandler.removeReservation(confNo);
     }
 
     public void showReservations() {
+        ReservationModel[] models = dbHandler.getReservationInfo();
+
+        for (int i = 0; i < models.length; i++) {
+            ReservationModel model = models[i];
+
+            // simplified output formatting; truncation may occur
+            System.out.printf("%-10.10s", model.getConfNo());
+            System.out.printf("%-20.20s", model.getVtname());
+            System.out.printf("%-20.20s", model.getCellphone());
+            System.out.printf("%-20.20s", model.getFromDate());
+            System.out.printf("%-20.20s", model.getFromTime());
+            System.out.printf("%-20.20s", model.getToDate());
+            System.out.printf("%-20.20s", model.getToTime());
+
+            System.out.println();
+        }
+    }
+
+    public void addCustomer(CustomerModel model) {
+      dbHandler.addCustomer(model);
+    }
+
+    public void showVehicles(String vtname, String location, String fromDate, String fromTime, String toDate, String toTime) {
 
     }
 
-    public void insertCustomer(CustomerModel model) {
-
-    }
-
-    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
-
-//        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-//                "Colour", "Features"}, 0);
-//        for (int i = 0; i<5; i++)
-//        {
-//            resmodel.addRow(new Object[]{i, "model", "make"});
-//        }
-        return resmodel;
-    }
-
-    /**
-     * Clerk transactions.
-     */
     public void rentVehicle(RentModel model) {
 
     }
@@ -182,27 +181,19 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showDailyRentalsReport(String location) {
-        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
-                "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
-        // res = dbHandler.getDailyRental(location);
-        return res;
+    public void showRentals(String location) {
+
     }
 
-    public DefaultTableModel showDailyRentalsReportByBranch(String location) {
-        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
-                "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
-        return res;
+    public void showReturns(String location) {
+
     }
 
-    public DefaultTableModel showDailyReturnsReport(String location) {
-        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
-        return res;
+    public void transactionsWindowFinished() {
+        dbHandler.close();
+        dbHandler = null;
+
+        System.exit(0);
     }
 
-    public DefaultTableModel showDailyReturnsReportByBranch(String location) {
-        DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
-        // res = dbHandler.getDailyReturn(location);
-        return res;
-    }
 }
