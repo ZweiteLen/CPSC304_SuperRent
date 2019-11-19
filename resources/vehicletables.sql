@@ -106,3 +106,11 @@ insert into rent values (3,7,'4','04d872', TO_TIMESTAMP('2019-08-30 15:00:00'),
                          TO_TIMESTAMP('2019-09-01 09:00:00'),1,'Visa','54135123','2004');
 insert into rent values (4,2,'2','6s3j72', TO_TIMESTAMP('2019-09-05 23:00:00'),
                          TO_TIMESTAMP('2019-09-25 20:00:00'),1,'Visa','54135123','2004');
+insert into rent values (5,4,'10','04d872', TO_TIMESTAMP('2019-01-09 15:00:00'),
+                         TO_TIMESTAMP('2019-01-20 09:00:00'),1,'Visa','54135123','2004');
+insert into rent values (6,5,'5','04d872', TO_TIMESTAMP('2019-05-23 15:00:00'),
+                         TO_TIMESTAMP('2019-05-25 09:00:00'),0,'Visa','54135123','2004');
+insert into rent values (7,8,'12','04d872', TO_TIMESTAMP('2019-05-23 15:00:00'),
+                         TO_TIMESTAMP('2019-05-25 09:00:00'),1,'Visa','54135123','2004');
+insert into rent values (8,6,'7','6s3j72', TO_TIMESTAMP('2019-05-23 15:00:00'),
+                         TO_TIMESTAMP('2019-05-25 09:00:00'),1,'Visa','54135123','2004');

@@ -193,6 +193,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Location", "Model", "Make", "Year",
                 "Colour", "Features", "Current Status"}, 0);
+
         String from = "";
         String to = "";
         if (!fromDateTime.isBlank()) {

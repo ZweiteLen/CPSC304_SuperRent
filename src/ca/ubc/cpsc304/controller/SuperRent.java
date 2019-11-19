@@ -182,25 +182,25 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showDailyRentalsReport(String location) {
+    public DefaultTableModel showDailyRentalsReport(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
         // res = dbHandler.getDailyRental(location);
         return res;
     }
 
-    public DefaultTableModel showDailyRentalsReportByBranch(String location) {
+    public DefaultTableModel showDailyRentalsReportByBranch(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
         return res;
     }
 
-    public DefaultTableModel showDailyReturnsReport(String location) {
+    public DefaultTableModel showDailyReturnsReport(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
         return res;
     }
 
-    public DefaultTableModel showDailyReturnsReportByBranch(String location) {
+    public DefaultTableModel showDailyReturnsReportByBranch(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
         // res = dbHandler.getDailyReturn(location);
         return res;
