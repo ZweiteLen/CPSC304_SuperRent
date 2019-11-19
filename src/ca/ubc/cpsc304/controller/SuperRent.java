@@ -163,7 +163,7 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
          DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 
 //        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",

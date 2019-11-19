@@ -15,26 +15,54 @@ import javax.swing.table.DefaultTableModel;
  * Refer to the Part 3 pdf for more details on the implementation
  */
 public interface TransactionsWindowDelegate {
+
     /**
-     * TODO: figure out how we want to generate confNo for each reservation
+     * Not all methods may be needed.
+     * Uncomment methods when implementing them.
      */
-    public void insertReservation(ReservationModel model);
-    public void deleteReservation(int confNo);
-    public void updateReservation(int confNo, ReservationModel model);
-    public void showReservations();
 
-    public void insertCustomer(CustomerModel model);
+    // Reservations
+    void insertReservation(ReservationModel model);
+//    void deleteReservation(int confNo);
+//    void updateReservation(int confNo, ReservationModel model);
+//    DefaultTableModel showReservations(ReservationModel model);
 
-    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime);
-    public void rentVehicle(RentModel model);
-    public void returnVehicle(ReturnModel model);
+    // Rental vehicles
+//    void insertRentVehicle(RentModel model);
+//    void deleteRentVehicle(String vid);
+//    void updateRentVehicle(String vid, RentModel model);
+    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime);
+
+    // Just vehicles themselves
+//    void insertVehicle(VehicleModel model);
+//    void deleteVehicle(String vid);
+//    void updateVehicle(String vid, VehicleModel model);
+//    DefaultTableModel showVehicles(VehicleModel model);
+
+    // Just vehicle types
+//    void insertVehicleType(VehicleTypeModel model);
+//    void deleteVehicleType(String vtName);
+//    void updateVehicleType(String vtName, VehicleTypeModel model);
+//    DefaultTableModel showVehicleTypes(VehicleTypeModel model);
+
+    // Customers
+//    void insertCustomer(CustomerModel model);
+//    void deleteCustomer(String dLicense);
+//    void updateCustomer(String dLicense, CustomerModel model);
+//    DefaultTableModel showCustomers(CustomerModel model);
+
+    // Return vehicles
+//    void insertReturnVehicle(ReturnModel model);
+//    void deleteReturnVehicle(String rid);
+//    void updateReturnVehicle(String rid, ReturnModel model);
+//    DefaultTableModel showReturnVehicles(ReturnModel model);
 
     /**
      * Daily report transactions
      * @param location: if not empty, then show a report only for that specified branch
      */
-    public DefaultTableModel showDailyRentalsReport(String location);
-    public DefaultTableModel showDailyRentalsReportByBranch(String location);
-    public DefaultTableModel showDailyReturnsReport(String location);
-    public DefaultTableModel showDailyReturnsReportByBranch(String location);
+    DefaultTableModel showDailyRentalsReport(String location);
+    DefaultTableModel showDailyRentalsReportByBranch(String location);
+    DefaultTableModel showDailyReturnsReport(String location);
+    DefaultTableModel showDailyReturnsReportByBranch(String location);
 }
