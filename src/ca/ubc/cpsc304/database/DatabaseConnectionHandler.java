@@ -100,12 +100,14 @@ public class DatabaseConnectionHandler {
             if (checkCustomerExists(ps, reservationModel)) {
             	ps.setString(3, reservationModel.getDLicense());
             } else {
-                // TODO: Call TransactionsWindowDelefate.insertCustomer(...) from here somehow.
+                // TODO: Call TransactionsWindowDelegate.insertCustomer(...) from here somehow.
             	// TODO: Display separate GUI to allow a new customer to enter details.
             }
             ps.setString(4, reservationModel.getFromDateTime());
             ps.setString(5, reservationModel.getToDateTime());
 
+            // TODO: Should executeQuery be used here instead of executeUpdate since former returns a ResultSet,
+            //  which can be used to to display details in a receipt.
             ps.executeUpdate();
             connection.commit();
             ps.close();
@@ -125,8 +127,8 @@ public class DatabaseConnectionHandler {
                 System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
             }
 
+            ps.executeUpdate();
             connection.commit();
-
             ps.close();
         } catch (SQLException e) {
             System.out.println(LOG_TAG + " " + e.getMessage());
@@ -136,7 +138,8 @@ public class DatabaseConnectionHandler {
 
     public void updateReservation(int confNo, ReservationModel reservationModel) {
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
+            PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET confNo = ?, vtName = ?, " +
+                    "dLicense = ?, fromDateTime = ?. toDateTime = ? WHERE confNo = ?");
             ps.setInt(1, confNo);
             ps.setString(2, reservationModel.getVtname());
             ps.setString(3, reservationModel.getDLicense());
