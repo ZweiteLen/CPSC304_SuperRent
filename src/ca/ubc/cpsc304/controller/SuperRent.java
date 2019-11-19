@@ -2,17 +2,15 @@ package ca.ubc.cpsc304.controller;
 
 import ca.ubc.cpsc304.database.DatabaseConnectionHandler;
 import ca.ubc.cpsc304.delegates.LoginWindowDelegate;
-import ca.ubc.cpsc304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
 import ca.ubc.cpsc304.model.*;
 import ca.ubc.cpsc304.ui.LoginWindow;
 import ca.ubc.cpsc304.ui.TransactionsWindow;
-import ca.ubc.cpsc304.ui.TerminalTransactions;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, TransactionsWindowDelegate {
+public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
     private DatabaseConnectionHandler dbHandler = null;
     private LoginWindow loginWindow = null;
     private TransactionsWindow transactionsWindow = null;
@@ -47,8 +45,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             // Once connected, remove login window and start text transaction flow
             loginWindow.dispose();
 
-            TerminalTransactions transaction = new TerminalTransactions();
-            transaction.showMainMenu(this);
+            TransactionsWindow transaction = new TransactionsWindow();
+            transaction.showFrame(this);
 
             /**
              * TODO: Uncomment when everything is done
@@ -71,35 +69,35 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
      * TerminalTransactionsDelegate Implementation
      *
      * Insert a reservation with the given info
-     */
-    public void insertReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel) {
-        dbHandler.insertReservation(resModel, custModel, vehModel);
+     *//*
+    public void insertReservation(ReservationModel resModel) {
+        dbHandler.insertReservation(resModel);
     }
 
-    /**
+    *//**
      * TerminalTransactionsDelegate Implementation
      *
      * Delete reservation with given confNo.
-     */
+     *//*
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
 
-    /**
+    *//**
      * TerminalTransactionsDelegate Implementation
      *
      * Update reservation not actually needed, but I'll remove later
-     */
+     *//*
 
     public void updateReservation(int confNo, String vtname) {
         dbHandler.updateReservation(confNo, vtname);
     }
 
-    /**
+    *//**
      * TerminalTransactionsDelegate Implementation
      *
      * Displays information about reservations.
-     */
+     *//*
     public void showReservation() {
         ReservationModel[] models = dbHandler.getReservationInfo();
 
@@ -117,7 +115,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
             System.out.println();
         }
-    }
+    }*/
 
     /**
      * TerminalTransactionsDelegate Implementation
@@ -137,12 +135,15 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
      *
      */
 
-
-    public void makeReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel) {
-        dbHandler.insertReservation(resModel, custModel, vehModel);
+    /**
+     * Customer transactions.
+     * @param resModel
+     */
+    public void insertReservation(ReservationModel resModel) {
+        dbHandler.insertReservation(resModel);
     }
 
-    public void removeReservation(String confNo) {
+    public void deleteReservation(String confNo) {
 
     }
 
@@ -166,6 +167,9 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         return resmodel;
     }
 
+    /**
+     * Clerk transactions.
+     */
     public void rentVehicle(RentModel model) {
 
     }

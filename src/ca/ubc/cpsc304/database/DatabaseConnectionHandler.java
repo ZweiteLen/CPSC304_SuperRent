@@ -90,8 +90,7 @@ public class DatabaseConnectionHandler {
         return true;
     }
 
-    public void insertReservation(ReservationModel reservationModel, CustomerModel customerModel,
-	VehicleModel vehicleModel) {
+    public void insertReservation(ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
 
@@ -102,10 +101,10 @@ public class DatabaseConnectionHandler {
             	ps.setString(3, reservationModel.getDLicense());
             } else {
             	// TODO: How to display a separate GUI to allow a new customer to enter details?
-                ps.setString(1, customerModel.getCellphone());
-                ps.setString(2, customerModel.getName());
-                ps.setString(3, customerModel.getAddress());
-                ps.setString(4, customerModel.getdLicemse());
+//                ps.setString(1, customerModel.getCellphone());
+//                ps.setString(2, customerModel.getName());
+//                ps.setString(3, customerModel.getAddress());
+//                ps.setString(4, customerModel.getdLicemse());
             }
             ps.setTimestamp(4, reservationModel.getFromDateTime());
             ps.setTimestamp(5, reservationModel.getToDateTime());

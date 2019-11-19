@@ -25,7 +25,6 @@ public class TransactionsWindow extends JFrame {
     // delegate
     private TransactionsWindowDelegate delegate;
 
-
     DefaultTableModel vmodel = new DefaultTableModel();
     DefaultTableModel searchmodel = new DefaultTableModel();
 

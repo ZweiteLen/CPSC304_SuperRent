@@ -15,13 +15,13 @@ import ca.ubc.cpsc304.model.VehicleModel;
  * TerminalTransactions calls the methods that we have listed below but
  * SuperRent is the actual class that will implement the methods.
  */
-public interface TerminalTransactionsDelegate {
+/*public interface TerminalTransactionsDelegate {
 
 	// Reservation transactions
 	public void deleteReservation(int confNo);
-	public void insertReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel);
+	public void insertReservation(ReservationModel resModel);
 	public void showReservation();
 	public void updateReservation(int confNo, String name);
-	
+
 	public void terminalTransactionsFinished();
-}
+}*/

@@ -7,8 +7,7 @@
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TerminalTransactionsDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TerminalTransactionsDelegate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/CustomerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/model/CustomerModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TerminalTransactions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TerminalTransactions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

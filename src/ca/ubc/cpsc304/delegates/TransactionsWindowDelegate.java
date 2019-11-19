@@ -18,8 +18,8 @@ public interface TransactionsWindowDelegate {
     /**
      * TODO: figure out how we want to generate confNo for each reservation
      */
-    public void makeReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel);
-    public void removeReservation(String confNo);
+    public void insertReservation(ReservationModel model);
+    public void deleteReservation(String confNo);
     public void showReservations();
 
     public void addCustomer(CustomerModel model);

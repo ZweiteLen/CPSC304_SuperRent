@@ -1,3 +1,4 @@
+/*
 package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TerminalTransactionsDelegate;
@@ -12,9 +13,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 
+*/
 /**
  * The class is only responsible for handling terminal text inputs. 
- */
+ *//*
+
 public class TerminalTransactions {
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
@@ -27,9 +30,11 @@ public class TerminalTransactions {
 	public TerminalTransactions() {
 	}
 
-	/**
+	*/
+/**
 	 * Displays simple text interface
-	 */ 
+	 *//*
+
 	public void showMainMenu(TerminalTransactionsDelegate delegate) {
 		this.delegate = delegate;
 		
@@ -180,3 +185,4 @@ public class TerminalTransactions {
 		return result;
 	}
 }
+*/
