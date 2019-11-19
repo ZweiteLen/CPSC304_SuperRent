@@ -1,6 +1,7 @@
 package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
+import ca.ubc.cpsc304.model.ReservationModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,7 @@ public class TransactionsWindow extends JFrame {
     private TransactionsWindowDelegate delegate;
 
     DefaultTableModel vmodel = new DefaultTableModel();
+    DefaultTableModel reservationModel = new DefaultTableModel();
     DefaultTableModel searchmodel = new DefaultTableModel();
 
     JButton seeVButton = new JButton("See vehicles");
@@ -66,16 +68,16 @@ public class TransactionsWindow extends JFrame {
         JMenu vehicles = new JMenu("Vehicles");
         mb.add(vehicles);
         mb.add(reports);
-        JMenuItem rentals = new JMenuItem("Rentals");
-        JMenuItem returns = new JMenuItem("Returns");
-        JMenuItem makeReservation = new JMenuItem("Reserve");
-        JMenuItem makeRental = new JMenuItem("Rent");
-        JMenuItem makeReturn = new JMenuItem("Return");
-        reports.add(rentals);
-        reports.add(returns);
-        vehicles.add(makeReservation);
-        vehicles.add(makeRental);
-        vehicles.add(makeReturn);
+        JMenuItem generateDailyRentals = new JMenuItem("Rentals");
+        JMenuItem generateDailyReturns = new JMenuItem("Returns");
+        JMenuItem insertReservation = new JMenuItem("Reserve");
+        JMenuItem insertRental = new JMenuItem("Rent");
+        JMenuItem insertReturn = new JMenuItem("Return");
+        reports.add(generateDailyRentals);
+        reports.add(generateDailyReturns);
+        vehicles.add(insertReservation);
+        vehicles.add(insertRental);
+        vehicles.add(insertReturn);
 
         // place menu bar
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -195,7 +197,7 @@ public class TransactionsWindow extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchmodel = delegate.showVehicles(vtnameField.getText(),locationField.getText(),fromField.getText(),
+                searchmodel = delegate.showVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(),
                         toField.getText());
                 int num = searchmodel.getRowCount();
                 foundButtonlabel.setText(num + " Vehicles found");
@@ -208,25 +210,27 @@ public class TransactionsWindow extends JFrame {
                 vehicleTable.setModel(searchmodel);
             }
         });
-        makeReservation.addActionListener(new ActionListener() {
+        insertReservation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO: Replace parameter of insertReservation with correct data.
+                delegate.insertReservation(new ReservationModel("123456789", "SUV", "ahfj12345",
+                        "August 11. 2019 12:00 pm", "Auuust 15, 2019 12:00 pm"));
+            }
+        });
+        insertRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
-        makeRental.addActionListener(new ActionListener() {
+        insertReturn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
-        makeReturn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        });
-        rentals.addActionListener(new ActionListener() {
+        generateDailyRentals.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String branch = JOptionPane.showInputDialog("Which branch? (optional)");
@@ -234,7 +238,7 @@ public class TransactionsWindow extends JFrame {
                 vehicleTable.setModel(searchmodel);
             }
         });
-        returns.addActionListener(new ActionListener() {
+        generateDailyReturns.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String branch = JOptionPane.showInputDialog("Which branch? (optional)");
@@ -256,7 +260,7 @@ public class TransactionsWindow extends JFrame {
         // center the frame
         Dimension d = this.getToolkit().getScreenSize();
         Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+        this.setLocation((d.width - r.width) / 2, (d.height - r.height) / 2);
 
         // make the window visible
         this.setVisible(true);

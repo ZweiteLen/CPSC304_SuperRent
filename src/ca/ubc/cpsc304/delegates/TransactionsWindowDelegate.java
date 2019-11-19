@@ -22,7 +22,7 @@ public interface TransactionsWindowDelegate {
     public void deleteReservation(String confNo);
     public void showReservations();
 
-    public void addCustomer(CustomerModel model);
+    public void insertCustomer(CustomerModel model);
 
     public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime);
     public void rentVehicle(RentModel model);

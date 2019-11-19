@@ -100,14 +100,11 @@ public class DatabaseConnectionHandler {
             if (checkCustomerExists(ps, reservationModel)) {
             	ps.setString(3, reservationModel.getDLicense());
             } else {
-            	// TODO: How to display a separate GUI to allow a new customer to enter details?
-//                ps.setString(1, customerModel.getCellphone());
-//                ps.setString(2, customerModel.getName());
-//                ps.setString(3, customerModel.getAddress());
-//                ps.setString(4, customerModel.getdLicemse());
+                // TODO: Call TransactionsWindowDelefate.insertCustomer(...) from here somehow.
+            	// TODO: Display separate GUI to allow a new customer to enter details.
             }
-            ps.setTimestamp(4, reservationModel.getFromDateTime());
-            ps.setTimestamp(5, reservationModel.getToDateTime());
+            ps.setString(4, reservationModel.getFromDateTime());
+            ps.setString(5, reservationModel.getToDateTime());
 
             ps.executeUpdate();
             connection.commit();
@@ -179,8 +176,8 @@ public class DatabaseConnectionHandler {
                 ReservationModel model = new ReservationModel(rs.getString("confNo"),
                         rs.getString("vtname"),
                         rs.getString("dLicense"),
-                        rs.getTimestamp("fromDateTime"),
-                        rs.getTimestamp("toDateTime"));
+                        rs.getString("fromDateTime"),
+                        rs.getString("toDateTime"));
                 result.add(model);
             }
 

@@ -15,6 +15,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     private LoginWindow loginWindow = null;
     private TransactionsWindow transactionsWindow = null;
 
+    public SuperRent() {
+        dbHandler = new DatabaseConnectionHandler();
+    }
+
     public static void main(String[] args) {
         SuperRent superRent = new SuperRent();
         superRent.start();
@@ -26,10 +30,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
      * TODO: uncomment and remove transactionsWindow when everything is complete
      */
     private void start() {
-        // loginWindow = new LoginWindow();
-        // loginWindow.showFrame(this);
-        transactionsWindow = new TransactionsWindow();
-        transactionsWindow.showFrame(this);
+         loginWindow = new LoginWindow();
+         loginWindow.showFrame(this);
+//        transactionsWindow = new TransactionsWindow();
+//        transactionsWindow.showFrame(this);
     }
 
 
@@ -51,8 +55,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             /**
              * TODO: Uncomment when everything is done
              */
-            // transactionsWindow = new TransactionsWindow();
-            // transactionsWindow.showFrame(this);
+//             transactionsWindow = new TransactionsWindow();
+//             transactionsWindow.showFrame(this);
 
         } else {
             loginWindow.handleLoginFailed();
@@ -132,12 +136,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     /**
      * TransactionsWindowDelegate Implementation Start
-     *
      */
 
     /**
      * Customer transactions.
-     * @param resModel
      */
     public void insertReservation(ReservationModel resModel) {
         dbHandler.insertReservation(resModel);
@@ -151,19 +153,19 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public void addCustomer(CustomerModel model) {
+    public void insertCustomer(CustomerModel model) {
 
     }
 
     public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-        // DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
+         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 
-        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-                "Colour", "Features"}, 0);
-        for (int i = 0; i<5; i++)
-        {
-            resmodel.addRow(new Object[]{i, "model", "make"});
-        }
+//        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
+//                "Colour", "Features"}, 0);
+//        for (int i = 0; i<5; i++)
+//        {
+//            resmodel.addRow(new Object[]{i, "model", "make"});
+//        }
         return resmodel;
     }
 
