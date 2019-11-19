@@ -94,7 +94,7 @@ public class DatabaseConnectionHandler {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
 
-            ps.setString(1, reservationModel.getConfNo());
+            ps.setInt(1, reservationModel.getConfNo());
             ps.setString(2, reservationModel.getVtname());
 
             if (checkCustomerExists(ps, reservationModel)) {
@@ -134,11 +134,14 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public void updateReservation(int confNo, String vtname) {
+    public void updateReservation(int confNo, ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET vtname = ? WHERE confNo = ?");
-            ps.setString(1, vtname);
-            ps.setInt(2, confNo);
+            ps.setInt(1, confNo);
+            ps.setString(2, reservationModel.getVtname());
+            ps.setString(3, reservationModel.getDLicense());
+            ps.setString(4, reservationModel.getFromDateTime());
+            ps.setString(5, reservationModel.getToDateTime());
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
@@ -146,7 +149,6 @@ public class DatabaseConnectionHandler {
             }
 
             connection.commit();
-
             ps.close();
         } catch (SQLException e) {
             System.out.println(LOG_TAG + " " + e.getMessage());
@@ -173,7 +175,7 @@ public class DatabaseConnectionHandler {
 //    		}
 
             while (rs.next()) {
-                ReservationModel model = new ReservationModel(rs.getString("confNo"),
+                ReservationModel model = new ReservationModel(rs.getInt("confNo"),
                         rs.getString("vtname"),
                         rs.getString("dLicense"),
                         rs.getString("fromDateTime"),

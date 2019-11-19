@@ -3,13 +3,13 @@ package ca.ubc.cpsc304.model;
 import java.sql.Timestamp;
 
 public class ReservationModel {
-    private final String confNo;
+    private final int confNo;
     private final String vtname;
     private final String dLicense;
     private final String fromDateTime;
     private final String toDateTime;
 
-    public ReservationModel (String confNo, String vtname, String dLicense, String fromDateTime,
+    public ReservationModel (int confNo, String vtname, String dLicense, String fromDateTime,
                              String toDateTime) {
         this.confNo = confNo;
         this.vtname = vtname;
@@ -18,7 +18,7 @@ public class ReservationModel {
         this.toDateTime = toDateTime;
     }
 
-    public String getConfNo() {
+    public int getConfNo() {
         return confNo;
     }
 

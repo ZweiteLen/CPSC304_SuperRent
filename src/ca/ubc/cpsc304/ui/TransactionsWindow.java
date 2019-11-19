@@ -2,6 +2,7 @@ package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
 import ca.ubc.cpsc304.model.ReservationModel;
+import ca.ubc.cpsc304.number_generator.RandomNumberGenerator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -216,8 +217,8 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO: Replace parameter of insertReservation with correct data.
-                delegate.insertReservation(new ReservationModel("123456789", "SUV", "ahfj12345",
-                        "August 11. 2019 12:00 pm", "Auuust 15, 2019 12:00 pm"));
+                delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(), "SUV", "ahfj12345",
+                        "August 11. 2019 12:00 pm", "August 15, 2019 12:00 pm"));
             }
         });
         insertRental.addActionListener(new ActionListener() {
