@@ -18,8 +18,6 @@ import java.awt.event.WindowEvent;
 public class TransactionsWindow extends JFrame {
     private static final int TEXT_FIELD_WIDTH = 10;
 
-    private final String LOG_TAG = TransactionsWindow.class.getSimpleName();
-
     // components of the login window
     private JTextField vtnameField;
     private JTextField locationField;
@@ -29,12 +27,11 @@ public class TransactionsWindow extends JFrame {
     // delegate
     private TransactionsWindowDelegate delegate;
 
+
     DefaultTableModel vmodel = new DefaultTableModel();
-    DefaultTableModel reservationModel = new DefaultTableModel();
     DefaultTableModel searchmodel = new DefaultTableModel();
 
-    JButton seeVButton = new JButton("See vehicles");
-    JLabel foundButtonlabel;
+    JButton seeVButton = new JButton(" ");
 
     public TransactionsWindow() {
         super("SuperRent");
@@ -48,8 +45,8 @@ public class TransactionsWindow extends JFrame {
 
         JLabel vtnameLabel = new JLabel("Enter vehicle type: ");
         JLabel locationLabel = new JLabel("Enter branch: ");
-        JLabel fromLabel = new JLabel("From (yyyymmddhh): ");
-        JLabel toLabel = new JLabel("Until (yyyymmddhh): ");
+        JLabel fromLabel = new JLabel("From (yyyy-mm-dd hh): ");
+        JLabel toLabel = new JLabel("Until (yyyy-mm-dd hh): ");
 
         vtnameField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
@@ -71,16 +68,16 @@ public class TransactionsWindow extends JFrame {
         JMenu vehicles = new JMenu("Vehicles");
         mb.add(vehicles);
         mb.add(reports);
-        JMenuItem generateDailyRentals = new JMenuItem("Rentals");
-        JMenuItem generateDailyReturns = new JMenuItem("Returns");
-        JMenuItem insertReservation = new JMenuItem("Reserve");
-        JMenuItem insertRental = new JMenuItem("Rent");
-        JMenuItem insertReturn = new JMenuItem("Return");
-        reports.add(generateDailyRentals);
-        reports.add(generateDailyReturns);
-        vehicles.add(insertReservation);
-        vehicles.add(insertRental);
-        vehicles.add(insertReturn);
+        JMenuItem rentals = new JMenuItem("Rentals");
+        JMenuItem returns = new JMenuItem("Returns");
+        JMenuItem makeReservation = new JMenuItem("Reserve");
+        JMenuItem makeRental = new JMenuItem("Rent");
+        JMenuItem makeReturn = new JMenuItem("Return");
+        reports.add(rentals);
+        reports.add(returns);
+        vehicles.add(makeReservation);
+        vehicles.add(makeRental);
+        vehicles.add(makeReturn);
 
         // place menu bar
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -184,14 +181,9 @@ public class TransactionsWindow extends JFrame {
         gb.setConstraints(sp, c);
         contentPane.add(sp);
 
-        foundButtonlabel = new JLabel(" ");
-        c.fill = GridBagConstraints.RELATIVE;
-        c.gridwidth = 1;
+        // set see vehicles button
+        c.gridwidth = 2;
         c.gridx = 0;
-        c.gridy = 2;
-        gb.setConstraints(foundButtonlabel, c);
-        contentPane.add(foundButtonlabel);
-        c.gridx = 1;
         c.gridy = 2;
         gb.setConstraints(seeVButton, c);
         contentPane.add(seeVButton);
@@ -200,10 +192,11 @@ public class TransactionsWindow extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchmodel = delegate.showRentalVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(),
-                        toField.getText());
+                searchmodel = delegate.showRentalVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(), toField.getText());
                 int num = searchmodel.getRowCount();
-                foundButtonlabel.setText(num + " Vehicles found");
+
+                JButton btn = seeVButton;
+                btn.setText(num + " Vehicles found");
                 vehicleTable.setModel(vmodel);
             }
         });
@@ -213,40 +206,47 @@ public class TransactionsWindow extends JFrame {
                 vehicleTable.setModel(searchmodel);
             }
         });
-        insertReservation.addActionListener(new ActionListener() {
+        makeReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,"Error: not connected yet",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                // todo: Add the input form
                 // TODO: Replace parameter of insertReservation with correct data.
                 delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(), "SUV", "ahfj12345",
                         "August 11. 2019 12:00 pm", "August 15, 2019 12:00 pm"));
             }
         });
-        insertRental.addActionListener(new ActionListener() {
+        makeRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
-        insertReturn.addActionListener(new ActionListener() {
+        makeReturn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
-        generateDailyRentals.addActionListener(new ActionListener() {
+        rentals.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String branch = JOptionPane.showInputDialog("Which branch? (optional)");
-                searchmodel = delegate.showDailyRentalsReport(branch);
-                vehicleTable.setModel(searchmodel);
+                String[] input = reportInput();
+                if (input != null) {
+                    searchmodel = delegate.showDailyRentalsReport(input[0], input[1]);
+                    vehicleTable.setModel(searchmodel);
+                }
             }
         });
-        generateDailyReturns.addActionListener(new ActionListener() {
+        returns.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String branch = JOptionPane.showInputDialog("Which branch? (optional)");
-                searchmodel = delegate.showDailyReturnsReport(branch);
-                vehicleTable.setModel(searchmodel);
+                String[] input = reportInput();
+                if (input != null) {
+                    searchmodel = delegate.showDailyReturnsReport(input[0], input[1]);
+                    vehicleTable.setModel(searchmodel);
+                }
             }
         });
 
@@ -263,12 +263,37 @@ public class TransactionsWindow extends JFrame {
         // center the frame
         Dimension d = this.getToolkit().getScreenSize();
         Rectangle r = this.getBounds();
-        this.setLocation((d.width - r.width) / 2, (d.height - r.height) / 2);
+        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
 
         // make the window visible
         this.setVisible(true);
 
         // place the cursor in the text field for the username
         vtnameField.requestFocus();
+    }
+
+    private String[] reportInput(){
+        JTextField dateField = new JTextField(10);
+        JTextField branchField = new JTextField(10);
+
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+
+        myPanel.add(new JLabel("Date (yyyy-mm-dd):"));
+        myPanel.add(dateField);
+        myPanel.add(Box.createVerticalStrut(1)); // a spacer
+        myPanel.add(new JLabel("Branch (Optional):"));
+        myPanel.add(branchField);
+
+        String[] res = null;
+        int result = JOptionPane.showConfirmDialog(null, myPanel,
+                "Report", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String date = dateField.getText();
+            String branch = branchField.getText();
+            res = new String[]{date, branch};
+        }
+        return res;
     }
 }

@@ -54,12 +54,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             TransactionsWindow transaction = new TransactionsWindow();
             transaction.showFrame(this);
 
-            /**
-             * TODO: Uncomment when everything is done
-             */
-//             transactionsWindow = new TransactionsWindow();
-//             transactionsWindow.showFrame(this);
-
         } else {
             loginWindow.handleLoginFailed();
 
@@ -164,10 +158,9 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
-
-//        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-//                "Colour", "Features"}, 0);
+        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
+                "Colour", "Features"}, 0);
+        resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 //        for (int i = 0; i<5; i++)
 //        {
 //            resmodel.addRow(new Object[]{i, "model", "make"});
@@ -186,25 +179,25 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showDailyRentalsReport(String location) {
+    public DefaultTableModel showDailyRentalsReport(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
         // res = dbHandler.getDailyRental(location);
         return res;
     }
 
-    public DefaultTableModel showDailyRentalsReportByBranch(String location) {
+    public DefaultTableModel showDailyRentalsReportByBranch(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "vid", "confNo", "cellphone",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
         return res;
     }
 
-    public DefaultTableModel showDailyReturnsReport(String location) {
+    public DefaultTableModel showDailyReturnsReport(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
         return res;
     }
 
-    public DefaultTableModel showDailyReturnsReportByBranch(String location) {
+    public DefaultTableModel showDailyReturnsReportByBranch(String date, String location) {
         DefaultTableModel res = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank", "value"}, 0);
         // res = dbHandler.getDailyReturn(location);
         return res;
