@@ -19,7 +19,8 @@ public interface TransactionsWindowDelegate {
      * TODO: figure out how we want to generate confNo for each reservation
      */
     public void insertReservation(ReservationModel model);
-    public void deleteReservation(String confNo);
+    public void deleteReservation(int confNo);
+    public void updateReservation(int confNo, ReservationModel model);
     public void showReservations();
 
     public void insertCustomer(CustomerModel model);
@@ -32,8 +33,8 @@ public interface TransactionsWindowDelegate {
      * Daily report transactions
      * @param location: if not empty, then show a report only for that specified branch
      */
-    public DefaultTableModel showDailyRentalsReport(String location);
-    public DefaultTableModel showDailyRentalsReportByBranch(String location);
-    public DefaultTableModel showDailyReturnsReport(String location);
-    public DefaultTableModel showDailyReturnsReportByBranch(String location);
+    public DefaultTableModel showDailyRentalsReport(String date, String location);
+    public DefaultTableModel showDailyRentalsReportByBranch(String date, String location);
+    public DefaultTableModel showDailyReturnsReport(String date, String location);
+    public DefaultTableModel showDailyReturnsReportByBranch(String date, String location);
 }
