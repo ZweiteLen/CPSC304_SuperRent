@@ -16,6 +16,8 @@ public class LoginWindow extends JFrame implements ActionListener {
 	private static final int TEXT_FIELD_WIDTH = 10;
 	private static final int MAX_LOGIN_ATTEMPTS = 3;
 
+	private final String LOG_TAG = LoginWindow.class.getSimpleName();
+
 	// running accumulator for login attempts
 	private int loginAttempts;
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class DatabaseConnectionHandler {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
-    private static final String EXCEPTION_TAG = "[EXCEPTION]";
+    private static final String LOG_TAG = DatabaseConnectionHandler.class.getSimpleName();
     private static final String WARNING_TAG = "[WARNING]";
 
     private Connection connection = null;
@@ -22,7 +22,7 @@ public class DatabaseConnectionHandler {
             // Note that the path could change for new drivers
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class DatabaseConnectionHandler {
             System.out.println("\nConnected to Oracle!");
             return true;
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
             return false;
         }
     }
@@ -47,7 +47,7 @@ public class DatabaseConnectionHandler {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class DatabaseConnectionHandler {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ public class DatabaseConnectionHandler {
             connection.commit();
             ps.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
             rollbackConnection();
         }
     }
@@ -129,7 +129,7 @@ public class DatabaseConnectionHandler {
 
             ps.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
             rollbackConnection();
         }
     }
@@ -149,7 +149,7 @@ public class DatabaseConnectionHandler {
 
             ps.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
             rollbackConnection();
         }
     }
@@ -184,7 +184,7 @@ public class DatabaseConnectionHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
 
         return result.toArray(new ReservationModel[result.size()]);
@@ -265,7 +265,7 @@ public class DatabaseConnectionHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
 
         return vmodel;
@@ -347,7 +347,7 @@ public class DatabaseConnectionHandler {
             connection.commit();
             ps.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
     }
 
@@ -372,7 +372,7 @@ public class DatabaseConnectionHandler {
                 ps.close();
             }
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + e.getMessage());
+            System.out.println(LOG_TAG + e.getMessage());
         }
     }
 
@@ -415,7 +415,7 @@ public class DatabaseConnectionHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
 
         return vmodel;
@@ -455,7 +455,7 @@ public class DatabaseConnectionHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
 
         return vmodel;

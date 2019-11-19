@@ -17,6 +17,8 @@ import java.awt.event.WindowEvent;
 public class TransactionsWindow extends JFrame {
     private static final int TEXT_FIELD_WIDTH = 10;
 
+    private final String LOG_TAG = TransactionsWindow.class.getSimpleName();
+
     // components of the login window
     private JTextField vtnameField;
     private JTextField locationField;

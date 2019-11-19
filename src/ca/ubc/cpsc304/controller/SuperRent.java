@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
+    private final String LOG_TAG = SuperRent.class.getSimpleName();
+
     private DatabaseConnectionHandler dbHandler = null;
     private LoginWindow loginWindow = null;
     private TransactionsWindow transactionsWindow = null;
