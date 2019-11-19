@@ -2,9 +2,6 @@ package ca.ubc.cpsc304.database;
 
 import ca.ubc.cpsc304.model.*;
 
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
-import javax.management.DescriptorAccess;
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
@@ -78,7 +75,7 @@ public class DatabaseConnectionHandler {
      * We can use them as examples
      */
 
-    // Helper function to check if custoemr already exists in Customer relation.
+    // Helper function to check if customer already exists in Customer relation.
     private boolean checkCustomerExists(PreparedStatement ps, ReservationModel reservationModel)
 			throws SQLException {
         ResultSet rs = ps.executeQuery("SELECT dLicense FROM customers WHERE dLicense = "
@@ -93,7 +90,8 @@ public class DatabaseConnectionHandler {
         return true;
     }
 
-    public void insertReservation(ReservationModel reservationModel, CustomerModel customerModel) {
+    public void insertReservation(ReservationModel reservationModel, CustomerModel customerModel,
+	VehicleModel vehicleModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
 
@@ -101,24 +99,19 @@ public class DatabaseConnectionHandler {
             ps.setString(2, reservationModel.getVtname());
 
             if (checkCustomerExists(ps, reservationModel)) {
-                ps.setNull(3, java.sql.Types.INTEGER);
+            	ps.setString(3, reservationModel.getDLicense());
             } else {
-                ps.setString(3, reservationModel.getDLicense());
+            	// TODO: How to display a separate GUI to allow a new customer to enter details?
+                ps.setString(1, customerModel.getCellphone());
+                ps.setString(2, customerModel.getName());
+                ps.setString(3, customerModel.getAddress());
+                ps.setString(4, customerModel.getdLicemse());
             }
-
             ps.setTimestamp(4, reservationModel.getFromDateTime());
             ps.setTimestamp(5, reservationModel.getToDateTime());
 
-
-            // ps.setString(4, model.getFromDate());
-            // ps.setString(5, model.getFromTime());
-            // ps.setString(6, model.getToDate());
-            // ps.setString(7, model.getToTime());
-
-
             ps.executeUpdate();
             connection.commit();
-
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());

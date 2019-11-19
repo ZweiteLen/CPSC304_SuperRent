@@ -19,7 +19,7 @@ public interface TerminalTransactionsDelegate {
 
 	// Reservation transactions
 	public void deleteReservation(int confNo);
-	public void insertReservation(ReservationModel model);
+	public void insertReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel);
 	public void showReservation();
 	public void updateReservation(int confNo, String name);
 	

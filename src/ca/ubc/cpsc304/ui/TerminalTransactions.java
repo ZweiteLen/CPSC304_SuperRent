@@ -10,6 +10,7 @@ import ca.ubc.cpsc304.model.VehicleModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 
 /**
  * The class is only responsible for handling terminal text inputs. 
@@ -97,38 +98,28 @@ public class TerminalTransactions {
 			vtname = readLine().trim();
 		}
 
-		int cellphone = INVALID_INPUT;
-		while (cellphone == INVALID_INPUT) {
-			System.out.print("Please enter the cellphone number you wish to insert: ");
-			cellphone = readInteger(false);
-		}
-		
-		String fromDate = null;
-		while (fromDate == null || fromDate.length() <= 0) {
-			System.out.print("Please enter the date you wish to reserve from: ");
-			fromDate = readLine().trim();
-		}
-		
-		String fromTime = null;
-		while (fromTime == null || fromTime.length() <= 0) {
-			System.out.print("Please enter the time you wish to reserve from: ");
-			fromTime = readLine().trim();
+		String dLicense = null;
+		while (dLicense == null || dLicense.length() <= 0) {
+			System.out.print("Please enter the driver's license you wish to insert: ");
+			dLicense = readLine().trim();
 		}
 
-		String toDate = null;
-		while (toDate == null || toDate.length() <= 0) {
-			System.out.print("Please enter the date you wish to reserve until: ");
-			toDate = readLine().trim();
+		// TODO: Change from type Timestamp to Java Date?
+		Timestamp fromDateTime = null;
+		while (fromDateTime == null) {
+			System.out.print("Please enter the date and time you wish to reserve from: ");
+//			fromDateTime = readLine().trim();
 		}
 
-		String toTime = null;
-		while (toTime == null || toTime.length() <= 0) {
-			System.out.print("Please enter the time you wish to reserve until: ");
-			toTime = readLine().trim();
+		// TODO: Change from type Timestamp to Java Date?
+		Timestamp toDateTime = null;
+		while (toDateTime == null) {
+			System.out.print("Please enter the date and time you wish to reserve until: ");
+//			toDateTime = readLine().trim();
 		}
 		
-		ReservationModel model = new ReservationModel(confNo, vtname, cellphone, fromDate, fromTime, toDate, toTime);
-		delegate.insertReservation(model);
+		ReservationModel model = new ReservationModel(confNo, vtname, dLicense, fromDateTime, toDateTime);
+//		delegate.insertReservation(model);
 	}
 	
 	private void handleUpdateOption() {

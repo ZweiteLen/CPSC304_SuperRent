@@ -72,8 +72,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
      *
      * Insert a reservation with the given info
      */
-    public void insertReservation(ReservationModel model) {
-        dbHandler.insertReservation(model);
+    public void insertReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel) {
+        dbHandler.insertReservation(resModel, custModel, vehModel);
     }
 
     /**
@@ -109,7 +109,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             // simplified output formatting; truncation may occur
             System.out.printf("%-10.10s", model.getConfNo());
             System.out.printf("%-20.20s", model.getVtname());
-            System.out.printf("%-20.20s", model.getCellphone());
+            System.out.printf("%-20.20s", model.getDLicense());
             //System.out.printf("%-20.20s", model.getFromDate());
             //System.out.printf("%-20.20s", model.getFromTime());
             //System.out.printf("%-20.20s", model.getToDate());
@@ -138,8 +138,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
      */
 
 
-    public void makeReservation(ReservationModel model) {
-        dbHandler.insertReservation(model);
+    public void makeReservation(ReservationModel resModel, CustomerModel custModel, VehicleModel vehModel) {
+        dbHandler.insertReservation(resModel, custModel, vehModel);
     }
 
     public void removeReservation(String confNo) {

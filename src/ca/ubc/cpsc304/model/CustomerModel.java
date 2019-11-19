@@ -1,28 +1,28 @@
 package ca.ubc.cpsc304.model;
 
 public class CustomerModel {
-    private final String dLicense;
+    private final String cellphone;
     private final String name;
     private final String address;
-    private final String dlicense;
+    private final String dLicemse;
 
-    public CustomerModel(String dLicense, String name, String address, String dlicense) {
-        this.dLicense = dLicense;
+    public CustomerModel(String cellphone, String name, String address, String dLicemse) {
+        this.cellphone = cellphone;
         this.name = name;
         this.address = address;
-        this.dlicense = dlicense;
+        this.dLicemse = dLicemse;
     }
 
-    public String getDLicense() {
-        return dLicense;
+    public String getCellphone() {
+        return cellphone;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public String getDlicense() {
-        return dlicense;
+    public String getdLicemse() {
+        return dLicemse;
     }
 
     public String getName() {
