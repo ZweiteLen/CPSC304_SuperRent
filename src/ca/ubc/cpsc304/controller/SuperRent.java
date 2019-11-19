@@ -54,12 +54,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             TransactionsWindow transaction = new TransactionsWindow();
             transaction.showFrame(this);
 
-            /**
-             * TODO: Uncomment when everything is done
-             */
-//             transactionsWindow = new TransactionsWindow();
-//             transactionsWindow.showFrame(this);
-
         } else {
             loginWindow.handleLoginFailed();
 
@@ -160,10 +154,9 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
-
-//        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-//                "Colour", "Features"}, 0);
+        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
+                "Colour", "Features"}, 0);
+        resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
 //        for (int i = 0; i<5; i++)
 //        {
 //            resmodel.addRow(new Object[]{i, "model", "make"});
