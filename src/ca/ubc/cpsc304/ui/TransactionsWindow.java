@@ -32,6 +32,7 @@ public class TransactionsWindow extends JFrame {
     DefaultTableModel searchmodel = new DefaultTableModel();
 
     JButton seeVButton = new JButton(" ");
+    JPanel myPanel = new JPanel();
 
     public TransactionsWindow() {
         super("SuperRent");
@@ -210,12 +211,11 @@ public class TransactionsWindow extends JFrame {
         makeReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,"Error: not connected yet",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                // todo: Add the input form
-                // TODO: Replace parameter of insertReservation with correct data.
-                delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(), "SUV", "ahfj12345",
-                        "August 11. 2019 12:00 pm", "August 15, 2019 12:00 pm"));
+                String[] input = reservationForm();
+                if (input != null) {
+                    delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(),
+                            input[0], input[1], input[2], input[3]));
+                }
             }
         });
         makeRental.addActionListener(new ActionListener() {
@@ -273,11 +273,80 @@ public class TransactionsWindow extends JFrame {
         vtnameField.requestFocus();
     }
 
+    private String[] reservationForm() {
+        JTextField vtField = new JTextField(10);
+        JTextField dlField = new JTextField(10);
+        JTextField fromField = new JTextField(10);
+        JTextField toField = new JTextField(10);
+
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+
+        myPanel.add(new JLabel("Vehicle Type:"));
+        myPanel.add(vtField);
+        myPanel.add(new JLabel("Driver License:"));
+        myPanel.add(dlField);
+        myPanel.add(new JLabel("From:"));
+        myPanel.add(fromField);
+        myPanel.add(new JLabel("To:"));
+        myPanel.add(toField);
+
+        String[] res = null;
+        String error = "";
+        boolean prev = false;
+        int result = JOptionPane.showConfirmDialog(null, myPanel,
+                "Make Reservation", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String vtname = vtField.getText().trim();
+            String dlicense = dlField.getText().trim();
+            String from = fromField.getText().trim();
+            String to = toField.getText().trim();
+            if (vtname.isEmpty()) {
+                error = " the type of vehicle you want";
+                prev = true;
+            }
+            if (dlicense.isEmpty()){
+                if (prev) {
+                    error = error + ", your driver's license";
+                } else {
+                    error = error + " your driver's license";
+                    prev = true;
+                }
+            }
+            if (from.isEmpty()){
+                if (prev) {
+                    error = error + ", the starting time";
+                } else {
+                    error = error + " the starting time";
+                    prev = true;
+                }
+            }if (to.isEmpty()){
+                if (prev) {
+                    error = error + " and the ending time";
+                } else {
+                    error = error + " the ending time";
+                }
+            }
+            if (prev){
+                error = "Please specify" + error;
+                inputError(error);
+            } else {
+                res = new String[]{vtname, dlicense, from, to};
+            }
+        }
+        return res;
+    }
+
+    public void inputError(String errorMsg) {
+        JOptionPane.showMessageDialog(null,errorMsg,
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     private String[] reportInput(){
         JTextField dateField = new JTextField(10);
         JTextField branchField = new JTextField(10);
 
-        JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
         myPanel.add(new JLabel("Date (yyyy-mm-dd):"));
