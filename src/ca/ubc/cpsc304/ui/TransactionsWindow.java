@@ -192,8 +192,7 @@ public class TransactionsWindow extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchmodel = delegate.showVehicles(vtnameField.getText(),locationField.getText(),fromField.getText(),
-                        toField.getText());
+                searchmodel = delegate.showRentalVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(), toField.getText());
                 int num = searchmodel.getRowCount();
 
                 JButton btn = seeVButton;
