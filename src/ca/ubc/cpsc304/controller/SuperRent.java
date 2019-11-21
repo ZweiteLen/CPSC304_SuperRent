@@ -141,6 +141,11 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.insertReservation(reservationModel);
     }
 
+    @Override
+    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+        return null;
+    }
+
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
