@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 /**
  * The class is responsible for displaying and handling the transactions GUI.
@@ -193,12 +194,14 @@ public class TransactionsWindow extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchmodel = delegate.showRentalVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(), toField.getText());
-                int num = searchmodel.getRowCount();
-
-                JButton btn = seeVButton;
-                btn.setText(num + " Vehicles found");
-                vehicleTable.setModel(vmodel);
+                try {
+                    searchmodel = delegate.showRentalVehicles(vtnameField.getText(), locationField.getText(), fromField.getText(), toField.getText());
+                    JButton btn = seeVButton;
+                    btn.setText(searchmodel.getRowCount() + " Vehicles found");
+                    vehicleTable.setModel(vmodel);
+                } catch (SQLException se) {
+                    inputError("Please make sure the dates and times are entered in the correct format");
+                }
             }
         });
         seeVButton.addActionListener(new ActionListener() {
@@ -294,7 +297,7 @@ public class TransactionsWindow extends JFrame {
         String error = "";
         boolean prev = false;
         int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Make Reservation", JOptionPane.OK_CANCEL_OPTION,
+                "Enter details", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             String vtname = vtField.getText().trim();

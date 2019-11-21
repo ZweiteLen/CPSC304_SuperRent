@@ -4,6 +4,7 @@ import ca.ubc.cpsc304.model.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
 
 /**
  * This interface uses the delegation design pattern where instead of having the
@@ -31,7 +32,7 @@ public interface TransactionsWindowDelegate {
 //    void insertRentVehicle(RentModel model);
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
-    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime);
+    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException;
 
     // Just vehicles themselves
 //    void insertVehicle(VehicleModel model);

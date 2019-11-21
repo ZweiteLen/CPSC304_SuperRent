@@ -9,6 +9,7 @@ import ca.ubc.cpsc304.ui.TransactionsWindow;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
 
 public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
     private final String LOG_TAG = SuperRent.class.getSimpleName();
@@ -34,8 +35,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     private void start() {
          loginWindow = new LoginWindow();
          loginWindow.showFrame(this);
-//        transactionsWindow = new TransactionsWindow();
-//        transactionsWindow.showFrame(this);
     }
 
 
@@ -141,11 +140,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.insertReservation(reservationModel);
     }
 
-    @Override
-    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-        return null;
-    }
-
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
@@ -162,8 +156,11 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException {
         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
+        if (resmodel == null) {
+            throw new SQLException("datetime");
+        }
         return resmodel;
     }
 
