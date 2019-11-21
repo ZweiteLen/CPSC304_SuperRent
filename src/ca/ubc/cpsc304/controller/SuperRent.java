@@ -141,6 +141,11 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.insertReservation(reservationModel);
     }
 
+    @Override
+    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+        return null;
+    }
+
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
@@ -157,14 +162,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     }
 
-    public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
-        DefaultTableModel resmodel = new DefaultTableModel(new String[]{"Current Status","Location","Model", "Make", "Year",
-                "Colour", "Features"}, 0);
-        resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
-//        for (int i = 0; i<5; i++)
-//        {
-//            resmodel.addRow(new Object[]{i, "model", "make"});
-//        }
+    public DefaultTableModel showVehicles(String vtname, String location, String fromDateTime, String toDateTime) {
+        DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
         return resmodel;
     }
 

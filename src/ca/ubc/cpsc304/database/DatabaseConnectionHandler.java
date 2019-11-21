@@ -152,7 +152,6 @@ public class DatabaseConnectionHandler {
             	ps.setString(3, reservationModel.getDLicense());
             } else {
                 // TODO: Call TransactionsWindowDelegate.insertCustomer(...) from here somehow.
-            	// TODO: Display separate GUI to allow a new customer to enter details.
             }
             ps.setString(4, reservationModel.getFromDateTime());
             ps.setString(5, reservationModel.getToDateTime());
@@ -246,64 +245,73 @@ public class DatabaseConnectionHandler {
         return result.toArray(new ReservationModel[result.size()]);
     }
 
+    private boolean checkValidDate(String from, String to) {
+        if (from.trim().isEmpty() && to.trim().isEmpty()){
+            return true;
+        }
+
+        return false;
+    }
+
     public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Location", "Model", "Make", "Year",
                 "Colour", "Features", "Current Status"}, 0);
-        String vt = vtname;
-        String loc = location;
+
         String from = "";
         String to = "";
 
-        if (!fromDateTime.isBlank()) {
-            from = "TO_TIMESTAMP('" + fromDateTime + ":00:00')";
+        if (!fromDateTime.trim().isEmpty()) {
+            from = "TO_TIMESTAMP('" + fromDateTime.trim() + ":00:00')";
         }
-        if (!toDateTime.isBlank()) {
-            to = "TO_TIMESTAMP('" + toDateTime + ":00:00')";
+        if (!toDateTime.trim().isEmpty()) {
+            to = "TO_TIMESTAMP('" + toDateTime.trim() + ":00:00')";
         }
 
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            // TODO test this query
-            if (vt.trim().isEmpty() && loc.trim().isEmpty() && from.trim().isEmpty() && to.trim().isEmpty()) {
-                rs = stmt.executeQuery("SELECT v.vtname, location, model, make, v.year, colour, features, status FROM vehicles v, vtype t WHERE v.vtname=t.vtname ORDER BY v.vtname, location");
+            if (vtname.trim().isEmpty() && location.trim().isEmpty() && from.trim().isEmpty() && to.trim().isEmpty()) {
+                rs = stmt.executeQuery("SELECT v.vtname, location, model, make, v.year, colour, features, status " +
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available' ORDER BY v.vtname, location");
             } else {
                 boolean prev = false;
+                // TODO test this query
+                // TODO change from vehicles in the table to be available
                 String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
-                        "FROM vehicles v, vtype vt WHERE v.vtname=t.vtname AND ";
-                if (!vtname.isBlank()) {
-                    sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'" + "v.vtname=r.vtname";
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available' AND ";
+                if (!vtname.trim().isEmpty()) {
+                    sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'";
                     prev = true;
                 }
-                if (!location.isBlank()) {
+                if (!location.trim().isEmpty()) {
                     if (prev) {
                         sqlquery = sqlquery + " AND ";
                     }
                     sqlquery = sqlquery + "location = " + "'" + location + "'";
                     prev = true;
                 }
-                if (!from.isBlank() && !to.isBlank()) {
-                    if (prev) {
-                        sqlquery = sqlquery + " AND ";
-                    }
-                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-                            "where (r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime) OR " +
-                            "(r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME) OR " +
-                            from + "<=r.FROMDATETIME AND " + "r.FROMDATETIME<=" + to + " OR " +
-                            from + "<=r.TODATETIME AND " + "r.TODATETIME<=" + to + ")";
-                } else if (!from.isBlank() ^ to.isBlank()) {
-                    if (prev) {
-                        sqlquery = sqlquery + " AND ";
-                    }
-                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-                            "where r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime)";
-                } else if (from.isBlank() ^ !to.isBlank()) {
-                    if (prev) {
-                        sqlquery = sqlquery + " AND ";
-                    }
-                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-                            "where r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME)";
-                }
+//                if (!from.isBlank() && !to.isBlank()) {
+//                    if (prev) {
+//                        sqlquery = sqlquery + " AND ";
+//                    }
+//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+//                            "where (r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime) OR " +
+//                            "(r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME) OR " +
+//                            from + "<=r.FROMDATETIME AND " + "r.FROMDATETIME<=" + to + " OR " +
+//                            from + "<=r.TODATETIME AND " + "r.TODATETIME<=" + to + ")";
+//                } else if (!from.isBlank() && to.isBlank()) {
+//                    if (prev) {
+//                        sqlquery = sqlquery + " AND ";
+//                    }
+//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+//                            "where r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime)";
+//                } else if (from.isBlank() && !to.isBlank()) {
+//                    if (prev) {
+//                        sqlquery = sqlquery + " AND ";
+//                    }
+//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
+//                            "where r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME)";
+//                }
                 sqlquery = sqlquery + " ORDER BY v.vtname, location";
                 rs = stmt.executeQuery(sqlquery);
             }
@@ -318,7 +326,6 @@ public class DatabaseConnectionHandler {
                 String c = rs.getString("colour");
                 String f = rs.getString("features");
                 vmodel.addRow(new Object[]{v, l, mo, ma, y, c, f, s});
-                System.out.println(vmodel.getRowCount());
             }
 
             rs.close();
