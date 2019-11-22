@@ -246,20 +246,26 @@ public class DatabaseConnectionHandler {
     }
 
     private boolean checkValidDate(String from, String to) {
-        if (from.trim().isEmpty() && to.trim().isEmpty()){
+        String fd = from.trim();
+        String td = to.trim();
+        if (fd.isEmpty() && td.isEmpty()){
             return true;
         }
-
-        return false;
+        String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s\\d\\d)$"
+                + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s\\d\\d)$"
+                + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s\\d\\d)$"
+                + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s\\d\\d)$";
+        return fd.matches(dateRegEx) && fd.matches(dateRegEx);
     }
 
     public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Location", "Model", "Make", "Year",
                 "Colour", "Features", "Current Status"}, 0);
 
+        if (!checkValidDate(fromDateTime, toDateTime)) { return null; }
+
         String from = "";
         String to = "";
-
         if (!fromDateTime.trim().isEmpty()) {
             from = "TO_TIMESTAMP('" + fromDateTime.trim() + ":00:00')";
         }
@@ -270,49 +276,23 @@ public class DatabaseConnectionHandler {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            if (vtname.trim().isEmpty() && location.trim().isEmpty() && from.trim().isEmpty() && to.trim().isEmpty()) {
+            // TODO add back in ' AND STATUS='available' ' when we change our data
+            if (vtname.trim().isEmpty() && location.trim().isEmpty() && fromDateTime.trim().isEmpty() && toDateTime.trim().isEmpty()) {
                 rs = stmt.executeQuery("SELECT v.vtname, location, model, make, v.year, colour, features, status " +
-                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available' ORDER BY v.vtname, location");
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname ORDER BY v.vtname, location");
             } else {
                 boolean prev = false;
-                // TODO test this query
                 // TODO change from vehicles in the table to be available
                 String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
-                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available' AND ";
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname";
                 if (!vtname.trim().isEmpty()) {
-                    sqlquery = sqlquery + "v.vtname = " + "'" + vtname + "'";
-                    prev = true;
+                    sqlquery = sqlquery+ " AND " + "v.vtname = " + "'" + vtname + "'";
                 }
                 if (!location.trim().isEmpty()) {
-                    if (prev) {
-                        sqlquery = sqlquery + " AND ";
-                    }
-                    sqlquery = sqlquery + "location = " + "'" + location + "'";
-                    prev = true;
+                    sqlquery = sqlquery + " AND " + "location = " + "'" + location + "'";
                 }
-//                if (!from.isBlank() && !to.isBlank()) {
-//                    if (prev) {
-//                        sqlquery = sqlquery + " AND ";
-//                    }
-//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-//                            "where (r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime) OR " +
-//                            "(r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME) OR " +
-//                            from + "<=r.FROMDATETIME AND " + "r.FROMDATETIME<=" + to + " OR " +
-//                            from + "<=r.TODATETIME AND " + "r.TODATETIME<=" + to + ")";
-//                } else if (!from.isBlank() && to.isBlank()) {
-//                    if (prev) {
-//                        sqlquery = sqlquery + " AND ";
-//                    }
-//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-//                            "where r.FROMDATETIME<=" + from + " AND " + from + "<=r.toDateTime)";
-//                } else if (from.isBlank() && !to.isBlank()) {
-//                    if (prev) {
-//                        sqlquery = sqlquery + " AND ";
-//                    }
-//                    sqlquery = sqlquery + "v.VLICENSE NOT IN (select r.vlicense from rent r " +
-//                            "where r.fromDateTime<=" + to + " AND " + to + "<=r.TODATETIME)";
-//                }
                 sqlquery = sqlquery + " ORDER BY v.vtname, location";
+                System.out.println(sqlquery);
                 rs = stmt.executeQuery(sqlquery);
             }
 
