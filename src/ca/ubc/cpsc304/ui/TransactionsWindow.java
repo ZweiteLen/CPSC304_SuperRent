@@ -33,7 +33,6 @@ public class TransactionsWindow extends JFrame {
     DefaultTableModel searchmodel = new DefaultTableModel();
 
     JButton seeVButton = new JButton(" ");
-    JPanel myPanel = new JPanel();
 
     public TransactionsWindow() {
         super("SuperRent");
@@ -237,8 +236,16 @@ public class TransactionsWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] input = reportInput();
                 if (input != null) {
-                    searchmodel = delegate.showDailyRentalsReport(input[0], input[1]);
-                    vehicleTable.setModel(searchmodel);
+                    try {
+                        if (input[1].trim().length() != 0) {
+                            searchmodel = delegate.showDailyRentalsReportByBranch(input[0], input[1]);
+                        } else {
+                            searchmodel = delegate.showDailyRentalsReport(input[0]);
+                        }
+                        vehicleTable.setModel(searchmodel);
+                    } catch (SQLException se) {
+                        inputError(se.getMessage());
+                    }
                 }
             }
         });
@@ -247,7 +254,7 @@ public class TransactionsWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] input = reportInput();
                 if (input != null) {
-                    searchmodel = delegate.showDailyReturnsReport(input[0], input[1]);
+                    searchmodel = delegate.showDailyReturnsReport(input[0]);
                     vehicleTable.setModel(searchmodel);
                 }
             }
@@ -340,7 +347,7 @@ public class TransactionsWindow extends JFrame {
         return res;
     }
 
-    public void inputError(String errorMsg) {
+    private void inputError(String errorMsg) {
         JOptionPane.showMessageDialog(null,errorMsg,
                 "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -349,15 +356,15 @@ public class TransactionsWindow extends JFrame {
         JTextField dateField = new JTextField(10);
         JTextField branchField = new JTextField(10);
 
+        JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
         myPanel.add(new JLabel("Date (yyyy-mm-dd):"));
         myPanel.add(dateField);
-        myPanel.add(Box.createVerticalStrut(1)); // a spacer
         myPanel.add(new JLabel("Branch (Optional):"));
         myPanel.add(branchField);
 
-        String[] res = null;
+        String[] res;
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Report", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
@@ -365,6 +372,8 @@ public class TransactionsWindow extends JFrame {
             String date = dateField.getText();
             String branch = branchField.getText();
             res = new String[]{date, branch};
+        } else {
+            res = null;
         }
         return res;
     }

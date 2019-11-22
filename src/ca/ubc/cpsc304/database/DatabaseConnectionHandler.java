@@ -55,8 +55,8 @@ public class DatabaseConnectionHandler {
 
         try {
             // There are two of the same statements here.  Choose the one that works for you.
-            FileReader fr = new FileReader(new File("Project/CPSC304_SuperRent/resources/vehicletables.sql"));
-//            FileReader fr = new FileReader(new File("resources/vehicletables.sql"));
+            //FileReader fr = new FileReader(new File("Project/CPSC304_SuperRent/resources/vehicletables.sql"));
+            FileReader fr = new FileReader(new File("resources/vehicletables.sql"));
             // be sure to not have line starting with "--" or "/*" or any other non alphabetical character
 
             BufferedReader br = new BufferedReader(fr);
@@ -245,24 +245,32 @@ public class DatabaseConnectionHandler {
         return result.toArray(new ReservationModel[result.size()]);
     }
 
-    private boolean checkValidDate(String from, String to) {
-        String fd = from.trim();
-        String td = to.trim();
-        if (fd.isEmpty() && td.isEmpty()){
+    private boolean checkValidDate(String date, boolean h) {
+        String d = date.trim();
+        if (d.isEmpty()){
             return true;
         }
-        String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s\\d\\d)$"
-                + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s\\d\\d)$"
-                + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s\\d\\d)$"
-                + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s\\d\\d)$";
-        return fd.matches(dateRegEx) && fd.matches(dateRegEx);
+        if (h) {
+            String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s\\d\\d)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s\\d\\d)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s\\d\\d)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s\\d\\d)$";
+            return d.matches(dateRegEx);
+        } else {
+            String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$";
+            return d.matches(dateRegEx);
+        }
+
     }
 
     public DefaultTableModel getVehicleInfo(String vtname, String location, String fromDateTime, String toDateTime) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Location", "Model", "Make", "Year",
                 "Colour", "Features", "Current Status"}, 0);
 
-        if (!checkValidDate(fromDateTime, toDateTime)) { return null; }
+        if (!checkValidDate(fromDateTime, true) || !checkValidDate(toDateTime, true)) { return null; }
 
         String from = "";
         String to = "";
@@ -422,40 +430,55 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public DefaultTableModel getDailyRental(String location) {
-        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "vlicense", "confNo", "dlicense",
+    public boolean checkBranch(String location) {
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT location FROM VEHICLES " +
+                    "WHERE LOCATION =" + "'"+ location + "'");
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println(LOG_TAG + e.getMessage());
+        }
+        return false;
+    }
+
+    public DefaultTableModel getDailyRental(String date) {
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Company Total", "Branch", "Branch Total", "Vehicle Type", "Type Total", "rid", "vlicense", "confNo", "dlicense",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        if (!checkValidDate(date, false) || date.trim().isEmpty()) {
+            return null;
+        }
+
+        String day = "'" + date + "'";
 
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            // TODO:
-            /* FIGURE OUT WHAT THE PROJECT DESCRIPTION MEANS WHEN IT SAYS
-             * 'contains information on all the vehicles rented out during the day'
-             */
-            if (location.isBlank()) {
-                rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
-                        "CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate  FROM rent r " +
-                        "WHERE CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
-            } else {
-                rs = stmt.executeQuery("SELECT rid, vlicense, confNo, dlicense, CONVERT(varchar, fromDateTime), " +
-                        "CONVERT(varchar, toDateTime), odometer, cardName, cardNo, expDate " +
-                        "FROM rent r, vehicles v WHERE r.vlicense=v.vlicense AND " +
-                        "CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE) AND v.location = " + "'" + location + "'");
-            }
+            rs = stmt.executeQuery("SELECT CompanyTotal, location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
+                    "FROM RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VRentals FROM RENT, VEHICLES " +
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE GROUP BY VTNAME), (SELECT LOCATION as branch, " +
+                    "COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE " +
+                    "GROUP BY LOCATION),(SELECT COUNT(*) as CompanyTotal FROM RENT) " +
+                    "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION " +
+                    "AND TRUNC(r.fromDateTime) = TO_DATE(" + day + ") ORDER BY LOCATION, VTNAME");
 
             while (rs.next()) {
+                String ct = rs.getString("CompanyTotal");
+                String l = rs.getString("location");
+                String br = rs.getString("BRentals");
+                String vt = rs.getString("VTNAME");
+                String vr = rs.getString("VRentals");
                 String r = rs.getString("rid");
                 String v = rs.getString("vlicense");
                 String c = rs.getString("confNo");
                 String d = rs.getString("dlicense");
-                Date from = rs.getDate("fromDateTime");
-                Date to = rs.getDate("toDateTime");
+                String from = rs.getTimestamp("fromDateTime").toString().substring(0,16);
+                String to = rs.getTimestamp("toDateTime").toString().substring(0,16);
                 int o = rs.getInt("odometer");
                 String cnm = rs.getString("cardName");
                 String cno = rs.getString("cardNo");
                 String e = rs.getString("expDate");
-                vmodel.addRow(new Object[]{r, v, c, d, from, to, o, cnm, cno, e});
+                vmodel.addRow(new Object[]{ct, l,br, vt, vr, r, v, c, d, from, to, o, cnm, cno, e});
             }
 
             rs.close();
@@ -467,24 +490,65 @@ public class DatabaseConnectionHandler {
         return vmodel;
     }
 
-    public DefaultTableModel getDailyRentalByBranch(String location) {
-        return null;
-    }
-
-    public DefaultTableModel getDailyReturn(String location) {
-        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank?", "value"}, 0);
+    public DefaultTableModel getDailyRentalByBranch(String date, String location) {
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Company Total","Branch","Branch Total","Vehicle Type", "Type Total" , "rid", "vlicense", "confNo", "dlicense",
+                "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
+        if (checkValidDate(date, false)|| date.trim().isEmpty()) {
+            return null;
+        }
+        String day = "'" + date + "'";
 
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            // TODO test this query
-            if (location.isBlank()) {
-                rs = stmt.executeQuery("SELECT *  FROM returns  WHERE " +
-                        "CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
-            } else {
-                rs = stmt.executeQuery("SELECT * FROM returns r, vehicles v WHERE r.vlicense=v.vlicense AND " +
-                        "CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE) AND v.location = " + "'" + location + "'");
+            rs = stmt.executeQuery("SELECT CompanyTotal, location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
+                    "FROM RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VRentals FROM RENT, VEHICLES " +
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE GROUP BY VTNAME), (SELECT LOCATION as branch, " +
+                    "COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE " +
+                    "GROUP BY LOCATION),(SELECT COUNT(*) as CompanyTotal FROM RENT) " +
+                    "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION " +
+                    "AND TRUNC(r.fromDateTime)= TO_DATE(" + day + ") AND location = '" + location +
+                    "' ORDER BY LOCATION, VTNAME");
+
+            while (rs.next()) {
+                String ct = rs.getString("CompanyTotal");
+                String l = rs.getString("location");
+                String br = rs.getString("BRentals");
+                String vt = rs.getString("VTNAME");
+                String vr = rs.getString("VRentals");
+                String r = rs.getString("rid");
+                String v = rs.getString("vlicense");
+                String c = rs.getString("confNo");
+                String d = rs.getString("dlicense");
+                String from = rs.getTimestamp("fromDateTime").toString().substring(0,16);
+                String to = rs.getTimestamp("toDateTime").toString().substring(0,16);
+                int o = rs.getInt("odometer");
+                String cnm = rs.getString("cardName");
+                String cno = rs.getString("cardNo");
+                String e = rs.getString("expDate");
+                vmodel.addRow(new Object[]{ct, l,br, vt, vr, r, v, c, d, from, to, o, cnm, cno, e});
             }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(LOG_TAG + " " + e.getMessage());
+        }
+
+        return vmodel;
+    }
+
+    public DefaultTableModel getDailyReturn(String date) {
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank?", "value"}, 0);
+        if (!checkValidDate(date, false)) {
+            return null;
+        }
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM returns r, vehicles v WHERE r.vlicense=v.vlicense AND " +
+                        "CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
+
 
             while (rs.next()) {
                 String r = rs.getString("rid");
@@ -507,7 +571,7 @@ public class DatabaseConnectionHandler {
         return vmodel;
     }
 
-    public DefaultTableModel getDailyReturnByBranch(String location) {
+    public DefaultTableModel getDailyReturnByBranch(String date, String location) {
         return null;
     }
 }
