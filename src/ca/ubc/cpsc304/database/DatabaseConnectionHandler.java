@@ -5,6 +5,7 @@ import ca.ubc.cpsc304.model.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
@@ -48,13 +49,14 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    private void loadData() throws SQLException {
+    private void loadData() {
         String s            = new String();
         StringBuffer sb = new StringBuffer();
 
-        try
-        {
-            FileReader fr = new FileReader(new File("resources/vehicletables.sql"));
+        try {
+            // There are two of the same statements here.  Choose the one that works for you.
+            FileReader fr = new FileReader(new File("Project/CPSC304_SuperRent/resources/vehicletables.sql"));
+//            FileReader fr = new FileReader(new File("resources/vehicletables.sql"));
             // be sure to not have line starting with "--" or "/*" or any other non alphabetical character
 
             BufferedReader br = new BufferedReader(fr);
@@ -65,7 +67,7 @@ public class DatabaseConnectionHandler {
             }
             br.close();
 
-            // here is our splitter ! We use ";" as a delimiter for each request
+            // here is our splitter! We use ";" as a delimiter for each request
             // then we are sure to have well formed statements
             String[] inst = sb.toString().split(";");
 
@@ -82,9 +84,7 @@ public class DatabaseConnectionHandler {
                 }
             }
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("*** Error : "+e.toString());
             System.out.println("*** ");
             System.out.println("*** Error : ");

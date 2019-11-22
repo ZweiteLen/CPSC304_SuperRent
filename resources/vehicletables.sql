@@ -1,8 +1,3 @@
-drop table rent;
-drop table reservation;
-drop table vehicles;
-drop table vtype;
-
 create table vtype (
                        vtname char(20) not null,
                        features char(50),
