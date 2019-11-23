@@ -213,9 +213,14 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String[] input = reservationForm();
-                if (input != null) {
-                    delegate.insertReservation(new ReservationModel(RandomNumberGenerator.generateRandomReservationNumber(),
-                            input[0], input[1], input[2], input[3]));
+                try {
+                    if (input != null) {
+                        int confo = RandomNumberGenerator.generateRandomReservationNumber();
+                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], input[2], input[3]));
+                        receipt(input, confo);
+                    }
+                } catch (SQLException se) {
+                    inputError(se.getMessage());
                 }
             }
         });
@@ -282,6 +287,18 @@ public class TransactionsWindow extends JFrame {
         vtnameField.requestFocus();
     }
 
+    private void receipt(String[] info, int confo) {
+        String cN = "" + confo;
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+
+        myPanel.add(new JLabel("Confirmation number:" + cN));
+        myPanel.add(new JLabel("Vehicle Type:" + info[0]));
+        myPanel.add(new JLabel("Driver License:" + info[1]));
+        myPanel.add(new JLabel("From:"+info[2]));
+        myPanel.add(new JLabel("To:"+info[3]));
+    }
+
     private String[] reservationForm() {
         JTextField vtField = new JTextField(10);
         JTextField dlField = new JTextField(10);
@@ -301,8 +318,6 @@ public class TransactionsWindow extends JFrame {
         myPanel.add(toField);
 
         String[] res = null;
-        String error = "";
-        boolean prev = false;
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Enter details", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
@@ -311,35 +326,8 @@ public class TransactionsWindow extends JFrame {
             String dlicense = dlField.getText().trim();
             String from = fromField.getText().trim();
             String to = toField.getText().trim();
-            if (vtname.isEmpty()) {
-                error = " the type of vehicle you want";
-                prev = true;
-            }
-            if (dlicense.isEmpty()){
-                if (prev) {
-                    error = error + ", your driver's license";
-                } else {
-                    error = error + " your driver's license";
-                    prev = true;
-                }
-            }
-            if (from.isEmpty()){
-                if (prev) {
-                    error = error + ", the starting time";
-                } else {
-                    error = error + " the starting time";
-                    prev = true;
-                }
-            }if (to.isEmpty()){
-                if (prev) {
-                    error = error + " and the ending time";
-                } else {
-                    error = error + " the ending time";
-                }
-            }
-            if (prev){
-                error = "Please specify" + error;
-                inputError(error);
+            if (vtname.isEmpty() || dlicense.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                inputError("Please fill out all the fields");
             } else {
                 res = new String[]{vtname, dlicense, from, to};
             }

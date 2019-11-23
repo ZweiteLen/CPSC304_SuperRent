@@ -120,12 +120,6 @@ public class DatabaseConnectionHandler {
      * 4) Update reservation
      */
 
-    /**
-     * Transactions Implementation Start
-     * These are from the terminalTransactions
-     * We can use them as examples
-     */
-
     // Helper function to check if customer already exists in Customer relation.
     public boolean checkCustomerExists(ReservationModel reservationModel){
         try {
