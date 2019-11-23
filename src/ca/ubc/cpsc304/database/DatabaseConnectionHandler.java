@@ -201,7 +201,7 @@ public class DatabaseConnectionHandler {
     public void updateReservation(int confNo, ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET confNo = ?, vtName = ?, " +
-                    "dLicense = ?, fromDateTime = ?. toDateTime = ? WHERE confNo = ?");
+                    "dLicense = ?, fromDateTime = ?, toDateTime = ? WHERE confNo = ?");
             ps.setInt(1, confNo);
             ps.setString(2, reservationModel.getVtname());
             ps.setString(3, reservationModel.getDLicense());
