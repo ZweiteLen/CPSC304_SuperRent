@@ -127,18 +127,41 @@ public class DatabaseConnectionHandler {
      */
 
     // Helper function to check if customer already exists in Customer relation.
-    private boolean checkCustomerExists(PreparedStatement ps, ReservationModel reservationModel)
-			throws SQLException {
-        ResultSet rs = ps.executeQuery("SELECT dLicense FROM customers WHERE dLicense = "
-                + reservationModel.getDLicense());
+    public boolean checkCustomerExists(ReservationModel reservationModel){
+        try {
+            Statement stmt =connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT dLicense FROM customers WHERE dLicense = "
+                    + reservationModel.getDLicense());
 
-        if (!rs.next()) {
+            if (!rs.next()) {
+                rs.close();
+                return false;
+            }
+
             rs.close();
-            return false;
+            return true;
+        } catch (SQLException e){
+            System.out.println(LOG_TAG + " " + e.getMessage());
         }
+         return false;
+    }
 
-        rs.close();
-        return true;
+
+    public void insertCustomer(CustomerModel customerModel){
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO customers VALUES (?,?,?,?)");
+
+            ps.setString(1, customerModel.getCellphone());
+            ps.setString(2, customerModel.getName());
+            ps.setString(3, customerModel.getAddress());
+            ps.setString(4, customerModel.getdLicense());
+            ps.executeUpdate();
+            connection.commit();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(LOG_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
     }
 
     public void insertReservation(ReservationModel reservationModel) {
@@ -147,14 +170,9 @@ public class DatabaseConnectionHandler {
 
             ps.setInt(1, reservationModel.getConfNo());
             ps.setString(2, reservationModel.getVtname());
-
-            if (checkCustomerExists(ps, reservationModel)) {
-            	ps.setString(3, reservationModel.getDLicense());
-            } else {
-                // TODO: Call TransactionsWindowDelegate.insertCustomer(...) from here somehow.
-            }
-            ps.setString(4, reservationModel.getFromDateTime());
-            ps.setString(5, reservationModel.getToDateTime());
+            ps.setString(3, reservationModel.getDLicense());
+            ps.setTimestamp(4, reservationModel.getFromDateTime());
+            ps.setTimestamp(5, reservationModel.getToDateTime());
 
             // TODO: Should executeQuery be used here instead of executeUpdate since former returns a ResultSet,
             //  which can be used to to display details in a receipt.
@@ -193,8 +211,8 @@ public class DatabaseConnectionHandler {
             ps.setInt(1, confNo);
             ps.setString(2, reservationModel.getVtname());
             ps.setString(3, reservationModel.getDLicense());
-            ps.setString(4, reservationModel.getFromDateTime());
-            ps.setString(5, reservationModel.getToDateTime());
+            ps.setTimestamp(4, reservationModel.getFromDateTime());
+            ps.setTimestamp(5, reservationModel.getToDateTime());
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
@@ -231,8 +249,8 @@ public class DatabaseConnectionHandler {
                 ReservationModel model = new ReservationModel(rs.getInt("confNo"),
                         rs.getString("vtname"),
                         rs.getString("dLicense"),
-                        rs.getString("fromDateTime"),
-                        rs.getString("toDateTime"));
+                        rs.getTimestamp("fromDateTime"),
+                        rs.getTimestamp("toDateTime"));
                 result.add(model);
             }
 
@@ -290,7 +308,6 @@ public class DatabaseConnectionHandler {
                         "FROM vehicles v, vtype t WHERE v.vtname=t.vtname ORDER BY v.vtname, location");
             } else {
                 boolean prev = false;
-                // TODO change from vehicles in the table to be available
                 String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
                         "FROM vehicles v, vtype t WHERE v.vtname=t.vtname";
                 if (!vtname.trim().isEmpty()) {
@@ -373,7 +390,7 @@ public class DatabaseConnectionHandler {
     // TODO: Handle case where vehicle was not reserved prior to renting.
     public void rentVehicle(RentModel rentModel) {
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals " +
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO rent " +
                     "(rid, vid, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
                     "cardNo, exoDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 

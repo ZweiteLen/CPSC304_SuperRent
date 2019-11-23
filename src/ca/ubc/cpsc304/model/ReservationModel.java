@@ -6,11 +6,11 @@ public class ReservationModel {
     private final int confNo;
     private final String vtname;
     private final String dLicense;
-    private final String fromDateTime;
-    private final String toDateTime;
+    private final Timestamp fromDateTime;
+    private final Timestamp toDateTime;
 
-    public ReservationModel (int confNo, String vtname, String dLicense, String fromDateTime,
-                             String toDateTime) {
+    public ReservationModel (int confNo, String vtname, String dLicense, Timestamp fromDateTime,
+                             Timestamp toDateTime) {
         this.confNo = confNo;
         this.vtname = vtname;
         this.dLicense = dLicense;
@@ -30,11 +30,11 @@ public class ReservationModel {
         return dLicense;
     }
 
-    public String getFromDateTime() {
+    public Timestamp getFromDateTime() {
         return fromDateTime;
     }
 
-    public String getToDateTime() {
+    public Timestamp getToDateTime() {
         return toDateTime;
     }
 }

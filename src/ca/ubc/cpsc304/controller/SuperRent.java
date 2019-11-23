@@ -136,7 +136,11 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * Customer transactions.
      */
-    public void insertReservation(ReservationModel reservationModel) {
+    public void insertReservation(ReservationModel reservationModel)throws SQLException {
+        boolean e = dbHandler.checkCustomerExists(reservationModel);
+        if (!e) {
+            throw new SQLException("No such customer exists");
+        }
         dbHandler.insertReservation(reservationModel);
     }
 
@@ -153,7 +157,7 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public void insertCustomer(CustomerModel model) {
-
+       dbHandler.insertCustomer(model);
     }
 
     public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException {
@@ -168,11 +172,11 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
      * Clerk transactions.
      */
     public void rentVehicle(RentModel model) {
-
+       dbHandler.rentVehicle(model);
     }
 
     public void returnVehicle(ReturnModel model) {
-
+        dbHandler.returnVehicle(model);
     }
 
     public DefaultTableModel showDailyRentalsReport(String date) throws SQLException {
