@@ -72,7 +72,7 @@ insert into rent values (9,10,'8','83ry92', TO_TIMESTAMP('2019-09-15 10:00:00','
 insert into rent values (10,9,'16','r384wt', TO_TIMESTAMP('2019-12-05 09:00:00','YYYY-MM-DD HH24:MI:SS'),
                          TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','48263942','2004');
 
-insert into returns values (1, TO_TIMESTAMP('2019-10-04 14:00:00','YYYY-MM-DD HH24:MI:SS'), 43493, 1, 132 ); /*value = wrate *4 weeks+ drate *2days + ... */
+insert into returns values (1, TO_TIMESTAMP('2019-10-04 14:00:00','YYYY-MM-DD HH24:MI:SS'), 43493, 1, 132 );
 insert into returns values (2, TO_TIMESTAMP('2019-11-01 11:00:00','YYYY-MM-DD HH24:MI:SS'), 34944, 0, 231 );
 insert into returns values (3, TO_TIMESTAMP('2019-09-01 22:00:00','YYYY-MM-DD HH24:MI:SS'), 34248, 1, 180 );
 insert into returns values (4, TO_TIMESTAMP('2019-09-25 20:00:00','YYYY-MM-DD HH24:MI:SS'), 45353, 0, 326 );

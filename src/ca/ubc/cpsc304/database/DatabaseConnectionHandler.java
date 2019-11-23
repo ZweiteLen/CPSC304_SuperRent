@@ -121,11 +121,11 @@ public class DatabaseConnectionHandler {
      */
 
     // Helper function to check if customer already exists in Customer relation.
-    public boolean checkCustomerExists(ReservationModel reservationModel){
+    public boolean checkCustomerExists(String dlicense){
         try {
             Statement stmt =connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT dLicense FROM customers WHERE dLicense = "
-                    + reservationModel.getDLicense());
+            ResultSet rs = stmt.executeQuery("SELECT dLicense FROM customers WHERE dLicense = '"
+                    + dlicense + "'");
 
             if (!rs.next()) {
                 rs.close();
@@ -446,7 +446,12 @@ public class DatabaseConnectionHandler {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT location FROM VEHICLES " +
                     "WHERE LOCATION =" + "'"+ location + "'");
-            return rs.next();
+
+            if (rs.next()) {
+                rs.close();
+                stmt.close();
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println(LOG_TAG + e.getMessage());
         }
@@ -502,9 +507,9 @@ public class DatabaseConnectionHandler {
     }
 
     public DefaultTableModel getDailyRentalByBranch(String date, String location) {
-        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Company Total","Branch","Branch Total","Vehicle Type", "Type Total" , "rid", "vlicense", "confNo", "dlicense",
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch","Branch Total","Vehicle Type", "Type Total" , "rid", "vlicense", "confNo", "dlicense",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
-        if (checkValidDate(date, false)|| date.trim().isEmpty()) {
+        if (!checkValidDate(date, false)|| date.trim().isEmpty()) {
             return null;
         }
         String day = "'" + date + "'";
@@ -512,17 +517,16 @@ public class DatabaseConnectionHandler {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            rs = stmt.executeQuery("SELECT CompanyTotal, location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
+            rs = stmt.executeQuery("SELECT location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
                     "FROM RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VRentals FROM RENT, VEHICLES " +
                     "WHERE RENT.VLICENSE = VEHICLES.VLICENSE GROUP BY VTNAME), (SELECT LOCATION as branch, " +
                     "COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE " +
-                    "GROUP BY LOCATION),(SELECT COUNT(*) as CompanyTotal FROM RENT) " +
+                    "GROUP BY LOCATION) " +
                     "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION " +
                     "AND TRUNC(r.fromDateTime)= TO_DATE(" + day + ") AND location = '" + location +
                     "' ORDER BY LOCATION, VTNAME");
 
             while (rs.next()) {
-                String ct = rs.getString("CompanyTotal");
                 String l = rs.getString("location");
                 String br = rs.getString("BRentals");
                 String vt = rs.getString("VTNAME");
@@ -537,7 +541,7 @@ public class DatabaseConnectionHandler {
                 String cnm = rs.getString("cardName");
                 String cno = rs.getString("cardNo");
                 String e = rs.getString("expDate");
-                vmodel.addRow(new Object[]{ct, l,br, vt, vr, r, v, c, d, from, to, o, cnm, cno, e});
+                vmodel.addRow(new Object[]{l,br, vt, vr, r, v, c, d, from, to, o, cnm, cno, e});
             }
 
             rs.close();

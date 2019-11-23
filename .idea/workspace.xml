@@ -2,12 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Glenn.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Glenn.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/createtables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/createtables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/insert.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/insert.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/vehicletables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/resources/vehicletables.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/controller/SuperRent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TerminalTransactionsDelegate.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates/TransactionsWindowDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TerminalTransactions.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

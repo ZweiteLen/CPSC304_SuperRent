@@ -23,7 +23,7 @@ public interface TransactionsWindowDelegate {
      */
 
     // Reservations
-    void insertReservation(ReservationModel model) throws SQLException;
+    void insertReservation(ReservationModel model) throws Exception;
 //    void deleteReservation(int confNo);
 //    void updateReservation(int confNo, ReservationModel model);
 //    DefaultTableModel showReservations(ReservationModel model);
@@ -32,7 +32,7 @@ public interface TransactionsWindowDelegate {
 //    void insertRentVehicle(RentModel model);
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
-    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException;
+    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws Exception;
 
     // Just vehicles themselves
 //    void insertVehicle(VehicleModel model);
@@ -47,7 +47,8 @@ public interface TransactionsWindowDelegate {
 //    DefaultTableModel showVehicleTypes(VehicleTypeModel model);
 
     // Customers
-//    void insertCustomer(CustomerModel model);
+    void insertCustomer(CustomerModel model);
+    boolean checkCustomer(String dlicense);
 //    void deleteCustomer(String dLicense);
 //    void updateCustomer(String dLicense, CustomerModel model);
 //    DefaultTableModel showCustomers(CustomerModel model);
@@ -61,8 +62,8 @@ public interface TransactionsWindowDelegate {
     /**
      * Daily report transactions
      */
-    public DefaultTableModel showDailyRentalsReport(String date) throws SQLException;
-    public DefaultTableModel showDailyRentalsReportByBranch(String date, String location) throws SQLException;
-    public DefaultTableModel showDailyReturnsReport(String date);
-    public DefaultTableModel showDailyReturnsReportByBranch(String date, String location);
+    public DefaultTableModel showDailyRentalsReport(String date) throws Exception;
+    public DefaultTableModel showDailyRentalsReportByBranch(String date, String location) throws Exception;
+    public DefaultTableModel showDailyReturnsReport(String date) throws Exception;
+    public DefaultTableModel showDailyReturnsReportByBranch(String date, String location) throws Exception;
 }

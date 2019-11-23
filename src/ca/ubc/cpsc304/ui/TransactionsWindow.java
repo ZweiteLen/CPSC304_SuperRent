@@ -1,6 +1,7 @@
 package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
+import ca.ubc.cpsc304.model.CustomerModel;
 import ca.ubc.cpsc304.model.ReservationModel;
 import ca.ubc.cpsc304.number_generator.RandomNumberGenerator;
 
@@ -12,6 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The class is responsible for displaying and handling the transactions GUI.
@@ -19,15 +23,8 @@ import java.sql.SQLException;
 public class TransactionsWindow extends JFrame {
     private static final int TEXT_FIELD_WIDTH = 10;
 
-    // components of the login window
-    private JTextField vtnameField;
-    private JTextField locationField;
-    private JTextField fromField;
-    private JTextField toField;
-
     // delegate
     private TransactionsWindowDelegate delegate;
-
 
     DefaultTableModel vmodel = new DefaultTableModel();
     DefaultTableModel searchmodel = new DefaultTableModel();
@@ -43,6 +40,11 @@ public class TransactionsWindow extends JFrame {
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
+
+        JTextField vtnameField;
+        JTextField locationField;
+        JTextField fromField;
+        JTextField toField;
 
         JLabel vtnameLabel = new JLabel("Enter vehicle type: ");
         JLabel locationLabel = new JLabel("Enter branch: ");
@@ -198,7 +200,7 @@ public class TransactionsWindow extends JFrame {
                     JButton btn = seeVButton;
                     btn.setText(searchmodel.getRowCount() + " Vehicles found");
                     vehicleTable.setModel(vmodel);
-                } catch (SQLException se) {
+                } catch (Exception se) {
                     inputError("Please make sure the dates and times are entered in the correct format");
                 }
             }
@@ -215,11 +217,25 @@ public class TransactionsWindow extends JFrame {
                 String[] input = reservationForm();
                 try {
                     if (input != null) {
+                        String customer = input[1];
+                        boolean exist = delegate.checkCustomer(customer);
+                        if (!exist) {
+                            String[] customerDetails = customerInput();
+                            delegate.insertCustomer(new CustomerModel
+                                    (customerDetails[0], customerDetails[1], customerDetails[2], customer));
+                        }
+
                         int confo = RandomNumberGenerator.generateRandomReservationNumber();
-                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], input[2], input[3]));
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        Date parsedFromDate = dateFormat.parse(input[2]);
+                        Timestamp fromts = new java.sql.Timestamp(parsedFromDate.getTime());
+                        Date parseToDate = dateFormat.parse(input[3]);
+                        Timestamp tots = new Timestamp(parseToDate.getTime());
+
+                        delegate.insertReservation(new ReservationModel(confo, input[0], customer, fromts, tots));
                         receipt(input, confo);
                     }
-                } catch (SQLException se) {
+                } catch (Exception se) {
                     inputError(se.getMessage());
                 }
             }
@@ -242,13 +258,13 @@ public class TransactionsWindow extends JFrame {
                 String[] input = reportInput();
                 if (input != null) {
                     try {
-                        if (input[1].trim().length() != 0) {
+                        if (!input[1].trim().isEmpty()) {
                             searchmodel = delegate.showDailyRentalsReportByBranch(input[0], input[1]);
                         } else {
                             searchmodel = delegate.showDailyRentalsReport(input[0]);
                         }
                         vehicleTable.setModel(searchmodel);
-                    } catch (SQLException se) {
+                    } catch (Exception se) {
                         inputError(se.getMessage());
                     }
                 }
@@ -259,8 +275,16 @@ public class TransactionsWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] input = reportInput();
                 if (input != null) {
-                    searchmodel = delegate.showDailyReturnsReport(input[0]);
-                    vehicleTable.setModel(searchmodel);
+                    try {
+                        if (!input[1].trim().isEmpty()) {
+                            searchmodel = delegate.showDailyReturnsReportByBranch(input[0], input[1]);
+                        } else {
+                            searchmodel = delegate.showDailyReturnsReport(input[0]);
+                        }
+                        vehicleTable.setModel(searchmodel);
+                    } catch (Exception se) {
+                        inputError(se.getMessage());
+                    }
                 }
             }
         });
@@ -285,6 +309,38 @@ public class TransactionsWindow extends JFrame {
 
         // place the cursor in the text field for the username
         vtnameField.requestFocus();
+    }
+
+    private String[] customerInput() {
+        JTextField cellField = new JTextField(10);
+        JTextField nameField = new JTextField(10);
+        JTextField addressField = new JTextField(10);
+
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
+
+        myPanel.add(new JLabel("Name:"));
+        myPanel.add(nameField);
+        myPanel.add(new JLabel("Cellphone:"));
+        myPanel.add(cellField);
+        myPanel.add(new JLabel("Address:"));
+        myPanel.add(addressField);
+
+        String[] res = null;
+        int result = JOptionPane.showConfirmDialog(null, myPanel,
+                "New Customer", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String cell = cellField.getText().trim();
+            String name = nameField.getText().trim();
+            String add = addressField.getText().trim();
+            if (cell.isEmpty() || name.isEmpty() || add.isEmpty()) {
+                inputError("Please fill out all the fields");
+            } else {
+                res = new String[]{cell, name, add};
+            }
+        }
+        return res;
     }
 
     private void receipt(String[] info, int confo) {

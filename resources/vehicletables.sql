@@ -1,3 +1,10 @@
+drop table returns;
+drop table rent;
+drop table reservation;
+drop table vehicles;
+drop table vtype;
+drop table customers;
+
 create table customers (
                            cellphone char(20),
                            name char(20),
@@ -50,7 +57,7 @@ create table reservation (
 grant select on reservation to public;
 
 create table rent (
-                      rid char(20) not null,
+                      rid integer not null,
                       confNo integer not null,
                       vlicense char(20) not null,
                       dlicense char(20) not null,
@@ -68,7 +75,7 @@ create table rent (
 grant select on rent to public;
 
 create table returns(
-                        rid char(20),
+                        rid integer not null,
                         datetime timestamp,
                         odometer integer,
                         fulltank number(1), /*since it doesn't support boolean type*/
