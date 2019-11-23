@@ -4,13 +4,13 @@ public class CustomerModel {
     private final String cellphone;
     private final String name;
     private final String address;
-    private final String dLicemse;
+    private final String dLicense;
 
-    public CustomerModel(String cellphone, String name, String address, String dLicemse) {
+    public CustomerModel(String cellphone, String name, String address, String dLicense) {
         this.cellphone = cellphone;
         this.name = name;
         this.address = address;
-        this.dLicemse = dLicemse;
+        this.dLicense = dLicense;
     }
 
     public String getCellphone() {
@@ -21,8 +21,8 @@ public class CustomerModel {
         return address;
     }
 
-    public String getdLicemse() {
-        return dLicemse;
+    public String getdLicense() {
+        return dLicense;
     }
 
     public String getName() {

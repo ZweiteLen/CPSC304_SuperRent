@@ -23,7 +23,7 @@ public interface TransactionsWindowDelegate {
      */
 
     // Reservations
-    void insertReservation(ReservationModel model);
+    void insertReservation(ReservationModel model) throws SQLException;
 //    void deleteReservation(int confNo);
 //    void updateReservation(int confNo, ReservationModel model);
 //    DefaultTableModel showReservations(ReservationModel model);

@@ -1,3 +1,12 @@
+create table customers (
+                           cellphone char(20),
+                           name char(20),
+                           address char(20),
+                           dlicense char(20) not null,
+                           primary key (dlicense)
+);
+grant select on customers to public;
+
 create table vtype (
                        vtname char(20) not null,
                        features char(50),
@@ -55,3 +64,14 @@ create table rent (
     foreign key (vlicense) references VEHICLES on delete cascade
 );
 grant select on rent to public;
+
+create table returns(
+                        rid char(20),
+                        datetime timestamp,
+                        odometer integer,
+                        fulltank number(1), /*since it doesn't support boolean type*/
+                        CONSTRAINT boolean_constraint CHECK (fulltank IN (1,0)),
+                        value integer,
+                        foreign key (rid) references rent on delete cascade
+);
+grant select on returns to public;
