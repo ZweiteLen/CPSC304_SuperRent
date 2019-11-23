@@ -49,7 +49,7 @@ create table reservation (
 grant select on reservation to public;
 
 create table rent (
-    rid integer not null,
+    rid char(20) not null,
     confNo integer not null,
     vlicense char(20) not null,
     dlicense char(20) not null,

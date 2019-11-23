@@ -211,6 +211,7 @@ public class TransactionsWindow extends JFrame {
                 vehicleTable.setModel(searchmodel);
             }
         });
+
         makeReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -226,13 +227,14 @@ public class TransactionsWindow extends JFrame {
                         }
 
                         int confo = RandomNumberGenerator.generateRandomReservationNumber();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        Date parsedFromDate = dateFormat.parse(input[2]);
-                        Timestamp fromts = new java.sql.Timestamp(parsedFromDate.getTime());
-                        Date parseToDate = dateFormat.parse(input[3]);
-                        Timestamp tots = new Timestamp(parseToDate.getTime());
-
-                        delegate.insertReservation(new ReservationModel(confo, input[0], customer, fromts, tots));
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//                        Date parsedFromDate = dateFormat.parse(input[2]);
+//                        Timestamp fromts = new java.sql.Timestamp(parsedFromDate.getTime());
+//                        Date parseToDate = dateFormat.parse(input[3]);
+//                        Timestamp tots = new Timestamp(parseToDate.getTime());
+//
+//                        delegate.insertReservation(new ReservationModel(confo, input[0], customer, fromts, tots));
+                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], Timestamp.valueOf(input[2]), Timestamp.valueOf(input[3])));
                         receipt(input, confo);
                     }
                 } catch (Exception se) {
@@ -240,18 +242,21 @@ public class TransactionsWindow extends JFrame {
                 }
             }
         });
+
         makeRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
+
         makeReturn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
+
         rentals.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

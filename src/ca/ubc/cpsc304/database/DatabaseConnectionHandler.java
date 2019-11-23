@@ -158,6 +158,7 @@ public class DatabaseConnectionHandler {
         }
     }
 
+
     public void insertReservation(ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
@@ -201,7 +202,7 @@ public class DatabaseConnectionHandler {
     public void updateReservation(int confNo, ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE reservation SET confNo = ?, vtName = ?, " +
-                    "dLicense = ?, fromDateTime = ?. toDateTime = ? WHERE confNo = ?");
+                    "dLicense = ?, fromDateTime = ?, toDateTime = ? WHERE confNo = ?");
             ps.setInt(1, confNo);
             ps.setString(2, reservationModel.getVtname());
             ps.setString(3, reservationModel.getDLicense());
@@ -347,7 +348,7 @@ public class DatabaseConnectionHandler {
     // Helper function to check if a vehicle has been reserved before renting
     // by comparing confirmation numbers.
     private boolean checkConfNoIsNull(RentModel rentModel, PreparedStatement ps) throws SQLException {
-        ResultSet rs = ps.executeQuery("SELECT confNo FROM reservations WHERE confNo = "
+        ResultSet rs = ps.executeQuery("SELECT confNo FROM reservation WHERE confNo = "
                 + rentModel.getConfNo());
 
         if (rs.next()) {
@@ -364,7 +365,7 @@ public class DatabaseConnectionHandler {
 
     // Helper function to check if a vehicle is rented before returning by comparing rent ids.
     private boolean checkRidIsNull(ReturnModel returnModel, PreparedStatement ps) throws SQLException {
-        ResultSet rs = ps.executeQuery("SELECT rid FROM rentals WHERE rid = "
+        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE rid = "
                 + returnModel.getRid());
 
         if (rs.next()) {
@@ -385,8 +386,8 @@ public class DatabaseConnectionHandler {
     public void rentVehicle(RentModel rentModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO rent " +
-                    "(rid, vid, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
-                    "cardNo, exoDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    "(rid, VLICENSE, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
+                    "cardNo, expDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             ps.setString(1, rentModel.getRid());
             ps.setString(2, rentModel.getVlicense());

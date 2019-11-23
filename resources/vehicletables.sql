@@ -75,7 +75,7 @@ create table rent (
 grant select on rent to public;
 
 create table returns(
-                        rid integer not null,
+                        rid integer NOT NULL,
                         datetime timestamp,
                         odometer integer,
                         fulltank number(1), /*since it doesn't support boolean type*/
