@@ -158,6 +158,7 @@ public class DatabaseConnectionHandler {
         }
     }
 
+
     public void insertReservation(ReservationModel reservationModel) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");

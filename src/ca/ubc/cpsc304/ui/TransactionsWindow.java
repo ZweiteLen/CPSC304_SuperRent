@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * The class is responsible for displaying and handling the transactions GUI.
@@ -209,6 +210,7 @@ public class TransactionsWindow extends JFrame {
                 vehicleTable.setModel(searchmodel);
             }
         });
+
         makeReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -216,7 +218,7 @@ public class TransactionsWindow extends JFrame {
                 try {
                     if (input != null) {
                         int confo = RandomNumberGenerator.generateRandomReservationNumber();
-                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], input[2], input[3]));
+                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], Timestamp.valueOf(input[2]), Timestamp.valueOf(input[3])));
                         receipt(input, confo);
                     }
                 } catch (SQLException se) {
@@ -224,18 +226,21 @@ public class TransactionsWindow extends JFrame {
                 }
             }
         });
+
         makeRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
+
         makeReturn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO
             }
         });
+
         rentals.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

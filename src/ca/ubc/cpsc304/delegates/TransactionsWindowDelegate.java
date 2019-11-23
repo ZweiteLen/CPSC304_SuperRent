@@ -24,15 +24,15 @@ public interface TransactionsWindowDelegate {
 
     // Reservations
     void insertReservation(ReservationModel model) throws SQLException;
-//    void deleteReservation(int confNo);
-//    void updateReservation(int confNo, ReservationModel model);
-//    DefaultTableModel showReservations(ReservationModel model);
+    //void deleteReservation(int confNo);
+    //void updateReservation(int confNo, ReservationModel model);
+   //DefaultTableModel showReservations(ReservationModel model);
 
     // Rental vehicles
 //    void insertRentVehicle(RentModel model);
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
-    DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException;
+      DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException;
 
     // Just vehicles themselves
 //    void insertVehicle(VehicleModel model);
@@ -47,10 +47,10 @@ public interface TransactionsWindowDelegate {
 //    DefaultTableModel showVehicleTypes(VehicleTypeModel model);
 
     // Customers
-//    void insertCustomer(CustomerModel model);
-//    void deleteCustomer(String dLicense);
-//    void updateCustomer(String dLicense, CustomerModel model);
-//    DefaultTableModel showCustomers(CustomerModel model);
+    void insertCustomer(CustomerModel model);
+    //void deleteCustomer(String dLicense);
+   // void updateCustomer(String dLicense, CustomerModel model);
+    //DefaultTableModel showCustomers(CustomerModel model);
 
     // Return vehicles
 //    void insertReturnVehicle(ReturnModel model);

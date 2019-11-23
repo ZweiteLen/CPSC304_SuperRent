@@ -160,6 +160,7 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
        dbHandler.insertCustomer(model);
     }
 
+
     public DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws SQLException {
         DefaultTableModel resmodel = dbHandler.getVehicleInfo(vtname, location, fromDateTime, toDateTime);
         if (resmodel == null) {
