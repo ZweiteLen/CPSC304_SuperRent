@@ -5,7 +5,6 @@ import ca.ubc.cpsc304.model.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
@@ -158,10 +157,35 @@ public class DatabaseConnectionHandler {
         }
     }
 
+    // Method to test if newly inserted reservations actually get inserted.
+    private void testWithResultData() throws SQLException {
+        Statement statement = null;
+        String query = "SELECT * FROM reservation";
+
+        try {
+            statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                int confNo = resultSet.getInt("confNo");
+                String vtName = resultSet.getString("vtname");
+                String dLicense = resultSet.getString("dLicense");
+                Timestamp fromDateTime = resultSet.getTimestamp("fromDateTime");
+                Timestamp toDateTime = resultSet.getTimestamp("toDateTime");
+
+                System.out.println(confNo + ", " + vtName + ", " + dLicense + ", " + fromDateTime + ", " +
+                        toDateTime);
+            }
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
+    }
 
     public void insertReservation(ReservationModel reservationModel) {
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?)");
 
             ps.setInt(1, reservationModel.getConfNo());
             ps.setString(2, reservationModel.getVtname());
@@ -172,6 +196,7 @@ public class DatabaseConnectionHandler {
             // TODO: Should executeQuery be used here instead of executeUpdate since former returns a ResultSet,
             //  which can be used to to display details in a receipt.
             ps.executeUpdate();
+            testWithResultData();
             connection.commit();
             ps.close();
         } catch (SQLException e) {
@@ -191,6 +216,7 @@ public class DatabaseConnectionHandler {
             }
 
             ps.executeUpdate();
+            testWithResultData();
             connection.commit();
             ps.close();
         } catch (SQLException e) {
@@ -214,6 +240,7 @@ public class DatabaseConnectionHandler {
                 System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
             }
 
+            testWithResultData();
             connection.commit();
             ps.close();
         } catch (SQLException e) {

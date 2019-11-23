@@ -88,7 +88,7 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public void showReservations() {
-
+        dbHandler.getReservationInfo();
     }
 
     public void insertCustomer(CustomerModel model) {

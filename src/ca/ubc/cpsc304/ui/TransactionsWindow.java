@@ -191,6 +191,7 @@ public class TransactionsWindow extends JFrame {
         gb.setConstraints(seeVButton, c);
         contentPane.add(seeVButton);
 
+
         // register buttons with action event handler
         searchButton.addActionListener(new ActionListener() {
             @Override
