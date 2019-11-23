@@ -12,10 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * The class is responsible for displaying and handling the transactions GUI.
@@ -219,6 +216,12 @@ public class TransactionsWindow extends JFrame {
                 String[] input = reservationForm();
                 try {
                     if (input != null) {
+                        String vehicleType = input[0];
+                        boolean vehicleTypeExists = delegate.isVehicleTypeAvailable(vehicleType);
+                        if (!vehicleTypeExists) {
+                            // TODO: Create dialog window explaning problem and a solution.
+                        }
+
                         String customer = input[1];
                         boolean exist = delegate.checkCustomer(customer);
                         if (!exist) {

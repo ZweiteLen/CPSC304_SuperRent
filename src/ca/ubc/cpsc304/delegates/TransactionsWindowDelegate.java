@@ -32,7 +32,7 @@ public interface TransactionsWindowDelegate {
 //    void insertRentVehicle(RentModel model);
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
-    boolean isVehicleAvailable(String vehicleType);
+    boolean isVehicleTypeAvailable(String vehicleType);
     DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws Exception;
 
     // Just vehicles themselves
