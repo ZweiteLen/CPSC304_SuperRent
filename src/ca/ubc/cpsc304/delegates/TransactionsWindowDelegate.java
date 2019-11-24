@@ -2,9 +2,7 @@ package ca.ubc.cpsc304.delegates;
 
 import ca.ubc.cpsc304.model.*;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.SQLException;
 
 /**
  * This interface uses the delegation design pattern where instead of having the
@@ -26,10 +24,10 @@ public interface TransactionsWindowDelegate {
     void insertReservation(ReservationModel model) throws Exception;
 //    void deleteReservation(int confNo);
 //    void updateReservation(int confNo, ReservationModel model);
-//    DefaultTableModel showReservations(ReservationModel model);
+    ReservationModel showReservations(String confo, String dLicense) throws Exception;
 
     // Rental vehicles
-//    void insertRentVehicle(RentModel model);
+   void insertRentVehicle(RentModel model) throws Exception;
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
     DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws Exception;
@@ -54,7 +52,7 @@ public interface TransactionsWindowDelegate {
 //    DefaultTableModel showCustomers(CustomerModel model);
 
     // Return vehicles
-//    void insertReturnVehicle(ReturnModel model);
+    String[] insertReturnVehicle(ReturnModel model) throws Exception;
 //    void deleteReturnVehicle(String rid);
 //    void updateReturnVehicle(String rid, ReturnModel model);
 //    DefaultTableModel showReturnVehicles(ReturnModel model);

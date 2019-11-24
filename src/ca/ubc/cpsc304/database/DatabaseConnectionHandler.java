@@ -458,68 +458,6 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public int getValue(RentModel model, ReturnModel returnModel) throws Exception{
-        int value = 0;
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT TIMESTAMPDIFF(week, r.FROMDATETIME, re.DATETIME) AS WeekDiff, " +
-                    "TIMESTAMPDIFF(day, r.FROMDATETIME, re.DATETIME) AS DayDiff, " + "TIMESTAMPDIFF(hour, r.FROMDATETIME, re.DATETIME ) AS HourDiff " +
-                    "From rent r, returns re Where r.rid = re.rid");
-
-
-            int weekdiff;
-            int daydiff;
-            int hourdiff;
-            if (rs.next()) {
-               weekdiff = rs.getInt("WeekDiff");
-               daydiff = rs.getInt("DayDiff");
-               hourdiff = rs.getInt("HourDiff");
-
-                rs.close();
-                stmt.close();
-            }else {
-                rs.close();
-                stmt.close();
-                throw new Exception("Calculation went wrong!");
-            }
-
-            Statement s = connection.createStatement();
-            ResultSet r = s.executeQuery("SELECT wrate, hrate, drate, wirate, dirate, hirate, krate FROM VTYPE, VEHICLES, RENT Where rid = " + model.getRid() +
-                    " and Rent.VLICENSE = VEHICLES.VLICENSE and  VEHICLES.VTNAME = VTYPE.VTNAME");
-
-            int wrate;
-            int hrate;
-            int drate;
-            int wirate;
-            int dirate;
-            int hirate;
-            int krate;
-
-            if (r.next()) {
-                wrate = r.getInt("wrate");
-                hrate = r.getInt("hrate");
-                drate = r.getInt("drate");
-                wirate = r.getInt("wirate");
-                dirate = r.getInt("dirate");
-                hirate = r.getInt("hirate");
-                krate = r.getInt("krate");
-
-                r.close();
-                s.close();
-            }else {
-                r.close();
-                s.close();
-                throw new Exception("Calculation went wrong!");
-            }
-
-            value = weekdiff * (wrate + wirate) + daydiff * (drate + dirate) + hourdiff * (hrate + hirate); // I dont know what to add krate coz we didnt set limit in the odometer
-            return value;
-        }catch (SQLException e) {
-            System.out.println(LOG_TAG + e.getMessage());
-        }
-        return value;
-    }
-
 
     public String[] returnVehicle(ReturnModel returnModel) throws Exception {
         String[] res = null;
@@ -540,8 +478,8 @@ public class DatabaseConnectionHandler {
                 updateVehicle(rentModel.getVlicense(), "available");
                 
                 // TODO DO THE CALCULATION
-                String calculation = ""; // dont understand this part so I created helper function
-                int value = getValue(rentModel, returnModel);
+                String calculation = "";
+                int value = 0;
                 String confo = Integer.toString(rentModel.getConfNo());
                 res = new String[]{confo, calculation, Integer.toString(value)};
 

@@ -7,18 +7,16 @@ import ca.ubc.cpsc304.model.*;
 import ca.ubc.cpsc304.ui.LoginWindow;
 import ca.ubc.cpsc304.ui.TransactionsWindow;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 
 public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
     private final String LOG_TAG = SuperRent.class.getSimpleName();
 
-    private DatabaseConnectionHandler dbHandler = null;
+    private DatabaseConnectionHandler dbHandler;
     private LoginWindow loginWindow = null;
-    private TransactionsWindow transactionsWindow = null;
 
-    public SuperRent() {
+    private SuperRent() {
         dbHandler = new DatabaseConnectionHandler();
     }
 
@@ -30,17 +28,14 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * loginWindow is temporarily commented out to make testing the
      * transactionsWindow gui easier on myself
-     * TODO: uncomment and remove transactionsWindow when everything is complete
      */
     private void start() {
          loginWindow = new LoginWindow();
          loginWindow.showFrame(this);
     }
 
-
     /**
      * LoginWindowDelegate Implementation
-     *
      * connects to Oracle database with supplied username and password
      */
     public void login(String username, String password) {
@@ -50,8 +45,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             // Once connected, remove login window and start text transaction flow
             loginWindow.dispose();
 
-            TransactionsWindow transaction = new TransactionsWindow();
-            transaction.showFrame(this);
+            TransactionsWindow transactionsWindow = new TransactionsWindow();
+            transactionsWindow.showFrame(this);
 
         } else {
             loginWindow.handleLoginFailed();
@@ -72,10 +67,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public void insertReservation(ReservationModel reservationModel) throws Exception {
-//        boolean e = dbHandler.checkCustomerExists(reservationModel);
-//        if (!e) {
-//            throw new Exception("No such customer exists");
-//        }
         dbHandler.insertReservation(reservationModel);
     }
 
@@ -85,10 +76,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
 
     public void updateReservation(int confNo, ReservationModel reservationModel) {
         dbHandler.updateReservation(confNo, reservationModel);
-    }
-
-    public void showReservations() {
-
     }
 
     public void insertCustomer(CustomerModel model) {
@@ -107,12 +94,16 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * Clerk transactions.
      */
-    public void rentVehicle(RentModel model) {
-       dbHandler.rentVehicle(model);
+    public void insertRentVehicle(RentModel model) throws Exception {
+        dbHandler.rentVehicle(model);
     }
 
-    public void returnVehicle(ReturnModel model) {
-        dbHandler.returnVehicle(model);
+    public ReservationModel showReservations(String confNo, String dLicense) throws Exception {
+        return dbHandler.getReservationInfo(confNo, dLicense);
+    }
+
+    public String[] insertReturnVehicle(ReturnModel model) throws Exception {
+        return dbHandler.returnVehicle(model);
     }
 
     public DefaultTableModel showDailyRentalsReport(String date) throws Exception {
