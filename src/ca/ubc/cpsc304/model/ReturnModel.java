@@ -3,7 +3,7 @@ package ca.ubc.cpsc304.model;
 import java.sql.*;
 
 public class ReturnModel {
-    private final String rid;
+    private final int rid;
     private final Timestamp datetime;
     private final int odometer;
     private final boolean fulltank;
@@ -29,9 +29,7 @@ public class ReturnModel {
         return odometer;
     }
 
-    public boolean isFulltank() {
-        return fulltank;
-    }
+    public boolean isFulltank() { return fulltank; }
 
     public int getValue() {
         return value;

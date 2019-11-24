@@ -13,11 +13,10 @@ import java.sql.SQLException;
 public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegate {
     private final String LOG_TAG = SuperRent.class.getSimpleName();
 
-    private DatabaseConnectionHandler dbHandler = null;
+    private DatabaseConnectionHandler dbHandler;
     private LoginWindow loginWindow = null;
-    private TransactionsWindow transactionsWindow = null;
 
-    public SuperRent() {
+    private SuperRent() {
         dbHandler = new DatabaseConnectionHandler();
     }
 
@@ -35,10 +34,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
          loginWindow.showFrame(this);
     }
 
-
     /**
      * LoginWindowDelegate Implementation
-     *
      * connects to Oracle database with supplied username and password
      */
     public void login(String username, String password) {
@@ -48,8 +45,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
             // Once connected, remove login window and start text transaction flow
             loginWindow.dispose();
 
-            TransactionsWindow transaction = new TransactionsWindow();
-            transaction.showFrame(this);
+            TransactionsWindow transactionsWindow = new TransactionsWindow();
+            transactionsWindow.showFrame(this);
 
         } else {
             loginWindow.handleLoginFailed();
@@ -81,10 +78,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.updateReservation(confNo, reservationModel);
     }
 
-    public void showReservations() {
-
-    }
-
     public void insertCustomer(CustomerModel model) {
        dbHandler.insertCustomer(model);
     }
@@ -105,8 +98,8 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.rentVehicle(model);
     }
 
-    public ReservationModel showReservations(String confo, String dLicense) throws Exception {
-        return dbHandler.getReservationInfo(confo, dLicense);
+    public ReservationModel showReservations(String confNo, String dLicense) throws Exception {
+        return dbHandler.getReservationInfo(confNo, dLicense);
     }
 
     public String[] insertReturnVehicle(ReturnModel model) throws Exception {

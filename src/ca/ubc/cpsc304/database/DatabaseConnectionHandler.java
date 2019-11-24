@@ -5,10 +5,8 @@ import ca.ubc.cpsc304.model.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.*;
-import java.util.ArrayList;
 
 /**
  * This class handles all database related transactions
@@ -273,23 +271,23 @@ public class DatabaseConnectionHandler {
         return result;
     }
 
-    private boolean checkValidDate(String date, boolean h) {
+    private boolean isDateInvalid(String date, boolean h) {
         String d = date.trim();
         if (d.isEmpty()){
-            return true;
+            return false;
         }
         if (h) {
             String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s\\d\\d)$"
                     + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s\\d\\d)$"
                     + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s\\d\\d)$"
                     + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s\\d\\d)$";
-            return d.matches(dateRegEx);
+            return !d.matches(dateRegEx);
         } else {
             String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
                     + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$"
                     + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$"
                     + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$";
-            return d.matches(dateRegEx);
+            return !d.matches(dateRegEx);
         }
 
     }
@@ -298,7 +296,7 @@ public class DatabaseConnectionHandler {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Vehicle Type", "Location", "Model", "Make", "Year",
                 "Colour", "Features", "Current Status"}, 0);
 
-        if (!checkValidDate(fromDateTime, true) || !checkValidDate(toDateTime, true)) { return null; }
+        if (isDateInvalid(fromDateTime, true) || isDateInvalid(toDateTime, true)) { return null; }
 
         try {
             Statement stmt = connection.createStatement();
@@ -341,7 +339,6 @@ public class DatabaseConnectionHandler {
         return vmodel;
     }
 
-
     /**
      * START OF CLERK TRANSACTIONS:
      * 1) Rent vehicle
@@ -352,13 +349,13 @@ public class DatabaseConnectionHandler {
 
     // Helper function to check if a vehicle has been reserved before renting
     // by comparing confirmation numbers.
-    private boolean checkConfNoIsNull(RentModel rentModel, PreparedStatement ps) throws SQLException {
+    private boolean checkConfNoIsNull(RentModel rentModel, PreparedStatement ps) throws Exception {
         ResultSet rs = ps.executeQuery("SELECT confNo FROM reservation WHERE confNo = "
                 + rentModel.getConfNo());
 
         if (rs.next()) {
-            String confNo = rs.getString(1);
-            if (confNo.equals(rentModel.getConfNo())) {
+            int confNo = rs.getInt("confNo");
+            if (confNo != rentModel.getConfNo()) {
                 rs.close();
                 return false;
             }
@@ -446,7 +443,6 @@ public class DatabaseConnectionHandler {
             ps.setInt(10, rentModel.getConfNo());
 
             if (checkConfNoIsNull(rentModel, ps)) {
-                // System.out.println("This vehicle has not even been reserved before renting!");
                 throw new Exception("This vehicle has not been reserved before renting!");
             }
 
@@ -472,8 +468,11 @@ public class DatabaseConnectionHandler {
                 ps.setInt(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
-                if () {}
-                ps.setInt(4, returnModel.isFulltank());
+                if (returnModel.isFulltank()) {
+                    ps.setInt(4, 1);
+                } else {
+                    ps.setInt(4, 0);
+                }
                 ps.setInt(5, returnModel.getValue());
 
                 updateVehicle(rentModel.getVlicense(), "available");
@@ -481,8 +480,8 @@ public class DatabaseConnectionHandler {
                 // TODO DO THE CALCULATION
                 String calculation = "";
                 int value = 0;
-                String confo = Integer.toString(rentModel.getConfNo());
-                res = new String[]{confo, calculation, Integer.toString(value)};
+                String confNo = Integer.toString(rentModel.getConfNo());
+                res = new String[]{confNo, calculation, Integer.toString(value)};
 
                 ps.executeUpdate();
                 connection.commit();
@@ -515,7 +514,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyRental(String date) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Company Total", "Branch", "Branch Total", "Vehicle Type", "Type Total", "rid", "vlicense", "confNo", "dlicense",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
-        if (!checkValidDate(date, false) || date.trim().isEmpty()) {
+        if (isDateInvalid(date, false) || date.trim().isEmpty()) {
             return null;
         }
 
@@ -563,7 +562,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyRentalByBranch(String date, String location) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch","Branch Total","Vehicle Type", "Type Total" , "rid", "vlicense", "confNo", "dlicense",
                 "fromDateTime", "toDateTime", "odometer", "cardName", "cardNo", "expDate"}, 0);
-        if (!checkValidDate(date, false)|| date.trim().isEmpty()) {
+        if (isDateInvalid(date, false) || date.trim().isEmpty()) {
             return null;
         }
         String day = "'" + date + "'";
@@ -610,7 +609,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyReturn(String date) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
                 "Subtotal: Type/Branch Returned", "Subtotal: Revenue/Branch", "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
-        if (!checkValidDate(date, false)) {
+        if (isDateInvalid(date, false)) {
             return null;
         }
         String day = "'" + date + "'";
@@ -657,7 +656,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyReturnByBranch(String date, String location) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
                 "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
-        if (!checkValidDate(date, false)) {
+        if (isDateInvalid(date, false)) {
             return null;
         }
         String day = "'" + date + "'";
