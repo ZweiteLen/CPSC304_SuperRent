@@ -158,9 +158,33 @@ public class DatabaseConnectionHandler {
         }
     }
 
-
-    public void insertReservation(ReservationModel reservationModel) {
+    private boolean checkVTAvailable(String vtname) {
         try {
+            Statement stmt =connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT VLICENSE FROM VEHICLES WHERE STATUS=" + "'available'" + " AND VTNAME = '"
+                    + vtname + "'");
+
+            if (!rs.next()) {
+                rs.close();
+                return false;
+            }
+
+            rs.close();
+            return true;
+        } catch (SQLException e){
+            System.out.println(LOG_TAG + " " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    public void insertReservation(ReservationModel reservationModel) throws Exception {
+        try {
+            boolean available = checkVTAvailable(reservationModel.getVtname());
+            if (!available) {
+                throw new Exception("Vehicle type not available");
+            }
+
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
 
             ps.setInt(1, reservationModel.getConfNo());
@@ -169,8 +193,6 @@ public class DatabaseConnectionHandler {
             ps.setTimestamp(4, reservationModel.getFromDateTime());
             ps.setTimestamp(5, reservationModel.getToDateTime());
 
-            // TODO: Should executeQuery be used here instead of executeUpdate since former returns a ResultSet,
-            //  which can be used to to display details in a receipt.
             ps.executeUpdate();
             connection.commit();
             ps.close();
@@ -222,31 +244,24 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public ReservationModel[] getReservationInfo() {
-        ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
+    public ReservationModel getReservationInfo(String confo, String dLicense) throws Exception {
+        ReservationModel result = null;
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation WHERE CONFNO =" + Integer.parseInt(confo)
+                    + " OR DLICENSE='" + dLicense + "'");
 
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
+            if (rs.next()) {
 
-            while (rs.next()) {
-                ReservationModel model = new ReservationModel(rs.getInt("confNo"),
+                result = new ReservationModel(
+                        rs.getInt("confNo"),
                         rs.getString("vtname"),
                         rs.getString("dLicense"),
                         rs.getTimestamp("fromDateTime"),
                         rs.getTimestamp("toDateTime"));
-                result.add(model);
+            } else {
+                throw new Exception("Confirmation number or driver's license is invalid");
             }
 
             rs.close();
@@ -255,7 +270,7 @@ public class DatabaseConnectionHandler {
             System.out.println(LOG_TAG + " " + e.getMessage());
         }
 
-        return result.toArray(new ReservationModel[result.size()]);
+        return result;
     }
 
     private boolean checkValidDate(String date, boolean h) {
@@ -285,26 +300,15 @@ public class DatabaseConnectionHandler {
 
         if (!checkValidDate(fromDateTime, true) || !checkValidDate(toDateTime, true)) { return null; }
 
-        String from = "";
-        String to = "";
-        if (!fromDateTime.trim().isEmpty()) {
-            from = "TO_TIMESTAMP('" + fromDateTime.trim() + ":00:00')";
-        }
-        if (!toDateTime.trim().isEmpty()) {
-            to = "TO_TIMESTAMP('" + toDateTime.trim() + ":00:00')";
-        }
-
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs;
-            // TODO add back in ' AND STATUS='available' ' when we change our data
             if (vtname.trim().isEmpty() && location.trim().isEmpty() && fromDateTime.trim().isEmpty() && toDateTime.trim().isEmpty()) {
                 rs = stmt.executeQuery("SELECT v.vtname, location, model, make, v.year, colour, features, status " +
-                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname ORDER BY v.vtname, location");
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available' ORDER BY v.vtname, location");
             } else {
-                boolean prev = false;
                 String sqlquery = "SELECT v.vtname, location, model, make, year, colour, features, status " +
-                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname";
+                        "FROM vehicles v, vtype t WHERE v.vtname=t.vtname AND STATUS='available'";
                 if (!vtname.trim().isEmpty()) {
                     sqlquery = sqlquery+ " AND " + "v.vtname = " + "'" + vtname + "'";
                 }
@@ -364,49 +368,85 @@ public class DatabaseConnectionHandler {
     }
 
     // Helper function to check if a vehicle is rented before returning by comparing rent ids.
-    private boolean checkRidIsNull(ReturnModel returnModel, PreparedStatement ps) throws SQLException {
-        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE rid = "
-                + returnModel.getRid());
+    private RentModel checkRidIsNull(ReturnModel returnModel, PreparedStatement ps) throws Exception {
+        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE rid = " + returnModel.getRid());
 
         if (rs.next()) {
-            String rid = rs.getString(1);
-            if (rid.equals(returnModel.getRid())) {
-                rs.close();
-                return false;
-            }
+            RentModel res = new RentModel(
+                    rs.getInt("rid"),
+                    rs.getString("vlicense"),
+                    rs.getString("dlicense"),
+                    rs.getTimestamp("fromDateTim"),
+                    rs.getTimestamp("toDateTim"),
+                    rs.getInt("odometer"), null, null, null,
+                    rs.getInt("confNo"));
+            rs.close();
+            return res;
         }
 
         rs.close();
-        return true;
+        return null;
     }
 
-    // TODO: Display receipt (confirmation number, date of reservation, type of car, location,
-    //  rental period, vehicle license, driver license).
-    // TODO: Handle case where vehicle was not reserved prior to renting.
-    public void rentVehicle(RentModel rentModel) {
+    private void updateVehicle(String vlicense, String status) {
         try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE VEHICLES SET STATUS= '" + status +
+                    "' WHERE VEHICLES.VLICENSE ='" + vlicense + "'");
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Vehicle " + vlicense + " does not exist!");
+            }
+
+            connection.commit();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(LOG_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    public void rentVehicle(RentModel rentModel) throws Exception {
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT VLICENSE, ODOMETER FROM VEHICLES, RESERVATION " +
+                    "WHERE STATUS='available' AND VEHICLES.VTNAME=RESERVATION.VTNAME AND RESERVATION.CONFNO="
+                    + rentModel.getConfNo());
+
+            String vlicense;
+            int odo;
+            if (rs.next()) {
+                vlicense = rs.getString("Vlicense");
+                odo = rs.getInt("Odometer");
+
+                rs.close();
+                stmt.close();
+            } else {
+                rs.close();
+                stmt.close();
+                throw new Exception("Desired vehicle not available");
+            }
+
+            updateVehicle(vlicense, "rented");
+
             PreparedStatement ps = connection.prepareStatement("INSERT INTO rent " +
                     "(rid, VLICENSE, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
                     "cardNo, expDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            ps.setString(1, rentModel.getRid());
-            ps.setString(2, rentModel.getVlicense());
+            ps.setInt(1, rentModel.getRid());
+            ps.setString(2, vlicense);
             ps.setString(3, rentModel.getDlicense());
             ps.setTimestamp(4, rentModel.getFromDateTime());
             ps.setTimestamp(5, rentModel.getToDateTime());
-            ps.setInt(6, rentModel.getOdometer());
+            ps.setInt(6, odo);
             ps.setString(7, rentModel.getCardName());
             ps.setString(8, rentModel.getCardNo());
             ps.setString(9, rentModel.getExpDate());
+            ps.setInt(10, rentModel.getConfNo());
 
             if (checkConfNoIsNull(rentModel, ps)) {
-                System.out.println("This vehicle has not even been reserved before renting!");
-            }
-
-            if (rentModel.getConfNo() == null) {
-                ps.setNull(10, Types.INTEGER);
-            } else {
-                ps.setString(10, rentModel.getConfNo());
+                // System.out.println("This vehicle has not even been reserved before renting!");
+                throw new Exception("This vehicle has not been reserved before renting!");
             }
 
             ps.executeUpdate();
@@ -417,15 +457,16 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    // TODO: Show receipt with reservation confirmation number, date of return, how total is calculated.
-    public void returnVehicle(ReturnModel returnModel) {
+
+    public String[] returnVehicle(ReturnModel returnModel) throws Exception {
+        String[] res = null;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO returns " +
                     "(rid, datetime, odometer, fulltank, value) VALUES (?, ?, ?, ?, ?)");
 
-            if (checkRidIsNull(returnModel, ps)) {
-                System.out.println("This vehicle has not even been rented!");
-                return;
+            RentModel rentModel = checkRidIsNull(returnModel, ps);
+            if (rentModel == null) {
+                throw new Exception("This vehicle has not been rented!");
             } else {
                 ps.setString(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
@@ -433,13 +474,23 @@ public class DatabaseConnectionHandler {
                 ps.setBoolean(4, returnModel.isFulltank());
                 ps.setInt(5, returnModel.getValue());
 
+                updateVehicle(rentModel.getVlicense(), "available");
+                
+                // TODO DO THE CALCULATION
+                String calculation = "";
+                int value = 0;
+                String confo = Integer.toString(rentModel.getConfNo());
+                res = new String[]{confo, calculation, Integer.toString(value)};
+
                 ps.executeUpdate();
                 connection.commit();
                 ps.close();
+                return res;
             }
         } catch (SQLException e) {
             System.out.println(LOG_TAG + e.getMessage());
         }
+        return res;
     }
 
     public boolean checkBranch(String location) {
@@ -555,27 +606,41 @@ public class DatabaseConnectionHandler {
     }
 
     public DefaultTableModel getDailyReturn(String date) {
-        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"rid", "datetime", "odometer", "fulltank?", "value"}, 0);
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
+                "Subtotal: Type/Branch Returned", "Subtotal: Revenue/Branch", "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
         if (!checkValidDate(date, false)) {
             return null;
         }
+        String day = "'" + date + "'";
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM returns r, vehicles v WHERE r.vlicense=v.vlicense AND " +
-                        "CONVERT(DATE, r.fromDateTime)=CONVERT(DATE, CURRENT_DATE)");
-
+            ResultSet rs = stmt.executeQuery("SELECT location, VTNAME, VTReturns, COUNT(VTReturns) over (partition " +
+                    "by LOCATION) as SubtotalVehicles, SUM(VALUE) over (partition by LOCATION) as SubtotalRevenue, " +
+                    "TotalReturns, TotalRevenue, rt.RID, DATETIME, rt.ODOMETER, FULLTANK, VALUE FROM RETURNS rt, RENT r, " +
+                    "VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VTReturns FROM RETURNS, RENT, VEHICLES " +
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE AND RETURNS.RID=RENT.RID AND TRUNC(RETURNS.DATETIME) = " +
+                    "TO_DATE(" + day + ") GROUP BY VTNAME), (SELECT COUNT(*) as TotalReturns, SUM(VALUE) as TotalRevenue " +
+                    "FROM RETURNS WHERE TRUNC(DATETIME) = TO_DATE(" + day + ")) WHERE r.VLICENSE=v.VLICENSE AND " +
+                    "vtype=v.VTNAME AND r.RID=rt.RID AND TRUNC(rt.DATETIME) = TO_DATE(" + day + ") ORDER BY LOCATION, VTNAME");
 
             while (rs.next()) {
+                String l = rs.getString("location");
+                String vt = rs.getString("VTNAME");
+                String vr = rs.getString("VTReturns");
+                String sv = rs.getString("SubtotalVehicles");
+                String sr = rs.getString("SubtotalRevenue");
+                String gv = rs.getString("TotalReturns");
+                String gr = rs.getString("TotalRevenue");
                 String r = rs.getString("rid");
-                Date d = rs.getDate("datetime");
+                String d = rs.getTimestamp("datetime").toString().substring(0,16);
                 int o = rs.getInt("odometer");
                 String t = "No";
-                if (rs.getBoolean("fulltank")) {
+                if (rs.getInt("fulltank") == 1) {
                     t = "Yes";
                 }
                 int v = rs.getInt("value");
-                vmodel.addRow(new Object[]{r, d, o, t, v});
+                vmodel.addRow(new Object[]{l, vt, vr, sv, sr, gv, gr, r, d, o, t, v});
             }
 
             rs.close();
@@ -588,6 +653,49 @@ public class DatabaseConnectionHandler {
     }
 
     public DefaultTableModel getDailyReturnByBranch(String date, String location) {
-        return null;
+        DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
+                "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
+        if (!checkValidDate(date, false)) {
+            return null;
+        }
+        String day = "'" + date + "'";
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT location, VTNAME, VTReturns, COUNT(VTReturns) over (partition " +
+                    "by LOCATION) as SubtotalVehicles, SUM(VALUE) over (partition by LOCATION) as SubtotalRevenue, " +
+                    "TotalReturns, TotalRevenue, rt.RID, DATETIME, rt.ODOMETER, FULLTANK, VALUE " +
+                    "FROM RETURNS rt, RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VTReturns FROM RETURNS, RENT, VEHICLES " +
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE AND RETURNS.RID=RENT.RID AND location = '" + location + "' " +
+                    "AND TRUNC(RETURNS.DATETIME) = TO_DATE(" + day + ") GROUP BY VTNAME), " +
+                    "(SELECT COUNT(*) as TotalReturns, SUM(VALUE) as TotalRevenue FROM RETURNS, RENT, VEHICLES WHERE TRUNC(DATETIME) = " +
+                    "TO_DATE(" + day + ") AND RENT.VLICENSE = VEHICLES.VLICENSE AND RETURNS.RID=RENT.RID AND location = '" + location + "') " +
+                    "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND r.RID=rt.RID AND TRUNC(rt.DATETIME) = " +
+                    "TO_DATE(" + day + ") AND location = '" + location + "' ORDER BY LOCATION, VTNAME");
+
+            while (rs.next()) {
+                String l = rs.getString("location");
+                String vt = rs.getString("VTNAME");
+                String vr = rs.getString("VTReturns");
+                String sv = rs.getString("SubtotalVehicles");
+                String sr = rs.getString("SubtotalRevenue");
+                String r = rs.getString("rid");
+                String d = rs.getTimestamp("datetime").toString().substring(0,16);
+                int o = rs.getInt("odometer");
+                String t = "No";
+                if (rs.getInt("fulltank") == 1) {
+                    t = "Yes";
+                }
+                int v = rs.getInt("value");
+                vmodel.addRow(new Object[]{l, vt, vr, sv, sr, r, d, o, t, v});
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(LOG_TAG + " " + e.getMessage());
+        }
+
+        return vmodel;
     }
 }

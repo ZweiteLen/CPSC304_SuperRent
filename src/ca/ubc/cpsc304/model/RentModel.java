@@ -3,7 +3,7 @@ package ca.ubc.cpsc304.model;
 import java.sql.*;
 
 public class RentModel {
-    private final String rid;
+    private final int rid;
     private final String vlicense;
     private final String dlicense;
     private final Timestamp fromDateTime;
@@ -12,10 +12,10 @@ public class RentModel {
     private final String cardName;
     private final String cardNo;
     private final String expDate;
-    private final String confNo;
+    private final int confNo;
 
-    public RentModel (String rid, String vlicense, String dlicense, Timestamp fromDateTime, Timestamp toDateTime,
-                      int odometer, String cardName, String cardNo, String expDate, String confNo) {
+    public RentModel (int rid, String vlicense, String dlicense, Timestamp fromDateTime, Timestamp toDateTime,
+                      int odometer, String cardName, String cardNo, String expDate, int confNo) {
         this.rid = rid;
         this.vlicense = vlicense;
         this.dlicense = dlicense;
@@ -28,7 +28,7 @@ public class RentModel {
         this.confNo = confNo;
     }
 
-    public String getRid() {
+    public int getRid() {
         return rid;
     }
 
@@ -64,7 +64,7 @@ public class RentModel {
         return expDate;
     }
 
-    public String getConfNo() {
+    public int getConfNo() {
         return confNo;
     }
 }
