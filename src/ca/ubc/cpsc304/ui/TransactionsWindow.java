@@ -219,7 +219,6 @@ public class TransactionsWindow extends JFrame {
                         String vehicleType = input[0];
                         boolean vehicleTypeExists = delegate.checkVehicleTypeExists(vehicleType);
                         if (!vehicleTypeExists) {
-                            // TODO: Create dialog window explaining problem and a solution.
                             inputError("The vehicle type is not available.  Please choose one of Economy, SUV, " +
                                     "Standard, Mid-size, Full-size, Compact, Truck.");
                         }
@@ -232,7 +231,7 @@ public class TransactionsWindow extends JFrame {
                                     (customerDetails[0], customerDetails[1], customerDetails[2], customer));
                         }
 
-                        int confo = RandomNumberGenerator.generateRandomReservationNumber();
+                        int confNo = RandomNumberGenerator.generateRandomReservationNumber();
 //                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //                        Date parsedFromDate = dateFormat.parse(input[2]);
 //                        Timestamp fromts = new java.sql.Timestamp(parsedFromDate.getTime());
@@ -240,8 +239,8 @@ public class TransactionsWindow extends JFrame {
 //                        Timestamp tots = new Timestamp(parseToDate.getTime());
 //
 //                        delegate.insertReservation(new ReservationModel(confo, input[0], customer, fromts, tots));
-                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], Timestamp.valueOf(input[2]), Timestamp.valueOf(input[3])));
-                        receipt(input, confo);
+                        delegate.insertReservation(new ReservationModel(confNo, input[0], input[1], Timestamp.valueOf(input[2]), Timestamp.valueOf(input[3])));
+                        receipt(input, confNo);
                     }
                 } catch (Exception se) {
                     inputError(se.getMessage());
@@ -355,6 +354,7 @@ public class TransactionsWindow extends JFrame {
     }
 
     private void receipt(String[] info, int confo) {
+        System.out.println("Receipt here!");
         String cN = "" + confo;
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
