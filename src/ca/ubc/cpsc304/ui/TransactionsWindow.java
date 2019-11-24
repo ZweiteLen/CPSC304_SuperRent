@@ -217,9 +217,11 @@ public class TransactionsWindow extends JFrame {
                 try {
                     if (input != null) {
                         String vehicleType = input[0];
-                        boolean vehicleTypeExists = delegate.isVehicleTypeAvailable(vehicleType);
+                        boolean vehicleTypeExists = delegate.checkVehicleTypeExists(vehicleType);
                         if (!vehicleTypeExists) {
-                            // TODO: Create dialog window explaning problem and a solution.
+                            // TODO: Create dialog window explaining problem and a solution.
+                            inputError("The vehicle type is not available.  Please choose one of Economy, SUV, " +
+                                    "Standard, Mid-size, Full-size, Compact, Truck.");
                         }
 
                         String customer = input[1];

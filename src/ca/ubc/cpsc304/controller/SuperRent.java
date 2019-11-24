@@ -71,6 +71,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         return dbHandler.checkCustomerExists(dlicense);
     }
 
+    public boolean checkVehicleTypeExists(String vehicleType) throws SQLException {
+        return dbHandler.checkVehicleTypeExists(vehicleType);
+    }
+
     public void insertReservation(ReservationModel reservationModel) throws Exception {
 //        boolean e = dbHandler.checkCustomerExists(reservationModel);
 //        if (!e) {

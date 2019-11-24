@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles all database related transactions
@@ -139,6 +140,36 @@ public class DatabaseConnectionHandler {
          return false;
     }
 
+    public boolean checkVehicleTypeExists(String vehicleType) throws SQLException {
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        System.out.println("Vehicle type: " + vehicleType);
+
+        try {
+            List<String> vehicleTypesFromResultSet = new ArrayList<>();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT UNIQUE vtname FROM vehicles");
+
+            while (resultSet.next()) {
+                vehicleTypesFromResultSet.add(resultSet.getString("vtname").trim());
+            }
+
+            for (String vt : vehicleTypesFromResultSet) {
+                System.out.println("Vehicle type: " + vt);
+            }
+
+            return vehicleTypesFromResultSet.contains(vehicleType);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+
+            if (statement != null) {
+                statement.close();
+            }
+        }
+    }
 
     public void insertCustomer(CustomerModel customerModel){
         try {
