@@ -469,9 +469,10 @@ public class DatabaseConnectionHandler {
             if (rentModel == null) {
                 throw new Exception("This vehicle has not been rented!");
             } else {
-                ps.setString(1, returnModel.getRid());
+                ps.setInt(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
+                
                 ps.setInt(4, returnModel.isFulltank());
                 ps.setInt(5, returnModel.getValue());
 

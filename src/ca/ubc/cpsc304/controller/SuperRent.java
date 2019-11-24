@@ -7,7 +7,6 @@ import ca.ubc.cpsc304.model.*;
 import ca.ubc.cpsc304.ui.LoginWindow;
 import ca.ubc.cpsc304.ui.TransactionsWindow;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 
@@ -30,7 +29,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * loginWindow is temporarily commented out to make testing the
      * transactionsWindow gui easier on myself
-     * TODO: uncomment and remove transactionsWindow when everything is complete
      */
     private void start() {
          loginWindow = new LoginWindow();
@@ -72,10 +70,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public void insertReservation(ReservationModel reservationModel) throws Exception {
-//        boolean e = dbHandler.checkCustomerExists(reservationModel);
-//        if (!e) {
-//            throw new Exception("No such customer exists");
-//        }
         dbHandler.insertReservation(reservationModel);
     }
 
@@ -107,12 +101,16 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * Clerk transactions.
      */
-    public void rentVehicle(RentModel model) {
-       dbHandler.rentVehicle(model);
+    public void insertRentVehicle(RentModel model) throws Exception {
+        dbHandler.rentVehicle(model);
     }
 
-    public void returnVehicle(ReturnModel model) {
-        dbHandler.returnVehicle(model);
+    public ReservationModel showReservations(String confo, String dLicense) throws Exception {
+        return dbHandler.getReservationInfo(confo, dLicense);
+    }
+
+    public String[] insertReturnVehicle(ReturnModel model) throws Exception {
+        return dbHandler.returnVehicle(model);
     }
 
     public DefaultTableModel showDailyRentalsReport(String date) throws Exception {
