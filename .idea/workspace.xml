@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="" />
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -156,6 +154,7 @@
       <workItem from="1574450965462" duration="9726000" />
       <workItem from="1574450965462" duration="7757000" />
       <workItem from="1574497156328" duration="19883000" />
+      <workItem from="1574585646380" duration="600000" />
     </task>
     <task id="LOCAL-00001" summary="corrected some variable names">
       <created>1574470934117</created>
@@ -194,16 +193,5 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="corrected some variable names" />
     <option name="LAST_COMMIT_MESSAGE" value="corrected some variable names" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java</url>
-          <line>298</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
