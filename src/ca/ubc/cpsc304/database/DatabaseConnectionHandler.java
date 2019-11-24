@@ -341,6 +341,7 @@ public class DatabaseConnectionHandler {
         return vmodel;
     }
 
+
     /**
      * START OF CLERK TRANSACTIONS:
      * 1) Rent vehicle
@@ -471,7 +472,7 @@ public class DatabaseConnectionHandler {
                 ps.setString(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
-                ps.setBoolean(4, returnModel.isFulltank());
+                ps.setInt(4, returnModel.isFulltank());
                 ps.setInt(5, returnModel.getValue());
 
                 updateVehicle(rentModel.getVlicense(), "available");

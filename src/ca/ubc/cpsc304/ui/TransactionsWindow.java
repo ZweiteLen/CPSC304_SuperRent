@@ -1,7 +1,8 @@
 package ca.ubc.cpsc304.ui;
 
 import ca.ubc.cpsc304.delegates.TransactionsWindowDelegate;
-import ca.ubc.cpsc304.model.*;
+import ca.ubc.cpsc304.model.CustomerModel;
+import ca.ubc.cpsc304.model.ReservationModel;
 import ca.ubc.cpsc304.number_generator.RandomNumberGenerator;
 
 import javax.swing.*;
@@ -11,7 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The class is responsible for displaying and handling the transactions GUI.
@@ -211,42 +215,44 @@ public class TransactionsWindow extends JFrame {
         makeReservation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeReservationHelper();
+                String[] input = reservationForm();
+                try {
+                    if (input != null) {
+                        String customer = input[1];
+                        boolean exist = delegate.checkCustomer(customer);
+                        if (!exist) {
+                            String[] customerDetails = customerInput();
+                            delegate.insertCustomer(new CustomerModel
+                                    (customerDetails[0], customerDetails[1], customerDetails[2], customer));
+                        }
+
+                        int confo = RandomNumberGenerator.generateRandomReservationNumber();
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//                        Date parsedFromDate = dateFormat.parse(input[2]);
+//                        Timestamp fromts = new java.sql.Timestamp(parsedFromDate.getTime());
+//                        Date parseToDate = dateFormat.parse(input[3]);
+//                        Timestamp tots = new Timestamp(parseToDate.getTime());
+//
+//                        delegate.insertReservation(new ReservationModel(confo, input[0], customer, fromts, tots));
+                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1], Timestamp.valueOf(input[2]), Timestamp.valueOf(input[3])));
+                        receipt(input, confo);
+                    }
+                } catch (Exception se) {
+                    inputError(se.getMessage());
+                }
             }
         });
 
         makeRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int method = rent();
-                if (method != 2) {
-                    if (method == 1) {
-                        makeReservationHelper();
-                    }
-                    makeRentalHelper();
-                }
+                // TODO
             }
         });
 
         makeReturn.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String[] input = returnInput();
-                if (input != null) {
-                    try {
-                        boolean full = input[3].equals("Yes");
-                        Timestamp returndate = Timestamp.valueOf(input[1]);
-                        String[] details = delegate.insertReturnVehicle(new ReturnModel(input[0], returndate,
-                                Integer.parseInt(input[2]), full, 0));
 
-                        String[] receiptDetails = new String[]{"Confirmation number: " + details[0], "Return date: " +
-                                returndate.toString().substring(0, 16), "Total price: $" + details[4], "Calculated by :"};
-                        receipt(receiptDetails);
-                    } catch (Exception se) {
-                        inputError(se.getMessage());
-                    }
-                }
-            }
         });
 
         rentals.addActionListener(new ActionListener() {
@@ -308,182 +314,6 @@ public class TransactionsWindow extends JFrame {
         vtnameField.requestFocus();
     }
 
-    private void makeReservationHelper() {
-        String[] input = reservationForm();
-        try {
-            if (input != null) {
-                String customer = input[1];
-                boolean exist = delegate.checkCustomer(customer);
-                if (!exist) {
-                    String[] customerDetails = customerInput();
-                    delegate.insertCustomer(new CustomerModel
-                            (customerDetails[0], customerDetails[1], customerDetails[2], customer));
-                }
-
-                int confo = RandomNumberGenerator.generateRandomReservationNumber();
-                try {
-                    Timestamp from = Timestamp.valueOf(input[2] + ":00:00.000");
-                    Timestamp to = Timestamp.valueOf(input[3] + ":00:00.000");
-
-                    delegate.insertReservation(new ReservationModel(confo, input[0], input[1],
-                            from, to));
-
-                    String[] receiptDetails = new String[]{"Confirmation number: " + confo, "Vehicle Type: " + input[0],
-                            "Driver's License: " + input[1], "From: " + from.toString().substring(0,16), "To: " + to.toString().substring(0,16)};
-                    receipt(receiptDetails);
-                } catch (Exception ex) {
-                    inputError("Please enter a valid time.");
-                }
-            }
-        } catch (Exception se) {
-            inputError(se.getMessage());
-        }
-    }
-
-    private int rent() {
-        Object[] options = {"Yes", "No", "Cancel"};
-        return JOptionPane.showOptionDialog(null,
-                "Do you have a reservation?",
-                "Rent",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-    }
-
-    private void makeRentalHelper() {
-        String[] input = rentInput();
-        if (input != null) {
-            try {
-                ReservationModel res = delegate.showReservations(input[0], input[1]);
-                int rid = RandomNumberGenerator.generateRandomReservationNumber();
-                int confoNo = res.getConfNo();
-                String dLicense = res.getDLicense();
-                Timestamp from = res.getFromDateTime();
-                Timestamp to = res.getToDateTime();
-                String[] cardDetails = cardInput();
-                if (cardDetails != null) {
-                    delegate.insertRentVehicle(new RentModel(rid, null, dLicense, from,
-                            to, -1, cardDetails[0], cardDetails[1], cardDetails[2], confoNo));
-
-                    String[] receiptDetails = new String[]{"Confirmation number: " + confoNo, "Driver's license: " +
-                            dLicense, "Vehicle License: " + input[0], "Vehicle type: " + res.getVtname(), "From: " +
-                            from.toString().substring(0, 16), "To: " + to.toString().substring(0, 16)};
-                    receipt(receiptDetails);
-                }
-            } catch (Exception se) {
-                inputError(se.getMessage());
-            }
-        }
-    }
-
-    private String[] cardInput() {
-        JTextField nameField = new JTextField(10);
-        JTextField numField = new JTextField(10);
-        JTextField expField = new JTextField(10);
-
-        JPanel myPanel = new JPanel();
-        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-        myPanel.add(new JLabel("Confirmation Number:"));
-        myPanel.add(nameField);
-        myPanel.add(new JLabel("Card Number:"));
-        myPanel.add(numField);
-        myPanel.add(new JLabel("Expiry Date:"));
-        myPanel.add(expField);
-
-        String[] res;
-        int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Rent", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            String name = nameField.getText().trim();
-            String no = numField.getText().trim();
-            String exp = expField.getText().trim();
-            if (!name.isEmpty() && !no.isEmpty() && !exp.isEmpty()) {
-                res = new String[]{name, no, exp};
-                return res;
-            } else {
-                inputError("Please fill out all the fields.");
-            }
-        }
-        return null;
-    }
-
-    private String[] rentInput() {
-        JTextField confoField = new JTextField(10);
-        JTextField dLField = new JTextField(10);
-
-        JPanel myPanel = new JPanel();
-        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-        myPanel.add(new JLabel("Confirmation Number:"));
-        myPanel.add(confoField);
-        myPanel.add(new JLabel("Driver's license:"));
-        myPanel.add(dLField);
-
-        String[] res;
-        int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Rent", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            String cN = confoField.getText().trim();
-            String dL = dLField.getText().trim();
-            if (!cN.isEmpty() || !dL.isEmpty()) {
-                res = new String[]{cN, dL};
-                return res;
-            } else {
-                inputError("Please fill out at least one field.");
-            }
-        }
-        return null;
-    }
-
-    private String tank;
-    private String[] returnInput() {
-        JTextField ridField = new JTextField(10);
-        JTextField dateField = new JTextField(10);
-        JTextField odometerField = new JTextField(10);
-
-        String[] yesno = { "No", "Yes"};
-        JComboBox<String> fullTank = new JComboBox<>(yesno);
-        fullTank.setSelectedIndex(1);
-        fullTank.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                tank = (String)cb.getSelectedItem();
-            }
-        });
-
-        JPanel myPanel = new JPanel();
-        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-        myPanel.add(new JLabel("Rid:"));
-        myPanel.add(ridField);
-        myPanel.add(new JLabel("Day/time:"));
-        myPanel.add(dateField);
-        myPanel.add(new JLabel("Odometer:"));
-        myPanel.add(odometerField);
-
-        String[] res = null;
-        int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Return", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            String rid = ridField.getText().trim();
-            String datetime = dateField.getText().trim();
-            String od = odometerField.getText().trim();
-            if (rid.isEmpty() || datetime.isEmpty() || od.isEmpty()) {
-                inputError("Please fill out all the fields");
-            } else {
-                res = new String[]{rid, datetime, od, tank};
-            }
-        }
-        return res;
-    }
-
     private String[] customerInput() {
         JTextField cellField = new JTextField(10);
         JTextField nameField = new JTextField(10);
@@ -501,7 +331,7 @@ public class TransactionsWindow extends JFrame {
 
         String[] res = null;
         int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "New Customer Registration", JOptionPane.OK_CANCEL_OPTION,
+                "New Customer", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             String cell = cellField.getText().trim();
@@ -516,14 +346,16 @@ public class TransactionsWindow extends JFrame {
         return res;
     }
 
-    private void receipt(String[] info) {
+    private void receipt(String[] info, int confo) {
+        String cN = "" + confo;
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
-        for (String s: info) {
-            myPanel.add(new JLabel(s));
-        }
-        JOptionPane.showMessageDialog(null, myPanel, "Receipt", JOptionPane.PLAIN_MESSAGE);
+        myPanel.add(new JLabel("Confirmation number:" + cN));
+        myPanel.add(new JLabel("Vehicle Type:" + info[0]));
+        myPanel.add(new JLabel("Driver License:" + info[1]));
+        myPanel.add(new JLabel("From:"+info[2]));
+        myPanel.add(new JLabel("To:"+info[3]));
     }
 
     private String[] reservationForm() {
@@ -539,9 +371,9 @@ public class TransactionsWindow extends JFrame {
         myPanel.add(vtField);
         myPanel.add(new JLabel("Driver License:"));
         myPanel.add(dlField);
-        myPanel.add(new JLabel("From (Date and hour):"));
+        myPanel.add(new JLabel("From:"));
         myPanel.add(fromField);
-        myPanel.add(new JLabel("To (Date and hour):"));
+        myPanel.add(new JLabel("To:"));
         myPanel.add(toField);
 
         String[] res = null;
