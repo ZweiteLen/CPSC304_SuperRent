@@ -252,7 +252,7 @@ public class TransactionsWindow extends JFrame {
         makeRental.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO
+                String[] input = rentalForm();
             }
         });
 
@@ -313,7 +313,7 @@ public class TransactionsWindow extends JFrame {
         // center the frame
         Dimension d = this.getToolkit().getScreenSize();
         Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+        this.setLocation((d.width - r.width) / 2, (d.height - r.height) / 2);
 
         // make the window visible
         this.setVisible(true);
@@ -361,6 +361,54 @@ public class TransactionsWindow extends JFrame {
         JOptionPane.showMessageDialog(null, dialogMessage, dialogTitle, JOptionPane.PLAIN_MESSAGE);
     }
 
+    // Takes in all the user entered rental info and inserts them into an array.
+    private String[] rentalForm() {
+        JTextField dLicenseField = new JTextField(10);
+        JTextField odometerField = new JTextField(10);
+        JTextField cardNameField = new JTextField(10);
+        JTextField cardNoField = new JTextField(10);
+        JTextField cardExpDateField = new JTextField(10);
+        JTextField confNoField = new JTextField(10);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.add(new JLabel("Driver's License:"));
+        panel.add(dLicenseField);
+        panel.add(new JLabel("Odometer:"));
+        panel.add(odometerField);
+        panel.add(new JLabel("Card Name:"));
+        panel.add(cardNameField);
+        panel.add(new JLabel("Card Number:"));
+        panel.add(cardNoField);
+        panel.add(new JLabel("Card Expiry Date:"));
+        panel.add(cardExpDateField);
+        panel.add(new JLabel("Reservation Confirmation Number:"));
+        panel.add(confNoField);
+
+        String[] res = null;
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Enter details", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String dLicense = dLicenseField.getText().trim();
+            String odometer = odometerField.getText().trim();
+            String cardName = cardNameField.getText().trim();
+            String cardNo = cardNoField.getText().trim();
+            String cardExpDate = cardExpDateField.getText().trim();
+            String confNo = confNoField.getText().trim();
+
+            if (dLicense.isEmpty() || odometer.isEmpty() || cardExpDate.isEmpty() || cardName.isEmpty()
+                    || cardNo.isEmpty() || confNo.isEmpty()) {
+                inputError("Please fill out all the fields.");
+            } else {
+                res = new String[]{dLicense, odometer, cardName, cardNo, cardExpDate, confNo};
+            }
+        }
+        return res;
+    }
+
+    // Takes in all the user entered reservation info and inserts them into an array.
     private String[] reservationForm() {
         JTextField vtField = new JTextField(10);
         JTextField dlField = new JTextField(10);
@@ -398,11 +446,11 @@ public class TransactionsWindow extends JFrame {
     }
 
     private void inputError(String errorMsg) {
-        JOptionPane.showMessageDialog(null,errorMsg,
+        JOptionPane.showMessageDialog(null, errorMsg,
                 "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private String[] reportInput(){
+    private String[] reportInput() {
         JTextField dateField = new JTextField(10);
         JTextField branchField = new JTextField(10);
 
