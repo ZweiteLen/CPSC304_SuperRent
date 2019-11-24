@@ -1,6 +1,7 @@
 package ca.ubc.cpsc304.database;
 
 import ca.ubc.cpsc304.model.*;
+import oracle.sql.INTERVALDS;
 
 import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
@@ -458,6 +459,67 @@ public class DatabaseConnectionHandler {
         }
     }
 
+    private int[] getValue(RentModel model, ReturnModel returnModel) {
+        int value;
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT EXTRACT(day FROM OverallDiff) as DayDiff, EXTRACT(hour FROM OverallDiff) AS HourDiff " +
+                    "FROM (SELECT re.DATETIME - r.FROMDATETIME AS OverallDiff From rent r, returns re Where r.rid = re.rid)");
+
+            int weekDiff;
+            int dayDiff;
+            int hourDiff;
+            if (rs.next()) {
+                int totalDay = rs.getInt("DayDiff");
+                weekDiff = totalDay / 7;
+                dayDiff = totalDay - (7*weekDiff);
+                hourDiff = rs.getInt("HourDiff");
+
+                rs.close();
+                stmt.close();
+            } else {
+                rs.close();
+                stmt.close();
+                throw new Exception("Calculation went wrong!");
+            }
+
+            Statement s = connection.createStatement();
+            ResultSet r = s.executeQuery("SELECT wrate, hrate, drate, wirate, dirate, hirate, krate FROM VTYPE, VEHICLES, RENT Where rid = " + model.getRid() +
+                    " and Rent.VLICENSE = VEHICLES.VLICENSE and  VEHICLES.VTNAME = VTYPE.VTNAME");
+
+            int wrate;
+            int hrate;
+            int drate;
+            int wirate;
+            int dirate;
+            int hirate;
+            int krate;
+
+            if (r.next()) {
+                wrate = r.getInt("wrate");
+                hrate = r.getInt("hrate");
+                drate = r.getInt("drate");
+                wirate = r.getInt("wirate");
+                dirate = r.getInt("dirate");
+                hirate = r.getInt("hirate");
+                krate = r.getInt("krate");
+
+                r.close();
+                s.close();
+            }else {
+                r.close();
+                s.close();
+                throw new Exception("Calculation went wrong!");
+            }
+
+            value = weekDiff * (wrate + wirate) + dayDiff * (drate + dirate) + hourDiff * (hrate + hirate);
+            // return value;
+            return new int[]{weekDiff, dayDiff, hourDiff, wrate, drate, hrate, wirate, dirate, hirate, value};
+        }catch (Exception e) {
+            System.out.println(LOG_TAG + e.getMessage());
+        }
+        return null;
+    }
 
     public String[] returnVehicle(ReturnModel returnModel) throws Exception {
         String[] res = null;
@@ -469,24 +531,33 @@ public class DatabaseConnectionHandler {
             if (rentModel == null) {
                 throw new Exception("This vehicle has not been rented!");
             } else {
-                ps.setString(1, returnModel.getRid());
+                ps.setInt(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
-                ps.setInt(4, returnModel.isFulltank());
+                if (returnModel.isFulltank()) {
+                    ps.setInt(4, 1);
+                } else {
+                    ps.setInt(4, 0);
+                }
                 ps.setInt(5, returnModel.getValue());
 
                 updateVehicle(rentModel.getVlicense(), "available");
-                
-                // TODO DO THE CALCULATION
-                String calculation = "";
-                int value = 0;
-                String confo = Integer.toString(rentModel.getConfNo());
-                res = new String[]{confo, calculation, Integer.toString(value)};
 
-                ps.executeUpdate();
-                connection.commit();
-                ps.close();
-                return res;
+                int[] calc = getValue(rentModel, returnModel);
+                if (calc != null) {
+                    // weekdiff * (wrate + wirate) + daydiff * (drate + dirate) + hourdiff * (hrate + hirate)
+                    // int[]{weekdiff, daydiff, hourdiff, wrate, drate, hrate, wirate, dirate, hirate, value}
+                    String calculation = calc[0] + " * (" + calc[3] + "+" + calc[6] + ") +" + calc[1] + " * (" + calc[4]
+                            + calc[7] + ") + " + calc[2] + " * (" + calc[5] + calc[8] + ")";
+                    int value = calc[9];
+                    String confo = Integer.toString(rentModel.getConfNo());
+                    res = new String[]{confo, calculation, Integer.toString(value)};
+
+                    ps.executeUpdate();
+                    connection.commit();
+                    ps.close();
+                    return res;
+                }
             }
         } catch (SQLException e) {
             System.out.println(LOG_TAG + e.getMessage());
