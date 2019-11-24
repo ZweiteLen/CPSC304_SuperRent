@@ -1,6 +1,6 @@
 insert into customers values('67738292736', 'Andy Smith', 'Vancouver', '50s8a2');
 insert into customers values('87745334764', 'John Williams', 'Vancouver', '04d872');
-insert into customers values('98304800402', 'Milly hosking', 'Burnaby', '93eb67');
+insert into customers values('98304800402', 'Milly Hosking', 'Burnaby', '93eb67');
 insert into customers values('29443924998', 'Lennon White', 'Victoria', '6s3j72');
 insert into customers values('49247927492', 'Eric Wong', 'Richmond', '05ejda');
 insert into customers values('39294892849', 'Violet Johnson', 'Vancouver', '73hwc8');
