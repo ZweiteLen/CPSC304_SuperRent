@@ -472,7 +472,7 @@ public class DatabaseConnectionHandler {
                 ps.setInt(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
-                
+
                 ps.setInt(4, returnModel.isFulltank());
                 ps.setInt(5, returnModel.getValue());
 

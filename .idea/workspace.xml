@@ -30,6 +30,8 @@
       <path>
         <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
         <item name="@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="@dbhost.students.cs.ubc.ca" type="feb32156:DbDataSourceImpl" />
+        <item name="ORA_GLENN2: schema" type="3abd1b6a:OraImplModel$Schema" />
       </path>
     </expand>
     <select />
@@ -61,12 +63,10 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="database.data.extractors.current.id" value="SQL Inserts" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="SQL Dialects" />
   </component>
   <component name="RecentsManager">
@@ -153,7 +153,6 @@
       <workItem from="1574017051327" duration="7603000" />
       <workItem from="1574450965462" duration="9726000" />
       <workItem from="1574450965462" duration="7757000" />
-      <workItem from="1574497156328" duration="19883000" />
     </task>
     <task id="LOCAL-00001" summary="corrected some variable names">
       <created>1574470934117</created>
@@ -192,16 +191,5 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="corrected some variable names" />
     <option name="LAST_COMMIT_MESSAGE" value="corrected some variable names" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java</url>
-          <line>298</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
