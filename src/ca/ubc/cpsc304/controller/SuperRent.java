@@ -69,6 +69,10 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         return dbHandler.checkCustomerExists(dlicense);
     }
 
+    public boolean checkVehicleTypeExists(String vehicleType) throws SQLException {
+        return dbHandler.checkVehicleTypeExists(vehicleType);
+    }
+
     public void insertReservation(ReservationModel reservationModel) throws Exception {
         dbHandler.insertReservation(reservationModel);
     }
@@ -82,7 +86,7 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     }
 
     public void showReservations() {
-
+        dbHandler.getReservationInfo();
     }
 
     public void insertCustomer(CustomerModel model) {

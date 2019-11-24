@@ -30,6 +30,7 @@ public interface TransactionsWindowDelegate {
    void insertRentVehicle(RentModel model) throws Exception;
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
+    boolean checkVehicleTypeExists(String vehicleType) throws SQLException;
     DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws Exception;
 
     // Just vehicles themselves
