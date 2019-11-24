@@ -3,13 +3,13 @@ package ca.ubc.cpsc304.model;
 import java.sql.*;
 
 public class ReturnModel {
-    private final String rid;
+    private final int rid;
     private final Timestamp datetime;
     private final int odometer;
     private final int fulltank;
     private final int value;
 
-    public ReturnModel(String rid, Timestamp datetime, int odometer, int fulltank, int value) {
+    public ReturnModel(int rid, Timestamp datetime, int odometer, int fulltank, int value) {
         this.rid = rid;
         this.datetime = datetime;
         this.odometer = odometer;
@@ -17,7 +17,7 @@ public class ReturnModel {
         this.value = value;
     }
 
-    public String getRid() {
+    public int getRid() {
         return rid;
     }
 

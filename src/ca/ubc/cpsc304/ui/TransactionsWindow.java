@@ -234,13 +234,16 @@ public class TransactionsWindow extends JFrame {
                 String[] input = returnInput();
                 if (input != null) {
                     try {
-                        boolean full = input[3].equals("Yes");
-                        Timestamp returndate = Timestamp.valueOf(input[1]);
-                        String[] details = delegate.insertReturnVehicle(new ReturnModel(Integer.parseInt(input[0]), returndate,
+                        int full = 0;
+                        if (input[3].equals("Yes")) {
+                            full = 1;
+                        }
+                        Timestamp returnDate = Timestamp.valueOf(input[1]);
+                        String[] details = delegate.insertReturnVehicle(new ReturnModel(Integer.parseInt(input[0]), returnDate,
                                 Integer.parseInt(input[2]), full, 0));
-
+                        // String[]{confo, calculation, Integer.toString(value)}
                         String[] receiptDetails = new String[]{"Confirmation number: " + details[0], "Return date: " +
-                                returndate.toString().substring(0, 16), "Total price: $" + details[4], "Calculated by :"};
+                                returnDate.toString().substring(0, 16), "Price: " + details[1], "Total price: $" + details[2]};
                         receipt(receiptDetails);
                     } catch (Exception se) {
                         inputError(se.getMessage());
