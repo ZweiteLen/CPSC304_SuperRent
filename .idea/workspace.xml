@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="" />
+    <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +30,18 @@
       </path>
       <path>
         <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="@dbhost.students.cs.ubc.ca" type="feb32156:DbDataSourceImpl" />
-        <item name="ORA_GLENN2: schema" type="3abd1b6a:OraImplModel$Schema" />
+        <item name="@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="ORA_CHANGALF: schema" type="3abd1b6a:OraImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="ORA_CHANGALF: schema" type="3abd1b6a:OraImplModel$Schema" />
+        <item name="CUSTOMERS: table" type="942f455b:OraImplModel$Table" />
       </path>
     </expand>
     <select />
@@ -59,10 +73,12 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="database.data.extractors.current.id" value="SQL Inserts" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/ca/ubc/cpsc304/delegates" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="SQL Dialects" />
   </component>
   <component name="RecentsManager">
@@ -113,17 +129,7 @@
     <option name="allServicesViewState">
       <serviceView>
         <treeState>
-          <expand>
-            <path>
-              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@e907c342" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-            </path>
-            <path>
-              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@e907c342" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@3f09b94e" type="9fbbdea:ServiceModel$ServiceNode" />
-            </path>
-          </expand>
+          <expand />
           <select />
         </treeState>
       </serviceView>
@@ -149,6 +155,7 @@
       <workItem from="1574017051327" duration="7603000" />
       <workItem from="1574450965462" duration="9726000" />
       <workItem from="1574450965462" duration="7757000" />
+      <workItem from="1574497156328" duration="19883000" />
     </task>
     <task id="LOCAL-00001" summary="corrected some variable names">
       <created>1574470934117</created>
@@ -187,5 +194,16 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="corrected some variable names" />
     <option name="LAST_COMMIT_MESSAGE" value="corrected some variable names" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java</url>
+          <line>298</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
