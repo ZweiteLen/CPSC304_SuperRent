@@ -144,8 +144,6 @@ public class DatabaseConnectionHandler {
         Statement statement = null;
         ResultSet resultSet = null;
 
-        System.out.println("Vehicle type: " + vehicleType);
-
         try {
             List<String> vehicleTypesFromResultSet = new ArrayList<>();
             statement = connection.createStatement();

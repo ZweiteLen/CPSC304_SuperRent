@@ -221,6 +221,7 @@ public class TransactionsWindow extends JFrame {
                         if (!vehicleTypeExists) {
                             inputError("The vehicle type is not available.  Please choose one of Economy, SUV, " +
                                     "Standard, Mid-size, Full-size, Compact, Truck.");
+                            return;
                         }
 
                         String customer = input[1];
@@ -353,17 +354,11 @@ public class TransactionsWindow extends JFrame {
         return res;
     }
 
-    private void receipt(String[] info, int confo) {
-        System.out.println("Receipt here!");
-        String cN = "" + confo;
-        JPanel myPanel = new JPanel();
-        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
-
-        myPanel.add(new JLabel("Confirmation number:" + cN));
-        myPanel.add(new JLabel("Vehicle Type:" + info[0]));
-        myPanel.add(new JLabel("Driver License:" + info[1]));
-        myPanel.add(new JLabel("From:"+info[2]));
-        myPanel.add(new JLabel("To:"+info[3]));
+    private void receipt(String[] info, int confNo) {
+        String dialogTitle = "Reservation Receipt";
+        String dialogMessage = "Confirmation Number: " + confNo + "\nVehicle Type: " + info[0] + "\nDriver's License: "
+                + info[1] + "\nRent From: " + info[2] + "\nRent To: " + info[3] + "\n\n";
+        JOptionPane.showMessageDialog(null, dialogMessage, dialogTitle, JOptionPane.PLAIN_MESSAGE);
     }
 
     private String[] reservationForm() {
