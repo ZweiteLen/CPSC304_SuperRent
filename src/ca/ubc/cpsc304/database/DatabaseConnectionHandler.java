@@ -186,7 +186,7 @@ public class DatabaseConnectionHandler {
                 throw new Exception("Vehicle type not available");
             }
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?)");
 
             ps.setInt(1, reservationModel.getConfNo());
             ps.setString(2, reservationModel.getVtname());
@@ -250,11 +250,14 @@ public class DatabaseConnectionHandler {
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation WHERE CONFNO =" + Integer.parseInt(confo)
-                    + " OR DLICENSE='" + dLicense + "'");
+            ResultSet rs;
+            if (!confo.trim().isEmpty()) {
+                rs = stmt.executeQuery("SELECT * FROM reservation WHERE CONFNO =" + Integer.parseInt(confo));
+            } else {
+                rs = stmt.executeQuery("SELECT * FROM reservation WHERE DLICENSE='" + dLicense + "'");
+            }
 
             if (rs.next()) {
-
                 result = new ReservationModel(
                         rs.getInt("confNo"),
                         rs.getString("vtname"),
@@ -280,10 +283,10 @@ public class DatabaseConnectionHandler {
             return true;
         }
         if (h) {
-            String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s\\d\\d)$"
-                    + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s\\d\\d)$"
-                    + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s\\d\\d)$"
-                    + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s\\d\\d)$";
+            String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29\\s([01]?[0-9]|2[0-3]):00)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8])\\s([01]?[0-9]|2[0-3]):00)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01])\\s([01]?[0-9]|2[0-3]):00)$"
+                    + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)\\s([01]?[0-9]|2[0-3]):00)$";
             return d.matches(dateRegEx);
         } else {
             String dateRegEx = "^((2000|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
@@ -370,8 +373,8 @@ public class DatabaseConnectionHandler {
     }
 
     // Helper function to check if a vehicle is rented before returning by comparing rent ids.
-    private RentModel checkRidIsNull(ReturnModel returnModel, PreparedStatement ps) throws Exception {
-        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE rid = " + returnModel.getRid());
+    private RentModel checkRidIsNull(int confNo, PreparedStatement ps) throws Exception {
+        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE CONFNO = " + confNo);
 
         if (rs.next()) {
             RentModel res = new RentModel(
@@ -408,16 +411,18 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    public void rentVehicle(RentModel rentModel) throws Exception {
+    public RentModel rentVehicle(RentModel rentModel) throws Exception {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT VLICENSE, ODOMETER FROM VEHICLES, RESERVATION " +
                     "WHERE STATUS='available' AND VEHICLES.VTNAME=RESERVATION.VTNAME AND RESERVATION.CONFNO="
                     + rentModel.getConfNo());
 
+            int rid;
             String vlicense;
             int odo;
             if (rs.next()) {
+                rid = rs.getInt("rid");
                 vlicense = rs.getString("Vlicense");
                 odo = rs.getInt("Odometer");
 
@@ -435,7 +440,7 @@ public class DatabaseConnectionHandler {
                     "(rid, VLICENSE, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
                     "cardNo, expDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            ps.setInt(1, rentModel.getRid());
+            ps.setInt(1, rid);
             ps.setString(2, vlicense);
             ps.setString(3, rentModel.getDlicense());
             ps.setTimestamp(4, rentModel.getFromDateTime());
@@ -446,17 +451,21 @@ public class DatabaseConnectionHandler {
             ps.setString(9, rentModel.getExpDate());
             ps.setInt(10, rentModel.getConfNo());
 
-            if (checkConfNoIsNull(rentModel, ps)) {
-                // System.out.println("This vehicle has not even been reserved before renting!");
+            if (!checkConfNoIsNull(rentModel, ps)) {
                 throw new Exception("This vehicle has not been reserved before renting!");
             }
+
+            RentModel rm = new RentModel(rid, vlicense, rentModel.getDlicense(), rentModel.getFromDateTime(),
+                    rentModel.getToDateTime(), odo, rentModel.getCardName(), rentModel.getCardNo(), rentModel.getExpDate(), rentModel.getConfNo());
 
             ps.executeUpdate();
             connection.commit();
             ps.close();
+            return rm;
         } catch (SQLException e) {
             System.out.println(LOG_TAG + " " + e.getMessage());
         }
+        return null;
     }
 
     private int[] getValue(RentModel model, ReturnModel returnModel) {
@@ -521,13 +530,13 @@ public class DatabaseConnectionHandler {
         return null;
     }
 
-    public String[] returnVehicle(ReturnModel returnModel) throws Exception {
+    public String[] returnVehicle(ReturnModel returnModel, int confNo) throws Exception {
         String[] res = null;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO returns " +
                     "(rid, datetime, odometer, fulltank, value) VALUES (?, ?, ?, ?, ?)");
 
-            RentModel rentModel = checkRidIsNull(returnModel, ps);
+            RentModel rentModel = checkRidIsNull(confNo, ps);
             if (rentModel == null) {
                 throw new Exception("This vehicle has not been rented!");
             } else {
@@ -676,7 +685,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyReturn(String date) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
                 "Subtotal: Type/Branch Returned", "Subtotal: Revenue/Branch", "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
-        if (!checkValidDate(date, false)) {
+        if (!checkValidDate(date, false) || date.trim().isEmpty()) {
             return null;
         }
         String day = "'" + date + "'";
@@ -723,7 +732,7 @@ public class DatabaseConnectionHandler {
     public DefaultTableModel getDailyReturnByBranch(String date, String location) {
         DefaultTableModel vmodel = new DefaultTableModel(new String[]{"Branch", "Vehicle Type", "Returns/Type",
                 "Total Returns", "Total Revenue","Rid", "Return Time", "Odometer", "Fulltank?", "Value"}, 0);
-        if (!checkValidDate(date, false)) {
+        if (!checkValidDate(date, false) || date.trim().isEmpty()) {
             return null;
         }
         String day = "'" + date + "'";

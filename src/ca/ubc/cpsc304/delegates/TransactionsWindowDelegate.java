@@ -27,7 +27,7 @@ public interface TransactionsWindowDelegate {
     ReservationModel showReservations(String confo, String dLicense) throws Exception;
 
     // Rental vehicles
-   void insertRentVehicle(RentModel model) throws Exception;
+   RentModel insertRentVehicle(RentModel model) throws Exception;
 //    void deleteRentVehicle(String vid);
 //    void updateRentVehicle(String vid, RentModel model);
     DefaultTableModel showRentalVehicles(String vtname, String location, String fromDateTime, String toDateTime) throws Exception;
@@ -52,7 +52,7 @@ public interface TransactionsWindowDelegate {
 //    DefaultTableModel showCustomers(CustomerModel model);
 
     // Return vehicles
-    String[] insertReturnVehicle(ReturnModel model) throws Exception;
+    String[] insertReturnVehicle(ReturnModel model, int confNo) throws Exception;
 //    void deleteReturnVehicle(String rid);
 //    void updateReturnVehicle(String rid, ReturnModel model);
 //    DefaultTableModel showReturnVehicles(ReturnModel model);

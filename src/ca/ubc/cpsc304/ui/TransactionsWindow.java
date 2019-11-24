@@ -44,8 +44,8 @@ public class TransactionsWindow extends JFrame {
 
         JLabel vtnameLabel = new JLabel("Enter vehicle type: ");
         JLabel locationLabel = new JLabel("Enter branch: ");
-        JLabel fromLabel = new JLabel("From (yyyy-mm-dd hh): ");
-        JLabel toLabel = new JLabel("Until (yyyy-mm-dd hh): ");
+        JLabel fromLabel = new JLabel("From (yyyy-mm-dd hh:00): ");
+        JLabel toLabel = new JLabel("Until (yyyy-mm-dd hh:00): ");
 
         vtnameField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
@@ -219,11 +219,15 @@ public class TransactionsWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int method = rent();
+                System.out.println(method);
+                boolean worked=false;
                 if (method != 2) {
                     if (method == 1) {
-                        makeReservationHelper();
+                        worked = makeReservationHelper();
                     }
-                    makeRentalHelper();
+                    if (worked || method==0) {
+                        makeRentalHelper();
+                    }
                 }
             }
         });
@@ -238,9 +242,9 @@ public class TransactionsWindow extends JFrame {
                         if (input[3].equals("Yes")) {
                             full = 1;
                         }
-                        Timestamp returnDate = Timestamp.valueOf(input[1]);
-                        String[] details = delegate.insertReturnVehicle(new ReturnModel(Integer.parseInt(input[0]), returnDate,
-                                Integer.parseInt(input[2]), full, 0));
+                        Timestamp returnDate = Timestamp.valueOf(input[1] + ":00.000");
+                        String[] details = delegate.insertReturnVehicle(new ReturnModel(-1, returnDate,
+                                Integer.parseInt(input[2]), full, 0), Integer.parseInt(input[0]));
                         // String[]{confo, calculation, Integer.toString(value)}
                         String[] receiptDetails = new String[]{"Confirmation number: " + details[0], "Return date: " +
                                 returnDate.toString().substring(0, 16), "Price: " + details[1], "Total price: $" + details[2]};
@@ -311,7 +315,7 @@ public class TransactionsWindow extends JFrame {
         vtnameField.requestFocus();
     }
 
-    private void makeReservationHelper() {
+    private boolean makeReservationHelper() {
         String[] input = reservationForm();
         try {
             if (input != null) {
@@ -325,8 +329,8 @@ public class TransactionsWindow extends JFrame {
 
                 int confo = RandomNumberGenerator.generateRandomReservationNumber();
                 try {
-                    Timestamp from = Timestamp.valueOf(input[2] + ":00:00.000");
-                    Timestamp to = Timestamp.valueOf(input[3] + ":00:00.000");
+                    Timestamp from = Timestamp.valueOf(input[2] + ":00.000");
+                    Timestamp to = Timestamp.valueOf(input[3] + ":00.000");
 
                     delegate.insertReservation(new ReservationModel(confo, input[0], input[1],
                             from, to));
@@ -334,6 +338,7 @@ public class TransactionsWindow extends JFrame {
                     String[] receiptDetails = new String[]{"Confirmation number: " + confo, "Vehicle Type: " + input[0],
                             "Driver's License: " + input[1], "From: " + from.toString().substring(0,16), "To: " + to.toString().substring(0,16)};
                     receipt(receiptDetails);
+                    return true;
                 } catch (Exception ex) {
                     inputError("Please enter a valid time.");
                 }
@@ -341,6 +346,7 @@ public class TransactionsWindow extends JFrame {
         } catch (Exception se) {
             inputError(se.getMessage());
         }
+        return false;
     }
 
     private int rent() {
@@ -367,11 +373,11 @@ public class TransactionsWindow extends JFrame {
                 Timestamp to = res.getToDateTime();
                 String[] cardDetails = cardInput();
                 if (cardDetails != null) {
-                    delegate.insertRentVehicle(new RentModel(rid, null, dLicense, from,
+                    RentModel rm = delegate.insertRentVehicle(new RentModel(rid, null, dLicense, from,
                             to, -1, cardDetails[0], cardDetails[1], cardDetails[2], confoNo));
 
                     String[] receiptDetails = new String[]{"Confirmation number: " + confoNo, "Driver's license: " +
-                            dLicense, "Vehicle License: " + input[0], "Vehicle type: " + res.getVtname(), "From: " +
+                            dLicense, "Vehicle License: " + rm.getVlicense(), "Vehicle type: " + res.getVtname(), "From: " +
                             from.toString().substring(0, 16), "To: " + to.toString().substring(0, 16)};
                     receipt(receiptDetails);
                 }
@@ -389,7 +395,7 @@ public class TransactionsWindow extends JFrame {
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
-        myPanel.add(new JLabel("Confirmation Number:"));
+        myPanel.add(new JLabel("Card Name:"));
         myPanel.add(nameField);
         myPanel.add(new JLabel("Card Number:"));
         myPanel.add(numField);
@@ -405,8 +411,13 @@ public class TransactionsWindow extends JFrame {
             String no = numField.getText().trim();
             String exp = expField.getText().trim();
             if (!name.isEmpty() && !no.isEmpty() && !exp.isEmpty()) {
-                res = new String[]{name, no, exp};
-                return res;
+                if (name.equals("MasterCard") || name.equals("Visa")) {
+                    res = new String[]{name, no, exp};
+                    return res;
+                }
+                else {
+                    inputError("We only accept MasterCard or Visa.");
+                }
             } else {
                 inputError("Please fill out all the fields.");
             }
@@ -445,7 +456,7 @@ public class TransactionsWindow extends JFrame {
 
     private String tank;
     private String[] returnInput() {
-        JTextField ridField = new JTextField(10);
+        JTextField confNoField = new JTextField(10);
         JTextField dateField = new JTextField(10);
         JTextField odometerField = new JTextField(10);
 
@@ -463,25 +474,27 @@ public class TransactionsWindow extends JFrame {
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS));
 
-        myPanel.add(new JLabel("Rid:"));
-        myPanel.add(ridField);
+        myPanel.add(new JLabel("Confirmation Number:"));
+        myPanel.add(confNoField);
         myPanel.add(new JLabel("Day/time:"));
         myPanel.add(dateField);
         myPanel.add(new JLabel("Odometer:"));
         myPanel.add(odometerField);
+        myPanel.add(new JLabel("Is tank full?"));
+        myPanel.add(fullTank);
 
         String[] res = null;
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Return", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            String rid = ridField.getText().trim();
+            String confNo = confNoField.getText().trim();
             String datetime = dateField.getText().trim();
             String od = odometerField.getText().trim();
-            if (rid.isEmpty() || datetime.isEmpty() || od.isEmpty()) {
+            if (confNo.isEmpty() || datetime.isEmpty() || od.isEmpty()) {
                 inputError("Please fill out all the fields");
             } else {
-                res = new String[]{rid, datetime, od, tank};
+                res = new String[]{confNo, datetime, od, tank};
             }
         }
         return res;

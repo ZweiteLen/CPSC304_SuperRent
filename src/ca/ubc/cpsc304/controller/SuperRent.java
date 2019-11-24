@@ -94,16 +94,16 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
     /**
      * Clerk transactions.
      */
-    public void insertRentVehicle(RentModel model) throws Exception {
-        dbHandler.rentVehicle(model);
+    public RentModel insertRentVehicle(RentModel model) throws Exception {
+        return dbHandler.rentVehicle(model);
     }
 
     public ReservationModel showReservations(String confNo, String dLicense) throws Exception {
         return dbHandler.getReservationInfo(confNo, dLicense);
     }
 
-    public String[] insertReturnVehicle(ReturnModel model) throws Exception {
-        return dbHandler.returnVehicle(model);
+    public String[] insertReturnVehicle(ReturnModel model, int confNo) throws Exception {
+        return dbHandler.returnVehicle(model, confNo);
     }
 
     public DefaultTableModel showDailyRentalsReport(String date) throws Exception {
