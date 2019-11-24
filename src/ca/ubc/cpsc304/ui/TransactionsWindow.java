@@ -234,7 +234,10 @@ public class TransactionsWindow extends JFrame {
                 String[] input = returnInput();
                 if (input != null) {
                     try {
-                        boolean full = input[3].equals("Yes");
+                        int full = 0;
+                        if (input[3].equals("Yes")) {
+                            full = 1;
+                        }
                         Timestamp returnDate = Timestamp.valueOf(input[1]);
                         String[] details = delegate.insertReturnVehicle(new ReturnModel(Integer.parseInt(input[0]), returnDate,
                                 Integer.parseInt(input[2]), full, 0));

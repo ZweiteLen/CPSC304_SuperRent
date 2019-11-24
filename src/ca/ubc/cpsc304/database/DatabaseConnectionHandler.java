@@ -534,11 +534,7 @@ public class DatabaseConnectionHandler {
                 ps.setInt(1, returnModel.getRid());
                 ps.setTimestamp(2, returnModel.getDateTime());
                 ps.setInt(3, returnModel.getOdometer());
-                if (returnModel.isFulltank()) {
-                    ps.setInt(4, 1);
-                } else {
-                    ps.setInt(4, 0);
-                }
+                ps.setInt(4, returnModel.isFulltank());
                 ps.setInt(5, returnModel.getValue());
 
                 updateVehicle(rentModel.getVlicense(), "available");
