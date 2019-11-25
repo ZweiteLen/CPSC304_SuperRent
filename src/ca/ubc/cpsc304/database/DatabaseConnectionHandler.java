@@ -165,13 +165,13 @@ public class DatabaseConnectionHandler {
             ResultSet rs = stmt.executeQuery("SELECT VLICENSE FROM VEHICLES WHERE STATUS=" + "'available'" + " AND VTNAME = '"
                     + vtname + "'");
 
-            if (!rs.next()) {
+            if (rs.next()) {
                 rs.close();
-                return false;
+                return true;
             }
 
             rs.close();
-            return true;
+            return false;
         } catch (SQLException e){
             System.out.println(LOG_TAG + " " + e.getMessage());
         }
@@ -193,25 +193,6 @@ public class DatabaseConnectionHandler {
             ps.setString(3, reservationModel.getDLicense());
             ps.setTimestamp(4, reservationModel.getFromDateTime());
             ps.setTimestamp(5, reservationModel.getToDateTime());
-
-            ps.executeUpdate();
-            connection.commit();
-            ps.close();
-        } catch (SQLException e) {
-            System.out.println(LOG_TAG + " " + e.getMessage());
-            rollbackConnection();
-        }
-    }
-
-    public void deleteReservation(int confNo) {
-        try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
-            ps.setInt(1, confNo);
-
-            int rowCount = ps.executeUpdate();
-            if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
-            }
 
             ps.executeUpdate();
             connection.commit();

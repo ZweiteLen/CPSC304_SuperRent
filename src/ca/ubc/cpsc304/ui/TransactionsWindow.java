@@ -332,13 +332,17 @@ public class TransactionsWindow extends JFrame {
                     Timestamp from = Timestamp.valueOf(input[2] + ":00.000");
                     Timestamp to = Timestamp.valueOf(input[3] + ":00.000");
 
-                    delegate.insertReservation(new ReservationModel(confo, input[0], input[1],
-                            from, to));
+                    try {
+                        delegate.insertReservation(new ReservationModel(confo, input[0], input[1],
+                                from, to));
 
-                    String[] receiptDetails = new String[]{"Confirmation number: " + confo, "Vehicle Type: " + input[0],
-                            "Driver's License: " + input[1], "From: " + from.toString().substring(0,16), "To: " + to.toString().substring(0,16)};
-                    receipt(receiptDetails);
-                    return true;
+                        String[] receiptDetails = new String[]{"Confirmation number: " + confo, "Vehicle Type: " + input[0],
+                                "Driver's License: " + input[1], "From: " + from.toString().substring(0,16), "To: " + to.toString().substring(0,16)};
+                        receipt(receiptDetails);
+                        return true;
+                    } catch (Exception ex) {
+                        inputError(ex.getMessage());
+                    }
                 } catch (Exception ex) {
                     inputError("Please enter a valid time.");
                 }
