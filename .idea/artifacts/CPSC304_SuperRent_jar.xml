@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CPSC304_SuperRent:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CPSC304_SuperRent_jar</output-path>
+    <root id="archive" name="CPSC304_SuperRent.jar">
+      <element id="module-output" name="CPSC304_SuperRent" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/resources/ojdbc8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

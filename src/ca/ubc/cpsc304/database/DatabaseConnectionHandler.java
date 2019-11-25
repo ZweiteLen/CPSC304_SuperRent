@@ -356,33 +356,36 @@ public class DatabaseConnectionHandler {
 
     // Helper function to check if a vehicle has been reserved before renting
     // by comparing confirmation numbers.
-    private boolean checkConfNoIsNull(RentModel rentModel, PreparedStatement ps) throws SQLException {
-        ResultSet rs = ps.executeQuery("SELECT confNo FROM reservation WHERE confNo = "
+    private boolean checkConfNoIsNull(RentModel rentModel) throws Exception {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservation WHERE confNo = "
                 + rentModel.getConfNo());
 
         if (rs.next()) {
             String confNo = rs.getString(1);
             if (confNo.equals(rentModel.getConfNo())) {
                 rs.close();
+                stmt.close();
                 return false;
             }
         }
 
         rs.close();
+        stmt.close();
         return true;
     }
 
     // Helper function to check if a vehicle is rented before returning by comparing rent ids.
     private RentModel checkRidIsNull(int confNo, PreparedStatement ps) throws Exception {
-        ResultSet rs = ps.executeQuery("SELECT rid FROM rent WHERE CONFNO = " + confNo);
+        ResultSet rs = ps.executeQuery("SELECT * FROM rent WHERE CONFNO = " + confNo);
 
         if (rs.next()) {
             RentModel res = new RentModel(
                     rs.getInt("rid"),
                     rs.getString("vlicense"),
                     rs.getString("dlicense"),
-                    rs.getTimestamp("fromDateTim"),
-                    rs.getTimestamp("toDateTim"),
+                    rs.getTimestamp("fromDateTime"),
+                    rs.getTimestamp("toDateTime"),
                     rs.getInt("odometer"), null, null, null,
                     rs.getInt("confNo"));
             rs.close();
@@ -413,54 +416,56 @@ public class DatabaseConnectionHandler {
 
     public RentModel rentVehicle(RentModel rentModel) throws Exception {
         try {
+            if (!checkConfNoIsNull(rentModel)) {
+                throw new Exception("This vehicle has not been reserved before renting!");
+            }
+            System.out.println("Can rent");
+
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT VLICENSE, ODOMETER FROM VEHICLES, RESERVATION " +
                     "WHERE STATUS='available' AND VEHICLES.VTNAME=RESERVATION.VTNAME AND RESERVATION.CONFNO="
                     + rentModel.getConfNo());
 
-            int rid;
             String vlicense;
             int odo;
             if (rs.next()) {
-                rid = rs.getInt("rid");
                 vlicense = rs.getString("Vlicense");
                 odo = rs.getInt("Odometer");
-
                 rs.close();
-                stmt.close();
             } else {
                 rs.close();
                 stmt.close();
                 throw new Exception("Desired vehicle not available");
             }
 
-            updateVehicle(vlicense, "rented");
+            System.out.println("Vlicense and odo get");
 
             PreparedStatement ps = connection.prepareStatement("INSERT INTO rent " +
-                    "(rid, VLICENSE, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
-                    "cardNo, expDate, confNo VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    "(rid, CONFNO, VLICENSE, dLicense, fromDateTime, toDateTime, odometer, cardName, " +
+                    "cardNo, expDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            ps.setInt(1, rid);
-            ps.setString(2, vlicense);
-            ps.setString(3, rentModel.getDlicense());
-            ps.setTimestamp(4, rentModel.getFromDateTime());
-            ps.setTimestamp(5, rentModel.getToDateTime());
-            ps.setInt(6, odo);
-            ps.setString(7, rentModel.getCardName());
-            ps.setString(8, rentModel.getCardNo());
-            ps.setString(9, rentModel.getExpDate());
-            ps.setInt(10, rentModel.getConfNo());
+            ps.setInt(1, rentModel.getRid());
+            ps.setInt(2, rentModel.getConfNo());
+            ps.setString(3, vlicense);
+            ps.setString(4, rentModel.getDlicense());
+            ps.setTimestamp(5, rentModel.getFromDateTime());
+            ps.setTimestamp(6, rentModel.getToDateTime());
+            ps.setInt(7, odo);
+            ps.setString(8, rentModel.getCardName());
+            ps.setString(9, rentModel.getCardNo());
+            ps.setString(10, rentModel.getExpDate());
 
-            if (!checkConfNoIsNull(rentModel, ps)) {
-                throw new Exception("This vehicle has not been reserved before renting!");
-            }
-
-            RentModel rm = new RentModel(rid, vlicense, rentModel.getDlicense(), rentModel.getFromDateTime(),
-                    rentModel.getToDateTime(), odo, rentModel.getCardName(), rentModel.getCardNo(), rentModel.getExpDate(), rentModel.getConfNo());
-
+            System.out.println("PS set");
             ps.executeUpdate();
             connection.commit();
             ps.close();
+            System.out.println("Rented");
+
+            RentModel rm = new RentModel(rentModel.getRid(), vlicense, rentModel.getDlicense(), rentModel.getFromDateTime(),
+                    rentModel.getToDateTime(), odo, rentModel.getCardName(), rentModel.getCardNo(), rentModel.getExpDate(),
+                    rentModel.getConfNo());
+            updateVehicle(vlicense, "rented");
+            System.out.println("Vehicle status updated");
             return rm;
         } catch (SQLException e) {
             System.out.println(LOG_TAG + " " + e.getMessage());
@@ -483,6 +488,7 @@ public class DatabaseConnectionHandler {
                 weekDiff = totalDay / 7;
                 dayDiff = totalDay - (7*weekDiff);
                 hourDiff = rs.getInt("HourDiff");
+                System.out.println("Got time differences");
 
                 rs.close();
                 stmt.close();
@@ -540,23 +546,22 @@ public class DatabaseConnectionHandler {
             if (rentModel == null) {
                 throw new Exception("This vehicle has not been rented!");
             } else {
-                ps.setInt(1, returnModel.getRid());
-                ps.setTimestamp(2, returnModel.getDateTime());
-                ps.setInt(3, returnModel.getOdometer());
-                ps.setInt(4, returnModel.isFulltank());
-                ps.setInt(5, returnModel.getValue());
-
                 updateVehicle(rentModel.getVlicense(), "available");
 
+                System.out.println("Doing calc");
                 int[] calc = getValue(rentModel, returnModel);
                 if (calc != null) {
-                    // weekdiff * (wrate + wirate) + daydiff * (drate + dirate) + hourdiff * (hrate + hirate)
-                    // int[]{weekdiff, daydiff, hourdiff, wrate, drate, hrate, wirate, dirate, hirate, value}
                     String calculation = calc[0] + " * (" + calc[3] + "+" + calc[6] + ") +" + calc[1] + " * (" + calc[4]
-                            + calc[7] + ") + " + calc[2] + " * (" + calc[5] + calc[8] + ")";
+                            + "+"  + calc[7] + ") + " + calc[2] + " * (" + calc[5] + "+" + calc[8] + ")";
                     int value = calc[9];
                     String confo = Integer.toString(rentModel.getConfNo());
                     res = new String[]{confo, calculation, Integer.toString(value)};
+
+                    ps.setInt(1, rentModel.getRid());
+                    ps.setTimestamp(2, returnModel.getDateTime());
+                    ps.setInt(3, returnModel.getOdometer());
+                    ps.setInt(4, returnModel.isFulltank());
+                    ps.setInt(5, value);
 
                     ps.executeUpdate();
                     connection.commit();

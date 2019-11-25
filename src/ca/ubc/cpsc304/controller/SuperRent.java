@@ -70,14 +70,6 @@ public class SuperRent implements LoginWindowDelegate, TransactionsWindowDelegat
         dbHandler.insertReservation(reservationModel);
     }
 
-    public void deleteReservation(int confNo) {
-        dbHandler.deleteReservation(confNo);
-    }
-
-    public void updateReservation(int confNo, ReservationModel reservationModel) {
-        dbHandler.updateReservation(confNo, reservationModel);
-    }
-
     public void insertCustomer(CustomerModel model) {
        dbHandler.insertCustomer(model);
     }
