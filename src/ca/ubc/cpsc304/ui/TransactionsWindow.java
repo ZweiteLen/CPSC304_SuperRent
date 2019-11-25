@@ -197,7 +197,7 @@ public class TransactionsWindow extends JFrame {
                     btn.setText(searchmodel.getRowCount() + " Vehicles found");
                     vehicleTable.setModel(vmodel);
                 } catch (Exception se) {
-                    inputError("Please make sure the dates and times are entered in the correct format");
+                    inputError("Please enter a valid date/time between 1900 to 2029");
                 }
             }
         });

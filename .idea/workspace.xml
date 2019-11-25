@@ -8,6 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9ece8336-adb9-436f-a1af-64ae1240674b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/CPSC304_SuperRent_jar/CPSC304_SuperRent.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/CPSC304_SuperRent_jar/CPSC304_SuperRent.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/database/DatabaseConnectionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cpsc304/ui/TransactionsWindow.java" afterDir="false" />
     </list>
@@ -162,6 +163,7 @@
       <workItem from="1574450965462" duration="7757000" />
       <workItem from="1574497156328" duration="19883000" />
       <workItem from="1574585646380" duration="600000" />
+      <workItem from="1574664498871" duration="647000" />
     </task>
     <task id="LOCAL-00001" summary="corrected some variable names">
       <created>1574470934117</created>
