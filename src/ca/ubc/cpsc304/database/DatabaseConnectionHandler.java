@@ -389,10 +389,12 @@ public class DatabaseConnectionHandler {
                     rs.getInt("odometer"), null, null, null,
                     rs.getInt("confNo"));
             rs.close();
+            ps.close();
             return res;
         }
 
         rs.close();
+        ps.close();
         return null;
     }
 
@@ -518,6 +520,7 @@ public class DatabaseConnectionHandler {
                 dirate = r.getInt("dirate");
                 hirate = r.getInt("hirate");
                 krate = r.getInt("krate");
+                System.out.println("Got rates");
 
                 r.close();
                 s.close();
@@ -547,7 +550,6 @@ public class DatabaseConnectionHandler {
                 throw new Exception("This vehicle has not been rented!");
             } else {
                 updateVehicle(rentModel.getVlicense(), "available");
-
                 System.out.println("Doing calc");
                 int[] calc = getValue(rentModel, returnModel);
                 if (calc != null) {
@@ -557,11 +559,15 @@ public class DatabaseConnectionHandler {
                     String confo = Integer.toString(rentModel.getConfNo());
                     res = new String[]{confo, calculation, Integer.toString(value)};
 
+                    ps = connection.prepareStatement("INSERT INTO returns " +
+                            "(rid, datetime, odometer, fulltank, value) VALUES (?, ?, ?, ?, ?)");
                     ps.setInt(1, rentModel.getRid());
+                    System.out.println(rentModel.getRid());
                     ps.setTimestamp(2, returnModel.getDateTime());
                     ps.setInt(3, returnModel.getOdometer());
                     ps.setInt(4, returnModel.isFulltank());
                     ps.setInt(5, value);
+                    System.out.println("setting PS");
 
                     ps.executeUpdate();
                     connection.commit();
@@ -606,11 +612,11 @@ public class DatabaseConnectionHandler {
             ResultSet rs;
             rs = stmt.executeQuery("SELECT CompanyTotal, location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
                     "FROM RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VRentals FROM RENT, VEHICLES " +
-                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE GROUP BY VTNAME), (SELECT LOCATION as branch, " +
-                    "COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE " +
-                    "GROUP BY LOCATION),(SELECT COUNT(*) as CompanyTotal FROM RENT) " +
-                    "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION " +
-                    "AND TRUNC(r.fromDateTime) = TO_DATE(" + day + ") ORDER BY LOCATION, VTNAME");
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE AND TRUNC(FROMDATETIME) = TO_DATE(" + day + ") " +
+                    "GROUP BY VTNAME), (SELECT LOCATION as branch, COUNT(*) as BRentals FROM RENT, VEHICLES WHERE " +
+                    "RENT.VLICENSE = VEHICLES.VLICENSE AND TRUNC(FROMDATETIME) = TO_DATE(" + day + ") GROUP BY LOCATION), " +
+                    "(SELECT COUNT(*) as CompanyTotal FROM RENT WHERE TRUNC(FROMDATETIME) = TO_DATE("+day+")) WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND " +
+                    "branch=v.LOCATION AND TRUNC(r.fromDateTime) = TO_DATE(" + day + ") ORDER BY LOCATION, VTNAME");
 
             while (rs.next()) {
                 String ct = rs.getString("CompanyTotal");
@@ -653,12 +659,11 @@ public class DatabaseConnectionHandler {
             ResultSet rs;
             rs = stmt.executeQuery("SELECT location, VTNAME, BRentals, VRentals, rid, CONFNO, r.VLICENSE, DLICENSE, FROMDATETIME, TODATETIME, r.ODOMETER, CARDNAME, CARDNO,EXPDATE " +
                     "FROM RENT r, VEHICLES v, (SELECT VTNAME as vtype, COUNT(*) as VRentals FROM RENT, VEHICLES " +
-                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE GROUP BY VTNAME), (SELECT LOCATION as branch, " +
-                    "COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE " +
-                    "GROUP BY LOCATION) " +
-                    "WHERE r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION " +
-                    "AND TRUNC(r.fromDateTime)= TO_DATE(" + day + ") AND location = '" + location +
-                    "' ORDER BY LOCATION, VTNAME");
+                    "WHERE RENT.VLICENSE = VEHICLES.VLICENSE AND location = '" + location + "' AND TRUNC(FROMDATETIME) " +
+                    "= TO_DATE(" + day + ") GROUP BY VTNAME), (SELECT LOCATION as branch, COUNT(*) as BRentals FROM RENT, VEHICLES WHERE RENT.VLICENSE = VEHICLES.VLICENSE AND location = '"
+                    + location + "' AND TRUNC(FROMDATETIME) = TO_DATE(" + day + ") GROUP BY LOCATION) WHERE " +
+                    "r.VLICENSE=v.VLICENSE AND vtype=v.VTNAME AND branch=v.LOCATION AND TRUNC(r.fromDateTime)= " +
+                    "TO_DATE(" + day + ") AND location = '" + location + "' ORDER BY LOCATION, VTNAME");
 
             while (rs.next()) {
                 String l = rs.getString("location");
