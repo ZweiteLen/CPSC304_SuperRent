@@ -125,7 +125,24 @@ insert into vehicles values('17', 'Toyota', 'Avalon', 2019, 'black', 0, 'In main
 insert into vehicles values('18', 'Toyota', 'Avalon', 2019, 'black', 0, 'available', 'Full-size', '3456 street', 'Vancouver');
 insert into vehicles values('19', 'Volkswagen', 'Atlas', 2019, 'green', 0, 'available', 'Standard', '1010 street', 'Richmond');
 insert into vehicles values('20', 'Volkswagen', 'Atlas', 2019, 'green', 0, 'available', 'Standard', '3456 street', 'Burnaby');
-
+insert into vehicles values('21', 'Mercedes Benz', 'C300', 2019, 'black', 0, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('22', 'Mercedes Benz', 'C300', 2018, 'red', 1, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('23', 'Mercedes Benz', 'C300', 2017, 'silver', 5, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('24', 'Mercedes Benz', 'C300', 2016, 'blue', 6, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('25', 'Mercedes Benz', 'C300', 2015, 'dark blue', 3, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('26', 'Mercedes Benz', 'C300', 2014, 'white', 7, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('27', 'Mercedes Benz', 'C300', 2011, 'black', 0, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('28', 'Mercedes Benz', 'C300', 2018, 'red', 10, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('29', 'Mercedes Benz', 'C300', 2017, 'gold', 50000, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('30', 'Mercedes Benz', 'C300', 2016, 'black', 2243, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('31', 'Mercedes Benz', 'C300', 2015, 'dark blue', 0, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('32', 'Mercedes Benz', 'C300', 2014, 'grey', 21509, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('33', 'Mercedes Benz', 'C300', 2011, 'black', 0, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('34', 'Mercedes Benz', 'C300', 2018, 'red', 10, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('35', 'Mercedes Benz', 'C300', 2017, 'gold', 50000, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('36', 'Mercedes Benz', 'C300', 2016, 'black', 2243, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('37', 'Mercedes Benz', 'C300', 2015, 'dark blue', 0, 'available', 'Economy', '8080 street', 'Burnaby');
+insert into vehicles values('38', 'Mercedes Benz', 'C300', 2014, 'grey', 21509, 'available', 'Economy', '8080 street', 'Burnaby');
 
 insert into reservation values(1, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-04 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-04 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 insert into reservation values(2, 'SUV', '6s3j72', TO_TIMESTAMP('2019-09-05 23:00:00','YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-09-25 20:00:00','YYYY-MM-DD HH24:MI:SS'));
@@ -137,6 +154,26 @@ insert into reservation values(7, 'SUV', '93eb67', TO_TIMESTAMP('2019-08-30 08:0
 insert into reservation values(8, 'Mid-size', '73hwc8', TO_TIMESTAMP('2019-07-20 15:00:00','YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'));
 insert into reservation values(9, 'Compact', 'r384wt', TO_TIMESTAMP('2019-12-05 09:00:00','YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'));
 insert into reservation values(10, 'SUV', '83ry92', TO_TIMESTAMP('2019-09-15 10:00:00','YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-09-17 22:00:00','YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(11, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-04 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-04 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(12, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-05 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-05 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(13, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-06 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-06 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(14, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-07 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-07 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(15, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-08 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-08 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(16, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-09 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-09 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(17, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-10 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(18, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-11 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-11 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(19, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-12 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-12 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(20, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-13 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-13 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(21, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-14 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-14 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(22, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-15 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-15 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(23, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-16 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-16 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(24, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-17 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-17 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(25, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-18 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-18 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(26, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-19 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-19 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(27, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-20 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-20 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(28, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-21 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-21 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(29, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-20 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-20 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
+insert into reservation values(30, 'Economy', '50s8a2', TO_TIMESTAMP('2019-09-21 05:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2019-10-21 15:00:00', 'YYYY-MM-DD HH24:MI:SS'));
 
 insert into rent values (1,1,'1','50s8a2', TO_TIMESTAMP('2019-09-04 05:00:00','YYYY-MM-DD HH24:MI:SS'),
                          TO_TIMESTAMP('2019-10-04 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51135123','2004');
@@ -156,8 +193,50 @@ insert into rent values (8,6,'7','we35u7', TO_TIMESTAMP('2019-03-11 15:00:00','Y
                          TO_TIMESTAMP('2019-04-01 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
 insert into rent values (9,10,'8','83ry92', TO_TIMESTAMP('2019-09-15 10:00:00','YYYY-MM-DD HH24:MI:SS'),
                          TO_TIMESTAMP('2019-09-17 22:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
-insert into rent values (10,9,'16','r384wt', TO_TIMESTAMP('2019-12-05 09:00:00','YYYY-MM-DD HH24:MI:SS'),
+insert into rent values (10,9,'16','r384wt', TO_TIMESTAMP('2019-09-15 09:00:00','YYYY-MM-DD HH24:MI:SS'),
                          TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','48263942','2004');
+insert into rent values (11,10,'1','50s8a2', TO_TIMESTAMP('2019-09-15 05:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-10-04 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51135123','2004');
+insert into rent values (12,11,'21','50s8a2', TO_TIMESTAMP('2019-09-15 05:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-10-04 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51135123','2004');
+insert into rent values (13,12,'22','50s8a2', TO_TIMESTAMP('2019-09-15 12:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-11-01 11:00:00','YYYY-MM-DD HH24:MI:SS'),0,'Visa','42139823','2004');
+insert into rent values (14,13,'23','50s8a2', TO_TIMESTAMP('2019-09-15 08:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-01 22:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','43885123','2004');
+insert into rent values (15,14,'24','50s8a2', TO_TIMESTAMP('2019-09-15 23:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-25 20:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','55178123','2004');
+insert into rent values (16,15,'25','50s8a2', TO_TIMESTAMP('2019-09-15 20:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-01-20 10:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','55135109','2004');
+insert into rent values (17,16,'26','50s8a2', TO_TIMESTAMP('2019-09-15 14:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-06-01 20:00:00','YYYY-MM-DD HH24:MI:SS'),0,'Visa','46775123','2004');
+insert into rent values (18,17,'27','50s8a2', TO_TIMESTAMP('2019-09-15 15:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','49178123','2004');
+insert into rent values (19,18,'28','50s8a2', TO_TIMESTAMP('2019-09-15 15:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-04-01 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
+insert into rent values (20,19,'29','50s8a2', TO_TIMESTAMP('2019-09-15 10:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-17 22:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
+insert into rent values (21,20,'30','50s8a2', TO_TIMESTAMP('2019-09-15 09:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','48263942','2004');
+insert into rent values (22,21,'31','50s8a2', TO_TIMESTAMP('2019-09-15 05:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-10-04 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51135123','2004');
+insert into rent values (23,22,'23','50s8a2', TO_TIMESTAMP('2019-09-15 08:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-01 22:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','43885123','2004');
+insert into rent values (24,23,'24','50s8a2', TO_TIMESTAMP('2019-09-15 23:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-25 20:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','55178123','2004');
+insert into rent values (25,24,'25','50s8a2', TO_TIMESTAMP('2019-09-15 20:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-01-20 10:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','55135109','2004');
+insert into rent values (26,25,'26','50s8a2', TO_TIMESTAMP('2019-09-15 14:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-06-01 20:00:00','YYYY-MM-DD HH24:MI:SS'),0,'Visa','46775123','2004');
+insert into rent values (27,26,'27','50s8a2', TO_TIMESTAMP('2019-09-15 15:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','49178123','2004');
+insert into rent values (28,27,'28','50s8a2', TO_TIMESTAMP('2019-09-15 15:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-04-01 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
+insert into rent values (29,28,'29','50s8a2', TO_TIMESTAMP('2019-09-15 10:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-09-17 22:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51189973','2004');
+insert into rent values (30,29,'30','50s8a2', TO_TIMESTAMP('2019-09-15 09:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Visa','48263942','2004');
+insert into rent values (31,30,'31','50s8a2', TO_TIMESTAMP('2019-09-15 05:00:00','YYYY-MM-DD HH24:MI:SS'),
+                         TO_TIMESTAMP('2019-10-04 15:00:00','YYYY-MM-DD HH24:MI:SS'),1,'Mastercard','51135123','2004');
 
 insert into returns values (1, TO_TIMESTAMP('2019-10-04 14:00:00','YYYY-MM-DD HH24:MI:SS'), 43493, 1, 132 ); /*value = wrate *4 weeks+ drate *2days + ... */
 insert into returns values (2, TO_TIMESTAMP('2019-11-01 11:00:00','YYYY-MM-DD HH24:MI:SS'), 34944, 0, 231 );
@@ -168,4 +247,20 @@ insert into returns values (6, TO_TIMESTAMP('2019-06-01 20:00:00','YYYY-MM-DD HH
 insert into returns values (7, TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'), 45854, 1, 282 );
 insert into returns values (8, TO_TIMESTAMP('2019-04-01 09:00:00','YYYY-MM-DD HH24:MI:SS'), 59648, 0, 42 );
 insert into returns values (9, TO_TIMESTAMP('2019-09-17 22:00:00','YYYY-MM-DD HH24:MI:SS'), 44657, 1, 158 );
-insert into returns values (10, TO_TIMESTAMP('2019-12-19 21:00:00','YYYY-MM-DD HH24:MI:SS'), 78647, 1, 134 );
+insert into returns values (10, TO_TIMESTAMP('2019-08-01 21:00:00','YYYY-MM-DD HH24:MI:SS'), 78647, 1, 134 );
+insert into returns values (11, TO_TIMESTAMP('2019-08-01 14:00:00','YYYY-MM-DD HH24:MI:SS'), 43493, 1, 132 ); /*value = wrate *4 weeks+ drate *2days + ... */
+insert into returns values (12, TO_TIMESTAMP('2019-08-01 11:00:00','YYYY-MM-DD HH24:MI:SS'), 34944, 0, 231 );
+insert into returns values (13, TO_TIMESTAMP('2019-08-01 22:00:00','YYYY-MM-DD HH24:MI:SS'), 34248, 1, 180 );
+insert into returns values (14, TO_TIMESTAMP('2019-08-01 20:00:00','YYYY-MM-DD HH24:MI:SS'), 45353, 0, 326 );
+insert into returns values (15, TO_TIMESTAMP('2019-08-01 10:00:00','YYYY-MM-DD HH24:MI:SS'), 95893, 1, 172 );
+insert into returns values (16, TO_TIMESTAMP('2019-08-01 20:00:00','YYYY-MM-DD HH24:MI:SS'), 43358, 0, 202 );
+insert into returns values (17, TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'), 45854, 1, 282 );
+insert into returns values (18, TO_TIMESTAMP('2019-08-01 09:00:00','YYYY-MM-DD HH24:MI:SS'), 59648, 0, 42 );
+insert into returns values (19, TO_TIMESTAMP('2019-08-01 22:00:00','YYYY-MM-DD HH24:MI:SS'), 44657, 1, 158 );
+insert into returns values (20, TO_TIMESTAMP('2019-08-01 21:00:00','YYYY-MM-DD HH24:MI:SS'), 78647, 1, 134 );
+insert into returns values (21, TO_TIMESTAMP('2019-08-01 10:00:00','YYYY-MM-DD HH24:MI:SS'), 95893, 1, 172 );
+insert into returns values (22, TO_TIMESTAMP('2019-08-01 20:00:00','YYYY-MM-DD HH24:MI:SS'), 43358, 0, 202 );
+insert into returns values (23, TO_TIMESTAMP('2019-08-01 13:00:00','YYYY-MM-DD HH24:MI:SS'), 45854, 1, 282 );
+insert into returns values (24, TO_TIMESTAMP('2019-08-01 09:00:00','YYYY-MM-DD HH24:MI:SS'), 59648, 0, 42 );
+insert into returns values (25, TO_TIMESTAMP('2019-08-01 22:00:00','YYYY-MM-DD HH24:MI:SS'), 44657, 1, 158 );
+insert into returns values (26, TO_TIMESTAMP('2019-08-01 21:00:00','YYYY-MM-DD HH24:MI:SS'), 78647, 1, 134 );
