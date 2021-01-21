@@ -1,2 +1,2 @@
-# CPSC304_SuperRent
+# DB Class Project SuperRent
  
